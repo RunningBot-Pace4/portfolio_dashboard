@@ -183,3 +183,21 @@ TLX          -> TLX.AX
 - Market prices may be delayed and may differ from your broker.
 - The quote lookup is not a guaranteed official market-data feed.
 - Because a Vercel URL is public, set `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD`.
+
+
+## Vercel routing fix
+
+This version includes `api/index.py` and `vercel.json`:
+
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/index.py" }
+  ]
+}
+```
+
+This forces all browser routes such as `/`, `/healthz`, and `/api/portfolio` to run the FastAPI app instead of being served as static files.
+
+If the browser downloads a file instead of opening the dashboard, check that Vercel Root Directory is the folder containing `api/index.py`, `app/main.py`, `requirements.txt`, and `vercel.json`.

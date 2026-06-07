@@ -1,6 +1,6 @@
 [project]
 name = "share-portfolio-dashboard"
-version = "5.0.0"
+version = "6.0.0"
 requires-python = ">=3.12"
 dependencies = [
   "fastapi>=0.115,<1.0",
@@ -14,4 +14,4 @@ dependencies = [
 ]
 
 [project.scripts]
-app = "index:app"
+app = "api.index:app"
