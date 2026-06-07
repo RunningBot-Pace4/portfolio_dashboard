@@ -6,136 +6,382 @@
   <title>Market Share Live Portfolio</title>
   <style>
     :root {
-      --bg: #f6f7f8;
-      --card: #ffffff;
-      --text: #182026;
-      --muted: #667085;
-      --border: #d9dee3;
-      --accent: #1f6f4a;
-      --danger: #b42318;
-      --positive: #067647;
-      --negative: #b42318;
-      --shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+      --bg: #07111f;
+      --bg-soft: #0b1729;
+      --panel: rgba(13, 26, 45, 0.76);
+      --panel-2: rgba(18, 34, 58, 0.92);
+      --border: rgba(255, 255, 255, 0.09);
+      --text: #f8fbff;
+      --muted: #93a4bd;
+      --accent: #6ee7b7;
+      --accent-2: #60a5fa;
+      --accent-3: #c084fc;
+      --danger: #fb7185;
+      --positive: #34d399;
+      --negative: #fb7185;
+      --warning: #fbbf24;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      --radius: 22px;
+      --radius-sm: 16px;
+      --glass: blur(20px);
     }
 
     * { box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
-      background: var(--bg);
       color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 26%),
+        radial-gradient(circle at top right, rgba(192, 132, 252, 0.20), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(110, 231, 183, 0.16), transparent 20%),
+        linear-gradient(180deg, #08111f 0%, #091423 30%, #07111f 100%);
+      min-height: 100vh;
     }
 
-    header {
-      background: #245b43;
-      color: white;
-      padding: 24px;
-    }
-
-    header h1 {
-      margin: 0 0 8px;
-      font-size: 26px;
-    }
-
-    header p {
-      margin: 0;
-      opacity: 0.9;
-    }
-
-    main {
-      max-width: 1280px;
+    .container {
+      max-width: 1380px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 26px 18px 34px;
     }
 
-    .grid {
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(110, 231, 183, 0.08)),
+        var(--panel);
+      backdrop-filter: var(--glass);
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(192, 132, 252, 0.32), transparent 62%);
+      pointer-events: none;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: #dce8f8;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .pill-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(110, 231, 183, 0.85);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin: 12px 0 0;
+      max-width: 760px;
+      color: #d2def0;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .summary-grid, .market-grid {
       display: grid;
       gap: 16px;
     }
 
-    .cards {
+    .summary-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 22px;
     }
 
-    .card {
-      background: var(--card);
+    .panel {
+      position: relative;
+      border-radius: var(--radius);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
+      background: var(--panel);
+      backdrop-filter: var(--glass);
       box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
-    .metric-title {
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), transparent 20%);
+    }
+
+    .metric-card {
+      padding: 18px 18px 20px;
+      min-height: 126px;
+    }
+
+    .metric-label {
       color: var(--muted);
       font-size: 13px;
-      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+      margin-bottom: 10px;
     }
 
     .metric-value {
-      font-size: 24px;
-      font-weight: 700;
+      font-size: clamp(24px, 2.8vw, 34px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
     }
 
-    section {
-      margin-top: 20px;
-    }
-
-    h2 {
-      font-size: 20px;
-      margin: 0 0 12px;
-    }
-
-    form {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 12px;
-      align-items: end;
-    }
-
-    label {
-      display: block;
-      color: var(--muted);
+    .metric-sub {
+      margin-top: 12px;
       font-size: 13px;
-      margin-bottom: 6px;
+      color: #d0ddf0;
+      opacity: 0.85;
+    }
+
+    .layout-2 {
+      display: grid;
+      grid-template-columns: 1.15fr 1.85fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-header p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section-body {
+      padding: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field { display: block; }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
     }
 
     input, select, button {
       width: 100%;
-      height: 42px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      padding: 0 10px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 14px;
+      min-height: 46px;
+      padding: 0 14px;
+      outline: none;
       font-size: 14px;
-      background: white;
+    }
+
+    input, select {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: rgba(96, 165, 250, 0.72);
+      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
+      transform: translateY(-1px);
+    }
+
+    select option {
+      color: #0b1729;
+    }
+
+    .input-note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
     button {
       cursor: pointer;
-      border: none;
-      background: var(--accent);
-      color: white;
       font-weight: 700;
+      color: white;
+      border: none;
+      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
     }
 
-    button.secondary {
-      background: #475467;
-    }
-
-    button.danger {
-      background: var(--danger);
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.22);
     }
 
     button:disabled {
-      opacity: 0.55;
+      opacity: .58;
       cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-primary { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+    .btn-secondary { background: linear-gradient(135deg, #334155, #475569); }
+    .btn-danger { background: linear-gradient(135deg, #dc2626, #fb7185); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .status-bar {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      color: #d5e1f2;
+      font-size: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .market-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .quote-card {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+        rgba(255, 255, 255, 0.03);
+      min-height: 148px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .quote-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quote-code {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge-live {
+      color: #dffcf2;
+      background: rgba(52, 211, 153, 0.14);
+      border: 1px solid rgba(52, 211, 153, 0.22);
+    }
+
+    .badge-error {
+      color: #ffe4eb;
+      background: rgba(251, 113, 133, 0.14);
+      border: 1px solid rgba(251, 113, 133, 0.22);
+    }
+
+    .quote-symbol {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .quote-price {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .quote-meta {
+      font-size: 12px;
+      color: #d2def0;
+      opacity: .86;
+    }
+
+    .quote-status {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .table-panel { margin-bottom: 22px; }
+
+    .table-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .table-toolbar .eyebrow {
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: white;
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(4, 12, 23, 0.34);
     }
 
     table {
@@ -145,178 +391,258 @@
     }
 
     th, td {
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
+      padding: 14px 14px;
       text-align: right;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
       white-space: nowrap;
-    }
-
-    th:first-child, td:first-child,
-    th:nth-child(2), td:nth-child(2) {
-      text-align: left;
-    }
-
-    th {
-      background: #eef4f0;
-      color: #22352c;
-      font-size: 13px;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .status {
-      margin-top: 12px;
-      color: var(--muted);
       font-size: 14px;
     }
 
-    .positive { color: var(--positive); font-weight: 700; }
-    .negative { color: var(--negative); font-weight: 700; }
-    .muted { color: var(--muted); }
-    .actions { display: flex; gap: 8px; justify-content: flex-end; }
-    .actions button { width: auto; padding: 0 12px; height: 34px; }
-
-    @media (max-width: 980px) {
-      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: rgba(15, 29, 49, 0.95);
+      color: #dce8f8;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.06em;
     }
 
-    @media (max-width: 560px) {
-      .cards { grid-template-columns: 1fr; }
-      form { grid-template-columns: 1fr; }
-      main { padding: 12px; }
+    td:first-child, th:first-child,
+    td:nth-child(2), th:nth-child(2) {
+      text-align: left;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .value-positive { color: var(--positive); font-weight: 800; }
+    .value-negative { color: var(--negative); font-weight: 800; }
+    .muted { color: var(--muted); }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.06);
+      color: #d9e5f4;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .empty-state {
+      padding: 26px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .small-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .small-actions button {
+      width: auto;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 1180px) {
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .layout-2 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .container { padding: 14px; }
+      .hero { padding: 22px 18px; border-radius: 24px; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .section-body { padding: 16px; }
+      .table-toolbar { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Market Share Live Portfolio</h1>
-    <p>Add purchases, view live prices, and track total earn/loss.</p>
-  </header>
+  <div class="container">
+    <section class="hero">
+      <div class="pill"><span class="pill-dot"></span> Live Portfolio Tracking • Modern Dashboard</div>
+      <h1>Market Share Live Portfolio</h1>
+      <p>Track your stock purchases, watch live market prices, and monitor total profit or loss in one exciting dashboard. Built for simple daily use with a cleaner, more premium design.</p>
+    </section>
 
-  <main>
-    <section class="grid cards">
-      <div class="card">
-        <div class="metric-title">Total Invested</div>
+    <section class="summary-grid">
+      <div class="panel metric-card">
+        <div class="metric-label">Total Invested</div>
         <div class="metric-value" id="metricInvested">-</div>
+        <div class="metric-sub">Your total amount used to buy all shares.</div>
       </div>
-      <div class="card">
-        <div class="metric-title">Current Market Value</div>
+      <div class="panel metric-card">
+        <div class="metric-label">Current Market Value</div>
         <div class="metric-value" id="metricMarketValue">-</div>
+        <div class="metric-sub">Live value based on current market prices.</div>
       </div>
-      <div class="card">
-        <div class="metric-title">Total Earn / Loss</div>
+      <div class="panel metric-card">
+        <div class="metric-label">Total Earn / Loss</div>
         <div class="metric-value" id="metricReturn">-</div>
+        <div class="metric-sub">Your total unrealized result across all holdings.</div>
       </div>
-      <div class="card">
-        <div class="metric-title">Portfolio Return</div>
+      <div class="panel metric-card">
+        <div class="metric-label">Portfolio Return</div>
         <div class="metric-value" id="metricReturnPct">-</div>
+        <div class="metric-sub">Overall return percentage of your portfolio.</div>
       </div>
     </section>
 
-    <section class="card">
-      <h2 id="formTitle">Add Share Record</h2>
-      <form id="recordForm">
-        <input type="hidden" id="recordId" />
+    <section class="layout-2">
+      <div class="panel">
+        <div class="section-body">
+          <div class="section-header">
+            <div>
+              <h2 id="formTitle">Add Share Record</h2>
+              <p>Create a new transaction or update an existing one.</p>
+            </div>
+            <span class="chip">Manual Entry</span>
+          </div>
 
-        <div>
-          <label>Date</label>
-          <input id="purchaseDate" type="date" required />
+          <form id="recordForm">
+            <input type="hidden" id="recordId" />
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="purchaseDate">Date</label>
+                <input id="purchaseDate" type="date" required />
+              </div>
+
+              <div class="field">
+                <label for="shareCode">Share Code</label>
+                <select id="shareCode" required>
+                  {% for code in share_codes %}
+                  <option value="{{ code }}">{{ code }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="investmentAmount">Investment Amount</label>
+                <input id="investmentAmount" type="number" step="0.0001" min="0" required />
+              </div>
+
+              <div class="field">
+                <label for="purchaseUnits">Total Purchase Unit</label>
+                <input id="purchaseUnits" type="number" step="0.00000001" min="0.00000001" required />
+              </div>
+
+              <div class="field">
+                <label for="averagePrice">Average Price</label>
+                <input id="averagePrice" type="text" readonly />
+                <div class="input-note">Average price is shown in 2 decimal places.</div>
+              </div>
+
+              <div class="field">
+                <label>&nbsp;</label>
+                <div class="actions">
+                  <button id="saveBtn" class="btn-primary" type="submit">Save</button>
+                  <button id="cancelBtn" class="btn-secondary" type="button">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="status-bar" id="statusText">Ready.</div>
         </div>
+      </div>
 
-        <div>
-          <label>Share Code</label>
-          <select id="shareCode" required>
-            {% for code in share_codes %}
-            <option value="{{ code }}">{{ code }}</option>
-            {% endfor %}
-          </select>
+      <div class="panel">
+        <div class="section-body">
+          <div class="section-header">
+            <div>
+              <h2>Live Market Dashboard</h2>
+              <p>Beautiful live watchlist for all your tracked share codes.</p>
+            </div>
+            <span class="chip" id="marketRefreshText">Refreshing...</span>
+          </div>
+          <div class="market-grid" id="marketGrid"></div>
         </div>
-
-        <div>
-          <label>Investment Amount</label>
-          <input id="investmentAmount" type="number" step="0.0001" min="0" required />
-        </div>
-
-        <div>
-          <label>Total Purchase Unit</label>
-          <input id="purchaseUnits" type="number" step="0.00000001" min="0.00000001" required />
-        </div>
-
-        <div>
-          <label>Average Price</label>
-          <input id="averagePrice" type="text" readonly />
-        </div>
-
-        <div class="actions">
-          <button id="saveBtn" type="submit">Save</button>
-          <button id="cancelBtn" class="secondary" type="button">Cancel</button>
-        </div>
-      </form>
-      <div class="status" id="statusText">Ready.</div>
-    </section>
-
-    <section class="card">
-      <h2>Live Market Dashboard</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Share Code</th>
-              <th>Market Symbol</th>
-              <th>Current Market Price</th>
-              <th>Currency</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="marketBody"></tbody>
-        </table>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Summary Dashboard of Shares You Bought</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Share Code</th>
-              <th>Total Invested</th>
-              <th>Total Units</th>
-              <th>Average Price</th>
-              <th>Market Price</th>
-              <th>Current Value</th>
-              <th>Total Earn / Loss</th>
-              <th>Return %</th>
-              <th>Transactions</th>
-            </tr>
-          </thead>
-          <tbody id="summaryBody"></tbody>
-        </table>
+    <section class="panel table-panel">
+      <div class="section-body">
+        <div class="table-toolbar">
+          <div>
+            <div class="section-header" style="margin-bottom:0; display:block;">
+              <h2>Summary Dashboard of Shares You Bought</h2>
+              <p>Combined view by share code with invested value, current value, and total return.</p>
+            </div>
+          </div>
+          <span class="eyebrow">Grouped by share code</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Share Code</th>
+                <th>Total Invested</th>
+                <th>Total Units</th>
+                <th>Average Price</th>
+                <th>Market Price</th>
+                <th>Current Value</th>
+                <th>Total Earn / Loss</th>
+                <th>Return %</th>
+                <th>Transactions</th>
+              </tr>
+            </thead>
+            <tbody id="summaryBody"></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Purchase Records</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Share Code</th>
-              <th>Investment Amount</th>
-              <th>Total Purchase Unit</th>
-              <th>Average Price</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="recordsBody"></tbody>
-        </table>
+    <section class="panel table-panel">
+      <div class="section-body">
+        <div class="table-toolbar">
+          <div>
+            <div class="section-header" style="margin-bottom:0; display:block;">
+              <h2>Purchase Records</h2>
+              <p>Your detailed transaction list. Edit or delete any record anytime.</p>
+            </div>
+          </div>
+          <span class="eyebrow">Average price fixed to 2 decimal places</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Share Code</th>
+                <th>Investment Amount</th>
+                <th>Total Purchase Unit</th>
+                <th>Average Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody"></tbody>
+          </table>
+        </div>
       </div>
     </section>
-  </main>
+  </div>
 
   <script>
     const form = document.getElementById("recordForm");
@@ -330,6 +656,7 @@
     const cancelBtn = document.getElementById("cancelBtn");
     const statusText = document.getElementById("statusText");
     const formTitle = document.getElementById("formTitle");
+    const marketRefreshText = document.getElementById("marketRefreshText");
 
     const money = new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 2,
@@ -346,8 +673,8 @@
     }
 
     function cls(value) {
-      if (value === null || value === undefined) return "";
-      return Number(value) >= 0 ? "positive" : "negative";
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "";
+      return Number(value) >= 0 ? "value-positive" : "value-negative";
     }
 
     function fmtMoney(value) {
@@ -368,7 +695,7 @@
     function recalcAverage() {
       const invested = Number(investmentAmount.value || 0);
       const units = Number(purchaseUnits.value || 0);
-      averagePrice.value = units > 0 ? (invested / units).toFixed(8) : "";
+      averagePrice.value = units > 0 ? (invested / units).toFixed(2) : "";
     }
 
     investmentAmount.addEventListener("input", recalcAverage);
@@ -410,22 +737,44 @@
       return response.json();
     }
 
+    function quoteCardHtml(q) {
+      const isError = Boolean(q.error);
+      return `
+        <div class="quote-card">
+          <div class="quote-head">
+            <div class="quote-code">${q.share_code}</div>
+            <div class="badge ${isError ? "badge-error" : "badge-live"}">${isError ? "Issue" : "Live"}</div>
+          </div>
+          <div>
+            <div class="quote-symbol">${q.market_symbol || "-"}</div>
+            <div class="quote-price">${fmtMoney(q.price)}</div>
+          </div>
+          <div>
+            <div class="quote-meta">Currency: ${q.currency || "-"}</div>
+            <div class="quote-status ${isError ? "value-negative" : "muted"}">${q.error ? q.error : "Price loaded successfully"}</div>
+          </div>
+        </div>
+      `;
+    }
+
     async function loadMarket() {
       const data = await requestJson("/api/market");
-      const body = document.getElementById("marketBody");
-      body.innerHTML = "";
+      const grid = document.getElementById("marketGrid");
+      grid.innerHTML = "";
+
+      if (!data.quotes.length) {
+        grid.innerHTML = `<div class="empty-state panel">No market codes configured.</div>`;
+        return;
+      }
 
       data.quotes.forEach(q => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${q.share_code}</td>
-          <td>${q.market_symbol || "-"}</td>
-          <td>${fmtMoney(q.price)}</td>
-          <td>${q.currency || "-"}</td>
-          <td class="${q.error ? "negative" : "positive"}">${q.error ? q.error : "OK"}</td>
-        `;
-        body.appendChild(tr);
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = quoteCardHtml(q);
+        grid.appendChild(wrapper.firstElementChild);
       });
+
+      const now = new Date();
+      marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
 
     async function loadSummary() {
@@ -435,15 +784,17 @@
 
       document.getElementById("metricInvested").textContent = fmtMoney(data.portfolio.total_invested);
       document.getElementById("metricMarketValue").textContent = fmtMoney(data.portfolio.market_value);
+
       const metricReturn = document.getElementById("metricReturn");
       metricReturn.textContent = fmtMoney(data.portfolio.total_return);
-      metricReturn.className = "metric-value " + cls(data.portfolio.total_return);
+      metricReturn.className = `metric-value ${cls(data.portfolio.total_return)}`;
+
       const metricReturnPct = document.getElementById("metricReturnPct");
       metricReturnPct.textContent = fmtPct(data.portfolio.return_percent);
-      metricReturnPct.className = "metric-value " + cls(data.portfolio.return_percent);
+      metricReturnPct.className = `metric-value ${cls(data.portfolio.return_percent)}`;
 
       if (!data.holdings.length) {
-        body.innerHTML = `<tr><td colspan="9" class="muted">No records yet.</td></tr>`;
+        body.innerHTML = `<tr><td colspan="9" class="empty-state">No records yet.</td></tr>`;
         return;
       }
 
@@ -458,7 +809,7 @@
           <td>${fmtMoney(row.market_value)}</td>
           <td class="${cls(row.total_return)}">${fmtMoney(row.total_return)}</td>
           <td class="${cls(row.return_percent)}">${fmtPct(row.return_percent)}</td>
-          <td>${row.transaction_count}</td>
+          <td><span class="chip">${row.transaction_count}</span></td>
         `;
         body.appendChild(tr);
       });
@@ -470,7 +821,7 @@
       body.innerHTML = "";
 
       if (!data.records.length) {
-        body.innerHTML = `<tr><td colspan="6" class="muted">No records yet.</td></tr>`;
+        body.innerHTML = `<tr><td colspan="6" class="empty-state">No records yet.</td></tr>`;
         return;
       }
 
@@ -483,9 +834,9 @@
           <td>${fmtNum(row.purchase_units)}</td>
           <td>${fmtMoney(row.average_price)}</td>
           <td>
-            <div class="actions">
-              <button type="button" class="secondary" data-edit="${row.id}">Edit</button>
-              <button type="button" class="danger" data-delete="${row.id}">Delete</button>
+            <div class="small-actions">
+              <button type="button" class="btn-secondary" data-edit="${row.id}">Edit</button>
+              <button type="button" class="btn-danger" data-delete="${row.id}">Delete</button>
             </div>
           </td>
         `;
@@ -557,6 +908,7 @@
         loadSummary(),
         loadRecords()
       ]);
+      saveBtn.disabled = false;
     }
 
     resetForm();
