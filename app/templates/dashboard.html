@@ -1,585 +1,570 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ title }}</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Market Share Live Portfolio</title>
   <style>
     :root {
-      --bg: #f4f7f6;
+      --bg: #f6f7f8;
       --card: #ffffff;
-      --text: #14211c;
-      --muted: #66736d;
-      --line: #dce5e1;
-      --green: #137a4b;
-      --red: #bf2f2f;
-      --header: #245c46;
-      --soft: #edf5f1;
-      --yellow-bg: #fff4d6;
-      --yellow-line: #f0d58a;
+      --text: #182026;
+      --muted: #667085;
+      --border: #d9dee3;
+      --accent: #1f6f4a;
+      --danger: #b42318;
+      --positive: #067647;
+      --negative: #b42318;
+      --shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
     }
+
     header {
-      background: linear-gradient(135deg, #1e5b43, #143829);
+      background: #245b43;
       color: white;
-      padding: 26px 24px;
+      padding: 24px;
     }
-    main { max-width: 1380px; margin: 0 auto; padding: 24px; }
-    h1 { margin: 0 0 8px; font-size: 28px; }
-    h2 { margin: 28px 0 14px; font-size: 20px; }
-    .sub { opacity: .88; font-size: 14px; line-height: 1.45; }
-    .toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; align-items: center; }
-    .button, button {
-      display: inline-block;
-      border: 0;
-      border-radius: 10px;
-      background: #ffffff;
-      color: #17422f;
-      text-decoration: none;
-      font-weight: 750;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-size: 14px;
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
     }
-    button.primary { background: var(--header); color: white; }
-    button.danger { color: #fff; background: var(--red); }
-    button.secondary { background: var(--soft); color: #17422f; }
-    button:disabled { opacity: .55; cursor: not-allowed; }
-    .cards {
+
+    header p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: -18px;
+      gap: 16px;
     }
+
+    .cards {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
     .card {
       background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
       padding: 18px;
-      box-shadow: 0 8px 24px rgba(8, 39, 25, .06);
+      box-shadow: var(--shadow);
     }
-    .label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
-    .value { font-weight: 850; font-size: 24px; }
-    .gain { color: var(--green); }
-    .loss { color: var(--red); }
-    .muted { color: var(--muted); }
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 8px 24px rgba(8, 39, 25, .04);
+
+    .metric-title {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
     }
-    form.grid {
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    section {
+      margin-top: 20px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 0 0 12px;
+    }
+
+    form {
       display: grid;
-      grid-template-columns: 155px 220px 180px 160px auto auto;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 12px;
       align-items: end;
     }
-    label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 700; }
-    input, select {
-      width: 100%;
-      border: 1px solid #cddbd5;
-      border-radius: 10px;
-      padding: 10px 11px;
-      font: inherit;
-      background: white;
-    }
-    .custom-symbol { margin-top: 8px; }
-    .hint { color: var(--muted); font-size: 12px; margin-top: 10px; line-height: 1.45; }
-    .table-wrap {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      overflow: auto;
-      box-shadow: 0 8px 24px rgba(8, 39, 25, .04);
-    }
-    table { width: 100%; border-collapse: collapse; min-width: 980px; }
-    th {
-      background: var(--header);
-      color: white;
-      font-size: 13px;
-      text-align: right;
-      padding: 11px 12px;
-      position: sticky;
-      top: 0;
-      white-space: nowrap;
-    }
-    th.left, td.left, th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
-    td {
-      border-bottom: 1px solid var(--line);
-      padding: 10px 12px;
-      text-align: right;
-      font-size: 14px;
-      vertical-align: middle;
-    }
-    tr:hover td { background: #f8fbfa; }
-    .symbol {
-      font-weight: 850;
-      letter-spacing: .02em;
-    }
-    .small { font-size: 12px; color: var(--muted); }
-    .actions { display: flex; gap: 8px; justify-content: flex-end; }
-    .actions button { padding: 7px 10px; font-size: 12px; border-radius: 8px; }
-    .errors, .notice {
-      background: var(--yellow-bg);
-      border: 1px solid var(--yellow-line);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-top: 18px;
-      color: #604a00;
-    }
-    .notice { background: var(--soft); border-color: #cddbd5; color: #214b39; }
-    .watch-grid {
-      display: grid;
-      grid-template-columns: repeat(13, minmax(92px, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .watch-card {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
-      background: white;
-      min-height: 82px;
-    }
-    .watch-card .symbol { font-size: 15px; }
-    .watch-card .price { font-weight: 850; font-size: 18px; margin-top: 6px; }
-    .section-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    footer {
+
+    label {
+      display: block;
       color: var(--muted);
       font-size: 13px;
-      text-align: center;
-      padding: 20px;
+      margin-bottom: 6px;
     }
-    @media (max-width: 1220px) {
-      .watch-grid { grid-template-columns: repeat(6, minmax(92px, 1fr)); }
+
+    input, select, button {
+      width: 100%;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 0 10px;
+      font-size: 14px;
+      background: white;
     }
-    @media (max-width: 1060px) {
-      form.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
     }
-    @media (max-width: 900px) {
+
+    button.secondary {
+      background: #475467;
+    }
+
+    button.danger {
+      background: var(--danger);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    th:first-child, td:first-child,
+    th:nth-child(2), td:nth-child(2) {
+      text-align: left;
+    }
+
+    th {
+      background: #eef4f0;
+      color: #22352c;
+      font-size: 13px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .status {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .positive { color: var(--positive); font-weight: 700; }
+    .negative { color: var(--negative); font-weight: 700; }
+    .muted { color: var(--muted); }
+    .actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .actions button { width: auto; padding: 0 12px; height: 34px; }
+
+    @media (max-width: 980px) {
       .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .watch-grid { grid-template-columns: repeat(3, minmax(92px, 1fr)); }
+      form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
+
     @media (max-width: 560px) {
-      main { padding: 14px; }
-      header { padding: 22px 16px; }
-      .cards { grid-template-columns: 1fr; margin-top: 14px; }
-      form.grid { grid-template-columns: 1fr; }
-      .watch-grid { grid-template-columns: repeat(2, minmax(92px, 1fr)); }
-      .value { font-size: 21px; }
+      .cards { grid-template-columns: 1fr; }
+      form { grid-template-columns: 1fr; }
+      main { padding: 12px; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Share Portfolio Dashboard</h1>
-    <div class="sub">
-      {{ portfolio.database }} · Updated: {{ portfolio.generated_at }} · Prices cached for {{ portfolio.price_cache_seconds }} seconds
-      <br><span id="refresh-status">Auto-refresh is on. It pauses while you are editing.</span>
-    </div>
-    <div class="toolbar">
-      <a class="button" href="/">Refresh market prices</a>
-      <a class="button" href="/api/portfolio">View JSON API</a>
-      <a class="button" href="/healthz">Health Check</a>
-    </div>
+    <h1>Market Share Live Portfolio</h1>
+    <p>Add purchases, view live prices, and track total earn/loss.</p>
   </header>
 
   <main>
-    {% if not portfolio.using_postgres %}
-      <div class="notice">
-        Local development mode is using SQLite. For Vercel + Neon hosting, set DATABASE_URL in Vercel environment variables.
-      </div>
-    {% endif %}
-
-    <section class="cards">
+    <section class="grid cards">
       <div class="card">
-        <div class="label">Total Invested</div>
-        <div class="value">{{ portfolio.summary.total_invested_fmt }}</div>
+        <div class="metric-title">Total Invested</div>
+        <div class="metric-value" id="metricInvested">-</div>
       </div>
       <div class="card">
-        <div class="label">Current Value</div>
-        <div class="value">{{ portfolio.summary.total_current_value_fmt }}</div>
+        <div class="metric-title">Current Market Value</div>
+        <div class="metric-value" id="metricMarketValue">-</div>
       </div>
       <div class="card">
-        <div class="label">Total Earn / Loss</div>
-        <div class="value {% if portfolio.summary.total_earn is not none and portfolio.summary.total_earn >= 0 %}gain{% else %}loss{% endif %}">
-          {{ portfolio.summary.total_earn_fmt }}
-        </div>
+        <div class="metric-title">Total Earn / Loss</div>
+        <div class="metric-value" id="metricReturn">-</div>
       </div>
       <div class="card">
-        <div class="label">Return %</div>
-        <div class="value {% if portfolio.summary.total_return_pct is not none and portfolio.summary.total_return_pct >= 0 %}gain{% else %}loss{% endif %}">
-          {{ portfolio.summary.total_return_pct_fmt }}
-        </div>
+        <div class="metric-title">Portfolio Return</div>
+        <div class="metric-value" id="metricReturnPct">-</div>
       </div>
     </section>
 
-    {% if portfolio.errors %}
-      <div class="errors">
-        <strong>Some prices could not be loaded:</strong>
-        <ul>
-          {% for error in portfolio.errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
+    <section class="card">
+      <h2 id="formTitle">Add Share Record</h2>
+      <form id="recordForm">
+        <input type="hidden" id="recordId" />
 
-    <div class="section-head">
+        <div>
+          <label>Date</label>
+          <input id="purchaseDate" type="date" required />
+        </div>
+
+        <div>
+          <label>Share Code</label>
+          <select id="shareCode" required>
+            {% for code in share_codes %}
+            <option value="{{ code }}">{{ code }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label>Investment Amount</label>
+          <input id="investmentAmount" type="number" step="0.0001" min="0" required />
+        </div>
+
+        <div>
+          <label>Total Purchase Unit</label>
+          <input id="purchaseUnits" type="number" step="0.00000001" min="0.00000001" required />
+        </div>
+
+        <div>
+          <label>Average Price</label>
+          <input id="averagePrice" type="text" readonly />
+        </div>
+
+        <div class="actions">
+          <button id="saveBtn" type="submit">Save</button>
+          <button id="cancelBtn" class="secondary" type="button">Cancel</button>
+        </div>
+      </form>
+      <div class="status" id="statusText">Ready.</div>
+    </section>
+
+    <section class="card">
       <h2>Live Market Dashboard</h2>
-      <div class="small">Default watchlist: NVDA, ORCL, GOOGL, NU, GRAB, TSM, HROW, SAIL, TLX, META, MSFT, AVGO, GLDM</div>
-    </div>
-    <section class="panel">
-      <div class="watch-grid">
-        {% for q in portfolio.watchlist %}
-          <div class="watch-card">
-            <div class="symbol">{{ q.display_symbol }}</div>
-            <div class="price">{{ q.current_market_price_fmt }}</div>
-            <div class="small">
-              {% if q.lookup_symbol != q.display_symbol %}Yahoo: {{ q.lookup_symbol }} · {% endif %}
-              {{ q.currency or "" }}
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th class="left">Share Code</th>
+              <th>Share Code</th>
+              <th>Market Symbol</th>
               <th>Current Market Price</th>
               <th>Currency</th>
-              <th class="left">Lookup Symbol</th>
-              <th class="left">Status</th>
+              <th>Status</th>
             </tr>
           </thead>
-          <tbody>
-            {% for q in portfolio.watchlist %}
-              <tr>
-                <td class="left"><span class="symbol">{{ q.display_symbol }}</span></td>
-                <td>{{ q.current_market_price_fmt }}</td>
-                <td>{{ q.currency or "-" }}</td>
-                <td class="left">{{ q.lookup_symbol }}</td>
-                <td class="left">{% if q.price_error %}{{ q.price_error }}{% else %}OK{% endif %}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
+          <tbody id="marketBody"></tbody>
         </table>
       </div>
     </section>
 
-    <h2>Summary Dashboard of Shares You Bought</h2>
-    <section class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th class="left">Share Code</th>
-            <th>Total Invested</th>
-            <th>Total Units</th>
-            <th>Average Price</th>
-            <th>Current Market Price</th>
-            <th>Current Value</th>
-            <th>Total Earn / Loss</th>
-            <th>Return %</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% if portfolio.holdings %}
-            {% for h in portfolio.holdings %}
-              <tr>
-                <td class="left"><span class="symbol">{{ h.symbol }}</span></td>
-                <td>{{ h.investment_amount_fmt }}</td>
-                <td>{{ h.purchase_units_fmt }}</td>
-                <td>{{ h.average_price_fmt }}</td>
-                <td>{{ h.current_market_price_fmt }}</td>
-                <td>{{ h.current_value_fmt }}</td>
-                <td class="{% if h.total_earn is not none and h.total_earn >= 0 %}gain{% else %}loss{% endif %}">
-                  {{ h.total_earn_fmt }}
-                </td>
-                <td class="{% if h.return_pct is not none and h.return_pct >= 0 %}gain{% else %}loss{% endif %}">
-                  {{ h.return_pct_fmt }}
-                </td>
-              </tr>
-            {% endfor %}
-          {% else %}
+    <section class="card">
+      <h2>Summary Dashboard of Shares You Bought</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
             <tr>
-              <td class="left" colspan="8">No share purchase records yet.</td>
+              <th>Share Code</th>
+              <th>Total Invested</th>
+              <th>Total Units</th>
+              <th>Average Price</th>
+              <th>Market Price</th>
+              <th>Current Value</th>
+              <th>Total Earn / Loss</th>
+              <th>Return %</th>
+              <th>Transactions</th>
             </tr>
-          {% endif %}
-        </tbody>
-      </table>
-    </section>
-
-    <h2 id="form-title">Add Share Record</h2>
-    <section class="panel">
-      <form id="record-form" class="grid">
-        <input type="hidden" id="record-id">
-        <div>
-          <label for="purchase-date">Date</label>
-          <input id="purchase-date" type="date" required>
-        </div>
-        <div>
-          <label for="symbol-select">Share Code</label>
-          <select id="symbol-select" required>
-            <option value="" disabled selected>Select share code</option>
-            {% for symbol in portfolio.symbols %}
-              <option value="{{ symbol }}">{{ symbol }}</option>
-            {% endfor %}
-            <option value="__custom__">Other / custom code</option>
-          </select>
-          <input id="custom-symbol" class="custom-symbol" placeholder="Example: NASDAQ:NVDA or 0700.HK" hidden>
-        </div>
-        <div>
-          <label for="investment-amount">Investment amount</label>
-          <input id="investment-amount" type="number" min="0.0001" step="0.0001" placeholder="121.74" required>
-        </div>
-        <div>
-          <label for="purchase-units">Total purchase unit</label>
-          <input id="purchase-units" type="number" min="0.0001" step="0.0001" placeholder="1" required>
-        </div>
-        <button id="submit-btn" class="primary" type="submit">Save Record</button>
-        <button id="cancel-btn" class="secondary" type="button" hidden>Cancel Edit</button>
-      </form>
-      <div class="hint">
-        The dropdown can be changed anytime, including while editing. Average price is calculated as investment amount ÷ purchase unit.
-        Current market price uses Yahoo-style lookup. Google-style symbols like NASDAQ:NVDA, HKG:0700, SGX:D05, KLSE:MAYBANK are auto-converted.
+          </thead>
+          <tbody id="summaryBody"></tbody>
+        </table>
       </div>
     </section>
 
-    {% if not portfolio.transactions %}
-      <div class="notice">
-        No records yet. Add your first share purchase above.
-      </div>
-    {% endif %}
-
-    <h2>Transaction Grid</h2>
-    <section class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th class="left">Date</th>
-            <th class="left">Share Code</th>
-            <th>Investment Amount</th>
-            <th>Total Purchase Unit</th>
-            <th>Average Price</th>
-            <th>Current Market Price</th>
-            <th>Current Value</th>
-            <th>Total Earn / Loss</th>
-            <th>Return %</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% if portfolio.transactions %}
-            {% for tx in portfolio.transactions %}
-              <tr>
-                <td class="left">{{ tx.purchase_date }}</td>
-                <td class="left"><span class="symbol">{{ tx.symbol }}</span></td>
-                <td>{{ tx.investment_amount_fmt }}</td>
-                <td>{{ tx.purchase_units_fmt }}</td>
-                <td>{{ tx.average_price_fmt }}</td>
-                <td>{{ tx.current_market_price_fmt }}</td>
-                <td>{{ tx.current_value_fmt }}</td>
-                <td class="{% if tx.total_earn is not none and tx.total_earn >= 0 %}gain{% else %}loss{% endif %}">
-                  {{ tx.total_earn_fmt }}
-                </td>
-                <td class="{% if tx.return_pct is not none and tx.return_pct >= 0 %}gain{% else %}loss{% endif %}">
-                  {{ tx.return_pct_fmt }}
-                </td>
-                <td>
-                  <div class="actions">
-                    <button type="button" class="secondary" onclick='editRecord({{ tx | tojson }})'>Edit</button>
-                    <button type="button" class="danger" onclick="deleteRecord({{ tx.id }})">Delete</button>
-                  </div>
-                </td>
-              </tr>
-            {% endfor %}
-          {% else %}
+    <section class="card">
+      <h2>Purchase Records</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
             <tr>
-              <td class="left" colspan="10">No transaction records yet.</td>
+              <th>Date</th>
+              <th>Share Code</th>
+              <th>Investment Amount</th>
+              <th>Total Purchase Unit</th>
+              <th>Average Price</th>
+              <th>Action</th>
             </tr>
-          {% endif %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody id="recordsBody"></tbody>
+        </table>
+      </div>
     </section>
   </main>
 
-  <footer>
-    Personal tracking only. Prices may be delayed and can differ from broker prices.
-  </footer>
-
   <script>
-    const form = document.getElementById("record-form");
-    const recordId = document.getElementById("record-id");
-    const formTitle = document.getElementById("form-title");
-    const submitBtn = document.getElementById("submit-btn");
-    const cancelBtn = document.getElementById("cancel-btn");
-    const symbolSelect = document.getElementById("symbol-select");
-    const customSymbol = document.getElementById("custom-symbol");
-    const refreshStatus = document.getElementById("refresh-status");
+    const form = document.getElementById("recordForm");
+    const recordId = document.getElementById("recordId");
+    const purchaseDate = document.getElementById("purchaseDate");
+    const shareCode = document.getElementById("shareCode");
+    const investmentAmount = document.getElementById("investmentAmount");
+    const purchaseUnits = document.getElementById("purchaseUnits");
+    const averagePrice = document.getElementById("averagePrice");
+    const saveBtn = document.getElementById("saveBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const statusText = document.getElementById("statusText");
+    const formTitle = document.getElementById("formTitle");
 
-    let isSaving = false;
-    let formDirty = false;
+    const money = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
 
-    function today() {
+    const numberFmt = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 8
+    });
+
+    function setStatus(message) {
+      statusText.textContent = message;
+    }
+
+    function cls(value) {
+      if (value === null || value === undefined) return "";
+      return Number(value) >= 0 ? "positive" : "negative";
+    }
+
+    function fmtMoney(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
+      return money.format(Number(value));
+    }
+
+    function fmtNum(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
+      return numberFmt.format(Number(value));
+    }
+
+    function fmtPct(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
+      return `${Number(value).toFixed(2)}%`;
+    }
+
+    function recalcAverage() {
+      const invested = Number(investmentAmount.value || 0);
+      const units = Number(purchaseUnits.value || 0);
+      averagePrice.value = units > 0 ? (invested / units).toFixed(8) : "";
+    }
+
+    investmentAmount.addEventListener("input", recalcAverage);
+    purchaseUnits.addEventListener("input", recalcAverage);
+
+    function todayIso() {
       return new Date().toISOString().slice(0, 10);
-    }
-
-    if (!document.getElementById("purchase-date").value) {
-      document.getElementById("purchase-date").value = today();
-    }
-
-    function syncCustomSymbol() {
-      const custom = symbolSelect.value === "__custom__";
-      customSymbol.hidden = !custom;
-      customSymbol.required = custom;
-      if (custom) {
-        customSymbol.focus();
-      } else {
-        customSymbol.value = "";
-      }
-    }
-
-    symbolSelect.addEventListener("change", () => {
-      formDirty = true;
-      syncCustomSymbol();
-    });
-
-    form.addEventListener("input", () => {
-      formDirty = true;
-    });
-
-    function setSymbolValue(value) {
-      const normalized = value.trim().toUpperCase();
-      const option = Array.from(symbolSelect.options).find((opt) => opt.value === normalized);
-      if (option) {
-        symbolSelect.value = normalized;
-        customSymbol.value = "";
-      } else {
-        symbolSelect.value = "__custom__";
-        customSymbol.hidden = false;
-        customSymbol.required = true;
-        customSymbol.value = normalized;
-      }
-      syncCustomSymbol();
-    }
-
-    function getSelectedSymbol() {
-      if (symbolSelect.value === "__custom__") {
-        return customSymbol.value.trim().toUpperCase();
-      }
-      return symbolSelect.value.trim().toUpperCase();
-    }
-
-    function getPayload() {
-      return {
-        purchase_date: document.getElementById("purchase-date").value,
-        symbol: getSelectedSymbol(),
-        investment_amount: Number(document.getElementById("investment-amount").value),
-        purchase_units: Number(document.getElementById("purchase-units").value)
-      };
     }
 
     function resetForm() {
       recordId.value = "";
-      form.reset();
-      document.getElementById("purchase-date").value = today();
-      symbolSelect.value = "";
-      customSymbol.hidden = true;
-      customSymbol.required = false;
-      customSymbol.value = "";
+      purchaseDate.value = todayIso();
+      shareCode.value = "NVDA";
+      investmentAmount.value = "";
+      purchaseUnits.value = "";
+      averagePrice.value = "";
       formTitle.textContent = "Add Share Record";
-      submitBtn.textContent = "Save Record";
-      submitBtn.disabled = false;
-      cancelBtn.hidden = true;
-      isSaving = false;
-      formDirty = false;
+      saveBtn.textContent = "Save";
+      saveBtn.disabled = false;
     }
 
-    function editRecord(record) {
-      recordId.value = record.id;
-      document.getElementById("purchase-date").value = record.purchase_date;
-      setSymbolValue(record.symbol);
-      document.getElementById("investment-amount").value = record.investment_amount;
-      document.getElementById("purchase-units").value = record.purchase_units;
+    async function requestJson(url, options = {}) {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        },
+        ...options
+      });
+
+      if (!response.ok) {
+        let detail = `${response.status} ${response.statusText}`;
+        try {
+          const errorBody = await response.json();
+          detail = errorBody.detail || errorBody.error || detail;
+        } catch {}
+        throw new Error(detail);
+      }
+      return response.json();
+    }
+
+    async function loadMarket() {
+      const data = await requestJson("/api/market");
+      const body = document.getElementById("marketBody");
+      body.innerHTML = "";
+
+      data.quotes.forEach(q => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${q.share_code}</td>
+          <td>${q.market_symbol || "-"}</td>
+          <td>${fmtMoney(q.price)}</td>
+          <td>${q.currency || "-"}</td>
+          <td class="${q.error ? "negative" : "positive"}">${q.error ? q.error : "OK"}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    async function loadSummary() {
+      const data = await requestJson("/api/summary");
+      const body = document.getElementById("summaryBody");
+      body.innerHTML = "";
+
+      document.getElementById("metricInvested").textContent = fmtMoney(data.portfolio.total_invested);
+      document.getElementById("metricMarketValue").textContent = fmtMoney(data.portfolio.market_value);
+      const metricReturn = document.getElementById("metricReturn");
+      metricReturn.textContent = fmtMoney(data.portfolio.total_return);
+      metricReturn.className = "metric-value " + cls(data.portfolio.total_return);
+      const metricReturnPct = document.getElementById("metricReturnPct");
+      metricReturnPct.textContent = fmtPct(data.portfolio.return_percent);
+      metricReturnPct.className = "metric-value " + cls(data.portfolio.return_percent);
+
+      if (!data.holdings.length) {
+        body.innerHTML = `<tr><td colspan="9" class="muted">No records yet.</td></tr>`;
+        return;
+      }
+
+      data.holdings.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.share_code}</td>
+          <td>${fmtMoney(row.total_invested)}</td>
+          <td>${fmtNum(row.total_units)}</td>
+          <td>${fmtMoney(row.average_price)}</td>
+          <td>${fmtMoney(row.current_price)}</td>
+          <td>${fmtMoney(row.market_value)}</td>
+          <td class="${cls(row.total_return)}">${fmtMoney(row.total_return)}</td>
+          <td class="${cls(row.return_percent)}">${fmtPct(row.return_percent)}</td>
+          <td>${row.transaction_count}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    async function loadRecords() {
+      const data = await requestJson("/api/records");
+      const body = document.getElementById("recordsBody");
+      body.innerHTML = "";
+
+      if (!data.records.length) {
+        body.innerHTML = `<tr><td colspan="6" class="muted">No records yet.</td></tr>`;
+        return;
+      }
+
+      data.records.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.purchase_date}</td>
+          <td>${row.share_code}</td>
+          <td>${fmtMoney(row.investment_amount)}</td>
+          <td>${fmtNum(row.purchase_units)}</td>
+          <td>${fmtMoney(row.average_price)}</td>
+          <td>
+            <div class="actions">
+              <button type="button" class="secondary" data-edit="${row.id}">Edit</button>
+              <button type="button" class="danger" data-delete="${row.id}">Delete</button>
+            </div>
+          </td>
+        `;
+        body.appendChild(tr);
+
+        tr.querySelector("[data-edit]").addEventListener("click", () => editRecord(row));
+        tr.querySelector("[data-delete]").addEventListener("click", () => deleteRecord(row.id));
+      });
+    }
+
+    function editRecord(row) {
+      recordId.value = row.id;
+      purchaseDate.value = row.purchase_date;
+      shareCode.value = row.share_code;
+      investmentAmount.value = row.investment_amount;
+      purchaseUnits.value = row.purchase_units;
+      recalcAverage();
       formTitle.textContent = "Edit Share Record";
-      submitBtn.textContent = "Update Record";
-      cancelBtn.hidden = false;
-      formDirty = false;
-      window.scrollTo({ top: document.getElementById("form-title").offsetTop - 10, behavior: "smooth" });
+      saveBtn.textContent = "Update";
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     async function deleteRecord(id) {
       if (!confirm("Delete this record?")) return;
-      const response = await fetch(`/api/transactions/${id}`, { method: "DELETE" });
-      if (!response.ok) {
-        alert("Delete failed.");
-        return;
-      }
-      window.location.reload();
+      await requestJson(`/api/records/${id}`, { method: "DELETE" });
+      setStatus("Record deleted.");
+      await refreshAll();
     }
-
-    cancelBtn.addEventListener("click", resetForm);
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      saveBtn.disabled = true;
 
-      if (isSaving) return;
-      isSaving = true;
-      submitBtn.disabled = true;
-      submitBtn.textContent = recordId.value ? "Updating..." : "Saving...";
-
-      const id = recordId.value;
-      const method = id ? "PUT" : "POST";
-      const url = id ? `/api/transactions/${id}` : "/api/transactions";
+      const payload = {
+        purchase_date: purchaseDate.value,
+        share_code: shareCode.value,
+        investment_amount: Number(investmentAmount.value),
+        purchase_units: Number(purchaseUnits.value)
+      };
 
       try {
-        const response = await fetch(url, {
-          method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(getPayload())
-        });
-
-        if (!response.ok) {
-          const detail = await response.json().catch(() => ({}));
-          alert(detail.detail || "Save failed.");
-          return;
+        if (recordId.value) {
+          await requestJson(`/api/records/${recordId.value}`, {
+            method: "PUT",
+            body: JSON.stringify(payload)
+          });
+          setStatus("Record updated.");
+        } else {
+          const result = await requestJson("/api/records", {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+          setStatus(result.record.duplicate_blocked ? "Duplicate save blocked." : "Record saved.");
         }
 
-        formDirty = false;
-        window.location.reload();
-      } catch (error) {
-        alert("Save failed. Please check that the server is running.");
-      } finally {
-        isSaving = false;
-        submitBtn.disabled = false;
-        submitBtn.textContent = recordId.value ? "Update Record" : "Save Record";
+        resetForm();
+        await refreshAll();
+      } catch (err) {
+        setStatus(`Error: ${err.message}`);
+        saveBtn.disabled = false;
       }
     });
 
-    // Refresh market prices every few minutes, but do not refresh while the user is typing/editing.
+    cancelBtn.addEventListener("click", resetForm);
+
+    async function refreshAll() {
+      await Promise.all([
+        loadMarket(),
+        loadSummary(),
+        loadRecords()
+      ]);
+    }
+
+    resetForm();
+    refreshAll().catch(err => setStatus(`Error loading dashboard: ${err.message}`));
     setInterval(() => {
-      if (isSaving || formDirty || recordId.value) {
-        refreshStatus.textContent = "Auto-refresh paused while you are editing.";
-        return;
-      }
-      window.location.reload();
-    }, {{ portfolio.price_cache_seconds * 1000 }});
+      loadMarket().catch(() => {});
+      loadSummary().catch(() => {});
+    }, 300000);
   </script>
 </body>
 </html>

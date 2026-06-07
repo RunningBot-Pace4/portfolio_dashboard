@@ -1,149 +1,55 @@
-# Share Portfolio Dashboard — Vercel + Neon Version
+# Market Share Live Portfolio Dashboard
 
-This version is built for:
+A small FastAPI + Neon Postgres dashboard for tracking share purchases.
 
-- **Vercel**: one stable public URL for the web dashboard
-- **Neon Postgres**: persistent database storage
-- **FastAPI**: Python web app and API
-- **Yahoo Finance chart endpoint**: lightweight market quote lookup
+## Important Vercel structure
 
-No Excel and no CSV are needed. You add/edit/delete share purchases directly in the web dashboard.
-
-## Features
-
-- Live market dashboard for:
-  `NVDA, ORCL, GOOGL, NU, GRAB, TSM, HROW, SAIL, TLX, META, MSFT, AVGO, GLDM`
-- Add / edit / delete share purchase records
-- Share code dropdown with custom code support
-- Summary dashboard by share:
-  - total invested
-  - total units
-  - average price
-  - current market price
-  - current value
-  - total earn/loss
-  - return %
-- Neon Postgres persistence
-- Optional password protection with HTTP Basic Auth
-
-## Project Structure
+Keep this structure:
 
 ```text
-portfolio_dashboard/
-  index.py
-  app/
-    main.py
-    templates/
-      dashboard.html
-  scripts/
-    migrate_sqlite_to_neon.py
-  schema.sql
-  requirements.txt
-  pyproject.toml
-  vercel.json
-  .env.example
+api/index.py
+app/__init__.py
+app/main.py
+app/db.py
+app/market_data.py
+app/models.py
+app/templates/dashboard.html
+requirements.txt
+vercel.json
 ```
 
-## 1. Create Neon database
+Do **not** create root `app.py` or root `index.py`. Those files can make Vercel download files or import the wrong module.
 
-1. Sign in to Neon.
-2. Create a new project.
-3. Open **Connect**.
-4. Copy the Postgres connection string.
-5. Use the connection string as `DATABASE_URL`.
+## Environment variables
 
-It should look like:
+Add these in Vercel Project Settings → Environment Variables:
 
-```text
-postgresql://USER:PASSWORD@HOST/neondb?sslmode=require&channel_binding=require
-```
-
-## 2. Deploy to Vercel
-
-### Option A — GitHub + Vercel Dashboard
-
-1. Upload this folder to a GitHub repository.
-2. In Vercel, click **Add New Project**.
-3. Import the GitHub repository.
-4. Add these environment variables:
-
-```text
+```env
 DATABASE_URL=your_neon_connection_string
 BASIC_AUTH_USERNAME=admin
 BASIC_AUTH_PASSWORD=your_private_password
 PRICE_CACHE_SECONDS=300
 ```
 
-5. Click **Deploy**.
+Select Production, Preview, and Development, then redeploy.
 
-Your stable production URL will be:
+## Deploy to Vercel
 
-```text
-https://your-project-name.vercel.app
-```
+1. Push this folder to GitHub.
+2. In Vercel, Add New → Project.
+3. Import your GitHub repo.
+4. Set Framework Preset to `Other`.
+5. Set Root Directory to the folder that contains `api/`, `app/`, `requirements.txt`, and `vercel.json`.
+6. Add the environment variables above.
+7. Deploy.
 
-### Option B — Vercel CLI
-
-Install Vercel CLI:
-
-```bash
-npm i -g vercel
-```
-
-Deploy:
-
-```bash
-vercel
-```
-
-Set environment variables:
-
-```bash
-vercel env add DATABASE_URL production
-vercel env add BASIC_AUTH_USERNAME production
-vercel env add BASIC_AUTH_PASSWORD production
-vercel env add PRICE_CACHE_SECONDS production
-```
-
-Then deploy production:
-
-```bash
-vercel --prod
-```
-
-## 3. Local run on Windows
-
-```powershell
-py -3 -m venv .venv
-.venv\Scripts\activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-copy .env.example .env
-```
-
-Edit `.env` and set your Neon `DATABASE_URL`.
-
-Run:
-
-```powershell
-python -m uvicorn app.main:app --reload
-```
-
-Open:
+Test:
 
 ```text
-http://localhost:8000
+https://your-project.vercel.app/healthz
 ```
 
-## 4. Test deployment
-
-Open:
-
-```text
-https://your-project-name.vercel.app/healthz
-```
-
-Expected result:
+Expected:
 
 ```json
 {
@@ -153,51 +59,48 @@ Expected result:
 }
 ```
 
-## 5. Migrate old local SQLite data to Neon
-
-If you already have records in an older `data/portfolio.db`, copy that file into this project, then run:
-
-```powershell
-$env:DATABASE_URL="your_neon_connection_string"
-python scripts/migrate_sqlite_to_neon.py --sqlite data/portfolio.db
-```
-
-## 6. Share code format
-
-The app uses Yahoo-style lookup symbols.
-
-Examples:
+Then open:
 
 ```text
-NASDAQ:NVDA  -> NVDA
-NYSE:ORCL    -> ORCL
-HKG:0700     -> 0700.HK
-SGX:D05      -> D05.SI
-KLSE:MAYBANK -> MAYBANK.KL
-TLX          -> TLX.AX
+https://your-project.vercel.app
 ```
 
-## Notes
+## Run locally
 
-- Prices are for personal tracking only.
-- Market prices may be delayed and may differ from your broker.
-- The quote lookup is not a guaranteed official market-data feed.
-- Because a Vercel URL is public, set `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD`.
+PowerShell:
 
-
-## Vercel routing fix
-
-This version includes `api/index.py` and `vercel.json`:
-
-```json
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/index.py" }
-  ]
-}
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+copy .env.example .env
+# Edit .env with your Neon DATABASE_URL
+python -m uvicorn app.main:app --reload
 ```
 
-This forces all browser routes such as `/`, `/healthz`, and `/api/portfolio` to run the FastAPI app instead of being served as static files.
+Open:
 
-If the browser downloads a file instead of opening the dashboard, check that Vercel Root Directory is the folder containing `api/index.py`, `app/main.py`, `requirements.txt`, and `vercel.json`.
+```text
+http://localhost:8000
+```
+
+## Share code mapping
+
+The app accepts normal codes like:
+
+```text
+NVDA, ORCL, GOOGL, NU, GRAB, TSM, HROW, SAIL, META, MSFT, AVGO, GLDM
+```
+
+It also accepts GoogleFinance-style codes like:
+
+```text
+NASDAQ:NVDA
+NYSE:ORCL
+ASX:TLX
+HKG:0700
+SGX:D05
+KLSE:MAYBANK
+```
+
+`TLX` is mapped to `TLX.AX` by default. Change `SYMBOL_OVERRIDES` in `app/market_data.py` if needed.

@@ -1,6 +1,9 @@
+.env
+.env.local
 .venv/
 __pycache__/
 *.pyc
-.env
+*.pyo
+.vs/
 data/*.db
-.vercel/
+.DS_Store
