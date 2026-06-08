@@ -5,11 +5,20 @@ from io import BytesIO
 from typing import Any
 
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_RIGHT
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+
+
+DARK_HEADER = colors.HexColor("#172033")
+BLUE_HEADER = colors.HexColor("#243B53")
+TEXT_DARK = colors.HexColor("#111827")
+TEXT_MUTED = colors.HexColor("#667085")
+GRID_LINE = colors.HexColor("#D6DAE2")
+ALT_ROW = colors.HexColor("#F7F9FC")
+METRIC_ROW = colors.HexColor("#EEF6FF")
 
 
 def _money(value: Any) -> str:
@@ -44,7 +53,16 @@ def _para(text: Any, style: ParagraphStyle) -> Paragraph:
     return Paragraph(safe.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"), style)
 
 
-def _make_table(data: list[list[Any]], widths: list[float], header_color=colors.HexColor("#172033")) -> Table:
+def _header_para(text: Any, style: ParagraphStyle) -> Paragraph:
+    """White paragraph text for dark PDF table headers.
+
+    Important: ReportLab TableStyle TEXTCOLOR does not override the text color
+    inside Paragraph objects, so header cells need their own white ParagraphStyle.
+    """
+    return _para(text, style)
+
+
+def _make_table(data: list[list[Any]], widths: list[float], header_color=DARK_HEADER) -> Table:
     table = Table(data, colWidths=widths, repeatRows=1)
     table.setStyle(
         TableStyle(
@@ -53,14 +71,16 @@ def _make_table(data: list[list[Any]], widths: list[float], header_color=colors.
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTSIZE", (0, 0), (-1, -1), 8),
-                ("BOTTOMPADDING", (0, 0), (-1, 0), 8),
-                ("TOPPADDING", (0, 0), (-1, 0), 8),
-                ("BACKGROUND", (0, 1), (-1, -1), colors.HexColor("#F7F9FC")),
-                ("GRID", (0, 0), (-1, -1), 0.25, colors.HexColor("#D6DAE2")),
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 9),
+                ("TOPPADDING", (0, 0), (-1, 0), 9),
+                ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
+                ("TOPPADDING", (0, 1), (-1, -1), 6),
+                ("BACKGROUND", (0, 1), (-1, -1), ALT_ROW),
+                ("GRID", (0, 0), (-1, -1), 0.25, GRID_LINE),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                 ("ALIGN", (1, 1), (-1, -1), "RIGHT"),
                 ("ALIGN", (0, 0), (-1, 0), "CENTER"),
-                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7F9FC")]),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, ALT_ROW]),
             ]
         )
     )
@@ -88,7 +108,7 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
         fontName="Helvetica-Bold",
         fontSize=22,
         leading=26,
-        textColor=colors.HexColor("#111827"),
+        textColor=TEXT_DARK,
         spaceAfter=4,
     )
     subtitle_style = ParagraphStyle(
@@ -96,7 +116,7 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
         parent=styles["Normal"],
         fontSize=9,
         leading=12,
-        textColor=colors.HexColor("#667085"),
+        textColor=TEXT_MUTED,
         spaceAfter=12,
     )
     h2_style = ParagraphStyle(
@@ -105,7 +125,7 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
         fontName="Helvetica-Bold",
         fontSize=13,
         leading=16,
-        textColor=colors.HexColor("#111827"),
+        textColor=TEXT_DARK,
         spaceBefore=10,
         spaceAfter=8,
     )
@@ -114,12 +134,31 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
         parent=styles["Normal"],
         fontSize=8,
         leading=10,
-        textColor=colors.HexColor("#111827"),
+        textColor=TEXT_DARK,
     )
     right_style = ParagraphStyle(
         "RightCell",
         parent=cell_style,
         alignment=TA_RIGHT,
+    )
+    header_style = ParagraphStyle(
+        "HeaderCell",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=8,
+        leading=10,
+        textColor=colors.white,
+        alignment=TA_CENTER,
+    )
+    header_right_style = ParagraphStyle(
+        "HeaderRightCell",
+        parent=header_style,
+        alignment=TA_RIGHT,
+    )
+    header_left_style = ParagraphStyle(
+        "HeaderLeftCell",
+        parent=header_style,
+        alignment=TA_CENTER,
     )
 
     portfolio = summary.get("portfolio", {})
@@ -143,15 +182,15 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
     metrics.setStyle(
         TableStyle(
             [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#172033")),
+                ("BACKGROUND", (0, 0), (-1, 0), DARK_HEADER),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("BACKGROUND", (0, 1), (-1, 1), colors.HexColor("#EEF6FF")),
-                ("TEXTCOLOR", (0, 1), (-1, 1), colors.HexColor("#111827")),
+                ("BACKGROUND", (0, 1), (-1, 1), METRIC_ROW),
+                ("TEXTCOLOR", (0, 1), (-1, 1), TEXT_DARK),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTNAME", (0, 1), (-1, 1), "Helvetica-Bold"),
                 ("FONTSIZE", (0, 0), (-1, -1), 11),
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-                ("GRID", (0, 0), (-1, -1), 0.25, colors.HexColor("#D6DAE2")),
+                ("GRID", (0, 0), (-1, -1), 0.25, GRID_LINE),
                 ("TOPPADDING", (0, 0), (-1, -1), 9),
                 ("BOTTOMPADDING", (0, 0), (-1, -1), 9),
             ]
@@ -165,15 +204,15 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
     if holdings:
         holdings_data = [
             [
-                _para("Share Code", cell_style),
-                _para("Total Invested", right_style),
-                _para("Total Units", right_style),
-                _para("Avg Price", right_style),
-                _para("Market Price", right_style),
-                _para("Current Value", right_style),
-                _para("Earn / Loss", right_style),
-                _para("Return %", right_style),
-                _para("Txns", right_style),
+                _header_para("Share Code", header_left_style),
+                _header_para("Total Invested", header_right_style),
+                _header_para("Total Units", header_right_style),
+                _header_para("Avg Price", header_right_style),
+                _header_para("Market Price", header_right_style),
+                _header_para("Current Value", header_right_style),
+                _header_para("Earn / Loss", header_right_style),
+                _header_para("Return %", header_right_style),
+                _header_para("Txns", header_right_style),
             ]
         ]
         for row in holdings:
@@ -200,11 +239,11 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
     if records:
         records_data = [
             [
-                _para("Date", cell_style),
-                _para("Share Code", cell_style),
-                _para("Investment Amount", right_style),
-                _para("Total Purchase Unit", right_style),
-                _para("Average Price", right_style),
+                _header_para("Date", header_left_style),
+                _header_para("Share Code", header_left_style),
+                _header_para("Investment Amount", header_right_style),
+                _header_para("Total Purchase Unit", header_right_style),
+                _header_para("Average Price", header_right_style),
             ]
         ]
         for row in records:
@@ -217,7 +256,7 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
                     _para(_money(row.get("average_price")), right_style),
                 ]
             )
-        story.append(_make_table(records_data, [35 * mm, 35 * mm, 50 * mm, 50 * mm, 45 * mm], colors.HexColor("#243B53")))
+        story.append(_make_table(records_data, [35 * mm, 35 * mm, 50 * mm, 50 * mm, 45 * mm], BLUE_HEADER))
     else:
         story.append(Paragraph("No purchase records yet.", subtitle_style))
 
