@@ -1475,6 +1475,215 @@
       }
     }
 
+
+    /* v19 compact market board and per-column filters */
+    .market-panel {
+      min-width: 0;
+    }
+
+    .market-mini-stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .market-mini-stats span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .market-mini-stats strong {
+      color: var(--text);
+    }
+
+    .market-board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px;
+      max-height: none;
+      overflow: visible;
+      padding-right: 0;
+    }
+
+    .market-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 10px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 15px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.035);
+      min-height: 108px;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+
+    .market-row:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96,165,250,.28);
+      background: rgba(96,165,250,.06);
+    }
+
+    .market-identity {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .market-code {
+      font-size: 16px;
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .market-symbol {
+      color: var(--muted);
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .market-status-badge {
+      justify-self: end;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .market-detail {
+      display: grid;
+      gap: 3px;
+    }
+
+    .market-label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .market-price,
+    .market-detail strong {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0;
+      line-height: 1.2;
+    }
+
+    .market-native-line,
+    .market-fx-line {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.35;
+      grid-column: 1 / -1;
+    }
+
+    .column-filter-row th {
+      position: sticky;
+      top: 42px;
+      z-index: 2;
+      background: rgba(15, 29, 49, 0.98);
+      padding: 8px;
+    }
+
+    .column-filter {
+      width: 100%;
+      min-height: 34px;
+      height: 34px;
+      border-radius: 10px;
+      padding: 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .column-filter::placeholder {
+      color: var(--muted);
+    }
+
+    .mini-filter-button {
+      min-height: 34px;
+      height: 34px;
+      border-radius: 10px;
+      padding: 0 10px;
+      font-size: 12px;
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .table-wrap thead tr:first-child th {
+      top: 0;
+    }
+
+    [data-theme="light"] .market-mini-stats span,
+    [data-theme="light"] .market-row {
+      background: rgba(255,255,255,.78);
+      border-color: rgba(15,23,42,.10);
+    }
+
+    [data-theme="light"] .market-row:hover {
+      background: rgba(37,99,235,.055);
+      border-color: rgba(37,99,235,.20);
+    }
+
+    [data-theme="light"] .column-filter-row th {
+      background: rgba(232, 240, 252, 0.98);
+    }
+
+    [data-theme="light"] .column-filter,
+    [data-theme="light"] .mini-filter-button {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: rgba(15,23,42,.14);
+    }
+
+
+    @media (min-width: 1181px) {
+      .layout-2 {
+        grid-template-columns: minmax(320px, .8fr) minmax(720px, 2.2fr);
+      }
+    }
+
+    .market-row {
+      min-height: 86px;
+      padding: 10px 11px;
+    }
+
+    .market-board {
+      grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+    }
+
+    .market-price,
+    .market-detail strong {
+      font-size: 14px;
+    }
+
+    .market-code {
+      font-size: 15px;
+    }
+
+
+    @media (max-width: 1180px) {
+      .market-board {
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      }
+    }
+
+
   </style>
 </head>
 <body>
@@ -1583,32 +1792,25 @@
         </div>
       </div>
 
-      <div class="panel">
+      <div class="panel market-panel">
         <div class="section-body">
-          <div class="section-header">
+          <div class="section-header market-section-header">
             <div>
               <h2>Live Market Dashboard</h2>
-              <p>Trading-board style view for your watchlist, converted prices, native currency, and quote status.</p>
+              <p>Compact market board view. Prices use the same size and style for easier scanning.</p>
             </div>
             <div class="market-header-actions">
               <span class="chip" id="marketLoadedText">Loading quotes</span>
               <span class="chip" id="marketRefreshText">Refreshing...</span>
             </div>
           </div>
-          <div class="market-command">
-            <div class="market-command-card">
-              <span>Total Symbols</span>
-              <strong id="marketTotalSymbols">-</strong>
-            </div>
-            <div class="market-command-card">
-              <span>Loaded Quotes</span>
-              <strong id="marketUsdSymbols">-</strong>
-            </div>
-            <div class="market-command-card">
-              <span>FX Converted</span>
-              <strong id="marketFxSymbols">-</strong>
-            </div>
+
+          <div class="market-mini-stats">
+            <span>Total: <strong id="marketTotalSymbols">-</strong></span>
+            <span>Loaded: <strong id="marketUsdSymbols">-</strong></span>
+            <span>FX: <strong id="marketFxSymbols">-</strong></span>
           </div>
+
           <div class="market-board" id="marketGrid"></div>
         </div>
       </div>
@@ -1803,6 +2005,20 @@
                 <th class="sortable" data-summary-sort="return_percent" data-summary-col="return_percent">Return %</th>
                 <th class="sortable" data-summary-sort="transaction_count" data-summary-col="transaction_count">Txns</th>
               </tr>
+              <tr class="column-filter-row">
+                <th data-summary-col="share_code"><select id="summaryColumnShareFilter" class="column-filter"><option value="">All</option></select></th>
+                <th data-summary-col="total_buy_amount"><input id="summaryMinBuyFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
+                <th data-summary-col="total_sell_amount"><input id="summaryMinSellFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
+                <th data-summary-col="remaining_units"><select id="summaryHoldingFilter" class="column-filter"><option value="">All</option><option value="OPEN">Open</option><option value="CLOSED">Closed</option></select></th>
+                <th data-summary-col="average_price"><input id="summaryMinAvgFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
+                <th data-summary-col="current_price"><input id="summaryMinPriceFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
+                <th data-summary-col="market_value"><input id="summaryMinValueFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
+                <th data-summary-col="realized_return"><select id="summaryRealizedFilter" class="column-filter"><option value="">All</option><option value="PROFIT">Profit</option><option value="LOSS">Loss</option></select></th>
+                <th data-summary-col="unrealized_return"><select id="summaryUnrealizedFilter" class="column-filter"><option value="">All</option><option value="PROFIT">Profit</option><option value="LOSS">Loss</option></select></th>
+                <th data-summary-col="total_return"><select id="summaryProfitFilter" class="column-filter"><option value="">All</option><option value="PROFIT">Profit</option><option value="LOSS">Loss</option></select></th>
+                <th data-summary-col="return_percent"><input id="summaryMinReturnPctFilter" class="column-filter" type="number" step="0.01" placeholder="Min %" /></th>
+                <th data-summary-col="transaction_count"><input id="summaryMinTxFilter" class="column-filter" type="number" step="1" placeholder="Min" /></th>
+              </tr>
             </thead>
             <tbody id="summaryBody"></tbody>
           </table>
@@ -1836,6 +2052,15 @@
                 <th class="sortable" data-record-sort="purchase_units" data-record-col="purchase_units">Share Unit</th>
                 <th class="sortable" data-record-sort="average_price" data-record-col="average_price">Price / Share</th>
                 <th data-record-col="action">Action</th>
+              </tr>
+              <tr class="column-filter-row">
+                <th data-record-col="purchase_date"><input id="recordColumnDateFilter" class="column-filter" type="date" /></th>
+                <th data-record-col="transaction_type"><select id="recordColumnTypeFilter" class="column-filter"><option value="">All</option><option value="BUY">BUY</option><option value="SELL">SELL</option></select></th>
+                <th data-record-col="share_code"><select id="recordColumnShareFilter" class="column-filter"><option value="">All</option></select></th>
+                <th data-record-col="investment_amount"><input id="recordMinAmountFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
+                <th data-record-col="purchase_units"><input id="recordMinUnitFilter" class="column-filter" type="number" step="0.0001" placeholder="Min" /></th>
+                <th data-record-col="average_price"><input id="recordMinPriceFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
+                <th data-record-col="action"><button id="resetColumnFiltersBtn" class="mini-filter-button" type="button">Clear</button></th>
               </tr>
             </thead>
             <tbody id="recordsBody"></tbody>
@@ -1887,6 +2112,34 @@
     const marketTotalSymbols = document.getElementById("marketTotalSymbols");
     const marketUsdSymbols = document.getElementById("marketUsdSymbols");
     const marketFxSymbols = document.getElementById("marketFxSymbols");
+
+    const summaryColumnShareFilter = document.getElementById("summaryColumnShareFilter");
+    const summaryMinBuyFilter = document.getElementById("summaryMinBuyFilter");
+    const summaryMinSellFilter = document.getElementById("summaryMinSellFilter");
+    const summaryHoldingFilter = document.getElementById("summaryHoldingFilter");
+    const summaryMinAvgFilter = document.getElementById("summaryMinAvgFilter");
+    const summaryMinPriceFilter = document.getElementById("summaryMinPriceFilter");
+    const summaryMinValueFilter = document.getElementById("summaryMinValueFilter");
+    const summaryRealizedFilter = document.getElementById("summaryRealizedFilter");
+    const summaryUnrealizedFilter = document.getElementById("summaryUnrealizedFilter");
+    const summaryProfitFilter = document.getElementById("summaryProfitFilter");
+    const summaryMinReturnPctFilter = document.getElementById("summaryMinReturnPctFilter");
+    const summaryMinTxFilter = document.getElementById("summaryMinTxFilter");
+    const recordColumnDateFilter = document.getElementById("recordColumnDateFilter");
+    const recordColumnTypeFilter = document.getElementById("recordColumnTypeFilter");
+    const recordColumnShareFilter = document.getElementById("recordColumnShareFilter");
+    const recordMinAmountFilter = document.getElementById("recordMinAmountFilter");
+    const recordMinUnitFilter = document.getElementById("recordMinUnitFilter");
+    const recordMinPriceFilter = document.getElementById("recordMinPriceFilter");
+    const resetColumnFiltersBtn = document.getElementById("resetColumnFiltersBtn");
+
+    const columnFilterInputs = [
+      summaryColumnShareFilter, summaryMinBuyFilter, summaryMinSellFilter, summaryHoldingFilter,
+      summaryMinAvgFilter, summaryMinPriceFilter, summaryMinValueFilter, summaryRealizedFilter,
+      summaryUnrealizedFilter, summaryProfitFilter, summaryMinReturnPctFilter, summaryMinTxFilter,
+      recordColumnDateFilter, recordColumnTypeFilter, recordColumnShareFilter, recordMinAmountFilter,
+      recordMinUnitFilter, recordMinPriceFilter
+    ].filter(Boolean);
 
     const REFRESH_INTERVAL_MS = 120000;
     const PORTFOLIO_CURRENCY = "{{ portfolio_currency }}";
@@ -2145,9 +2398,9 @@
       const nativeText = q.converted
         ? fmtCurrency(q.native_price, q.native_currency)
         : fmtCurrency(q.price, q.currency || PORTFOLIO_CURRENCY);
-      const fxText = q.converted ? fmtFxRate(q.fx_rate) : "1";
+      const fxText = q.converted ? `${q.native_currency}/${PORTFOLIO_CURRENCY} ${fmtFxRate(q.fx_rate)}` : "No FX";
       const statusText = isError ? "Issue" : (q.cached ? "Cached" : "Live");
-      const detailText = q.error || (q.converted ? `Converted from ${q.native_currency}` : "Native market currency");
+      const detailText = q.error || (q.converted ? `Native ${nativeText}` : `Native ${q.currency || PORTFOLIO_CURRENCY}`);
 
       return `
         <div class="market-row ${isError ? "quote-error" : "quote-live"}">
@@ -2155,25 +2408,20 @@
             <span class="market-code">${q.share_code}</span>
             <span class="market-symbol">${q.market_symbol || "-"}</span>
           </div>
-
-          <div class="market-price-main">
-            <span class="market-label">Market Price</span>
-            <span class="market-price">${priceLabel}</span>
-          </div>
-
-          <div class="market-detail">
-            <span class="market-label">Native Price</span>
-            <strong>${nativeText}</strong>
-            <span>${detailText}</span>
-          </div>
-
-          <div class="market-detail">
-            <span class="market-label">FX</span>
-            <strong>${q.converted ? fxText : "No conversion"}</strong>
-            <span>${q.converted ? `${q.native_currency}/${PORTFOLIO_CURRENCY}` : q.currency || PORTFOLIO_CURRENCY}</span>
-          </div>
-
           <div class="market-status-badge ${isError ? "issue" : "live"}">${statusText}</div>
+
+          <div class="market-detail">
+            <span class="market-label">Market Price</span>
+            <strong>${priceLabel}</strong>
+          </div>
+
+          <div class="market-detail">
+            <span class="market-label">Currency</span>
+            <strong>${mainCurrency}</strong>
+          </div>
+
+          <div class="market-native-line">${detailText}</div>
+          <div class="market-fx-line">${fxText}</div>
         </div>
       `;
     }
@@ -2244,6 +2492,79 @@
     function filteredRecordsByForm() {
       const filters = currentFilters();
       return allRecords.filter(row => recordMatchesFilters(row, filters));
+    }
+
+
+    function getNumberFilterValue(input) {
+      if (!input || input.value === "") return null;
+      const value = Number(input.value);
+      return Number.isNaN(value) ? null : value;
+    }
+
+    function isProfitLossMatch(value, mode) {
+      if (!mode) return true;
+      const numeric = Number(value || 0);
+      if (mode === "PROFIT") return numeric >= 0;
+      if (mode === "LOSS") return numeric < 0;
+      return true;
+    }
+
+    function summaryColumnMatches(row) {
+      const share = summaryColumnShareFilter?.value.trim().toUpperCase() || "";
+      const holding = summaryHoldingFilter?.value.trim().toUpperCase() || "";
+      const realizedMode = summaryRealizedFilter?.value.trim().toUpperCase() || "";
+      const unrealizedMode = summaryUnrealizedFilter?.value.trim().toUpperCase() || "";
+      const profitMode = summaryProfitFilter?.value.trim().toUpperCase() || "";
+
+      if (share && String(row.share_code || "").toUpperCase() !== share) return false;
+      if (holding === "OPEN" && Number(row.remaining_units || 0) <= 0) return false;
+      if (holding === "CLOSED" && Number(row.remaining_units || 0) > 0) return false;
+      if (!isProfitLossMatch(row.realized_return, realizedMode)) return false;
+      if (!isProfitLossMatch(row.unrealized_return, unrealizedMode)) return false;
+      if (!isProfitLossMatch(row.total_return, profitMode)) return false;
+
+      const numberChecks = [
+        [summaryMinBuyFilter, row.total_buy_amount],
+        [summaryMinSellFilter, row.total_sell_amount],
+        [summaryMinAvgFilter, row.average_price],
+        [summaryMinPriceFilter, row.current_price],
+        [summaryMinValueFilter, row.market_value],
+        [summaryMinReturnPctFilter, row.return_percent],
+        [summaryMinTxFilter, row.transaction_count]
+      ];
+
+      return numberChecks.every(([input, value]) => {
+        const min = getNumberFilterValue(input);
+        return min === null || Number(value || 0) >= min;
+      });
+    }
+
+    function recordColumnMatches(row) {
+      const date = recordColumnDateFilter?.value || "";
+      const type = recordColumnTypeFilter?.value.trim().toUpperCase() || "";
+      const share = recordColumnShareFilter?.value.trim().toUpperCase() || "";
+
+      if (date && String(row.purchase_date || "") !== date) return false;
+      if (type && String(row.transaction_type || "BUY").toUpperCase() !== type) return false;
+      if (share && String(row.share_code || "").toUpperCase() !== share) return false;
+
+      const numberChecks = [
+        [recordMinAmountFilter, row.investment_amount],
+        [recordMinUnitFilter, row.purchase_units],
+        [recordMinPriceFilter, row.average_price]
+      ];
+
+      return numberChecks.every(([input, value]) => {
+        const min = getNumberFilterValue(input);
+        return min === null || Number(value || 0) >= min;
+      });
+    }
+
+    function resetColumnFilters() {
+      columnFilterInputs.forEach(input => {
+        if (input) input.value = "";
+      });
+      renderDashboardData();
     }
 
     function quoteByShareCode() {
@@ -2399,6 +2720,8 @@
 
     function updateShareFilterOptions() {
       const current = filterShare.value;
+      const currentSummaryColumn = summaryColumnShareFilter?.value || "";
+      const currentRecordColumn = recordColumnShareFilter?.value || "";
       const codes = new Set();
 
       document.querySelectorAll("#shareCode option").forEach(option => {
@@ -2416,8 +2739,20 @@
       }
 
       const sorted = Array.from(codes).sort();
-      filterShare.innerHTML = `<option value="">All Shares</option>` + sorted.map(code => `<option value="${code}">${code}</option>`).join("");
+      const options = `<option value="">All Shares</option>` + sorted.map(code => `<option value="${code}">${code}</option>`).join("");
+
+      filterShare.innerHTML = options;
       filterShare.value = sorted.includes(current) ? current : "";
+
+      if (summaryColumnShareFilter) {
+        summaryColumnShareFilter.innerHTML = options;
+        summaryColumnShareFilter.value = sorted.includes(currentSummaryColumn) ? currentSummaryColumn : "";
+      }
+
+      if (recordColumnShareFilter) {
+        recordColumnShareFilter.innerHTML = options;
+        recordColumnShareFilter.value = sorted.includes(currentRecordColumn) ? currentRecordColumn : "";
+      }
     }
 
     function updateFilterResult(records, rows) {
@@ -2632,12 +2967,23 @@
 
     function renderDashboardData() {
       const filters = currentFilters();
-      const baseRecords = filteredRecordsByForm();
-      let rows = calculateSummaryRowsFromRecords(baseRecords).filter(row => rowMatchesStatus(row, filters.status));
-      const visibleShareCodes = new Set(rows.map(row => String(row.share_code || "").toUpperCase()));
-      const records = filters.status
-        ? baseRecords.filter(row => visibleShareCodes.has(String(row.share_code || "").toUpperCase()))
-        : baseRecords;
+      const smartFilteredRecords = filteredRecordsByForm();
+
+      let rows = calculateSummaryRowsFromRecords(smartFilteredRecords)
+        .filter(row => rowMatchesStatus(row, filters.status))
+        .filter(summaryColumnMatches);
+
+      const statusShareCodes = new Set(
+        calculateSummaryRowsFromRecords(smartFilteredRecords)
+          .filter(row => rowMatchesStatus(row, filters.status))
+          .map(row => String(row.share_code || "").toUpperCase())
+      );
+
+      let records = filters.status
+        ? smartFilteredRecords.filter(row => statusShareCodes.has(String(row.share_code || "").toUpperCase()))
+        : smartFilteredRecords;
+
+      records = records.filter(recordColumnMatches);
 
       rows = sortRows(rows, summarySort);
       const sortedRecords = sortRows(records, recordSort);
@@ -2770,6 +3116,19 @@
         renderDashboardData();
       });
     });
+
+    columnFilterInputs.forEach(el => {
+      el.addEventListener("input", renderDashboardData);
+      el.addEventListener("change", renderDashboardData);
+      el.addEventListener("click", event => event.stopPropagation());
+    });
+
+    if (resetColumnFiltersBtn) {
+      resetColumnFiltersBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        resetColumnFilters();
+      });
+    }
 
     resetFilterBtn.addEventListener("click", () => {
       filterSearch.value = "";
