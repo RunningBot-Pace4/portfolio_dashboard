@@ -130,3 +130,9 @@ marketsharelive-portfolio-report.pdf
 ```
 
 The PDF includes portfolio metrics, summary by share code, and purchase records.
+
+## v12 UI Theme Fix
+
+- Fixed light mode live badge text visibility.
+- Improved light mode contrast for market cards, labels, badges, and action buttons.
+- Live and summary data still auto-refresh every 2 minutes.

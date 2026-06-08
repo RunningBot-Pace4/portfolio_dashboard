@@ -6,6 +6,7 @@
   <title>Market Share Live Portfolio</title>
   <style>
     :root {
+      color-scheme: dark;
       --bg: #07111f;
       --bg-soft: #0b1729;
       --panel: rgba(13, 26, 45, 0.76);
@@ -32,6 +33,7 @@
     }
 
     [data-theme="light"] {
+      color-scheme: light;
       --bg: #eef4ff;
       --bg-soft: #f8fbff;
       --panel: rgba(255, 255, 255, 0.82);
@@ -391,6 +393,15 @@
       border: 1px solid rgba(251, 113, 133, 0.22);
     }
 
+    .badge::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: currentColor;
+      opacity: 0.85;
+    }
+
     .quote-symbol {
       color: var(--muted);
       font-size: 13px;
@@ -560,6 +571,55 @@
 
     [data-theme="light"] tr:hover td {
       background: rgba(37, 99, 235, 0.045);
+    }
+
+
+    /* Light mode bug fixes: keep badge and secondary text readable. */
+    [data-theme="light"] .badge-live {
+      color: #065f46;
+      background: rgba(16, 185, 129, 0.16);
+      border-color: rgba(5, 150, 105, 0.28);
+      box-shadow: 0 8px 20px rgba(5, 150, 105, 0.08);
+    }
+
+    [data-theme="light"] .badge-error {
+      color: #9f1239;
+      background: rgba(244, 63, 94, 0.12);
+      border-color: rgba(225, 29, 72, 0.26);
+      box-shadow: 0 8px 20px rgba(225, 29, 72, 0.08);
+    }
+
+    [data-theme="light"] .quote-symbol,
+    [data-theme="light"] .quote-status,
+    [data-theme="light"] .table-toolbar .eyebrow,
+    [data-theme="light"] .field label,
+    [data-theme="light"] .input-note,
+    [data-theme="light"] .footer-note {
+      color: #475569;
+    }
+
+    [data-theme="light"] .quote-price,
+    [data-theme="light"] .quote-code,
+    [data-theme="light"] .metric-value,
+    [data-theme="light"] .section-header h2 {
+      color: #0f172a;
+    }
+
+    [data-theme="light"] .btn-secondary {
+      background: linear-gradient(135deg, #475569, #64748b);
+      color: #ffffff;
+    }
+
+    [data-theme="light"] .btn-danger {
+      background: linear-gradient(135deg, #e11d48, #f43f5e);
+      color: #ffffff;
+    }
+
+    [data-theme="light"] .small-actions button,
+    [data-theme="light"] #exportPdfBtn,
+    [data-theme="light"] #saveBtn,
+    [data-theme="light"] #cancelBtn {
+      color: #ffffff;
     }
 
     @media (max-width: 1180px) {
