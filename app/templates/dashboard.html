@@ -643,7 +643,7 @@
   <div class="container">
     <section class="hero">
       <div class="hero-top">
-        <div class="pill"><span class="pill-dot"></span> Live Portfolio Tracking • Auto refresh every 2 minutes</div>
+        <div class="pill"><span class="pill-dot"></span> Live Portfolio Tracking</div>
         <button id="themeToggleBtn" class="theme-toggle" type="button">☀️ Light Mode</button>
       </div>
       <h1>Market Share Live Portfolio</h1>
@@ -728,7 +728,7 @@
             </div>
           </form>
 
-          <div class="status-bar" id="statusText">Ready. Live market data refreshes every 2 minutes.</div>
+          <div class="status-bar" id="statusText">Ready.</div>
         </div>
       </div>
 
@@ -739,7 +739,7 @@
               <h2>Live Market Dashboard</h2>
               <p>Beautiful live watchlist for all your tracked share codes.</p>
             </div>
-            <span class="chip" id="marketRefreshText">Auto refresh: 2 min</span>
+            <span class="chip" id="marketRefreshText">Refreshing...</span>
           </div>
           <div class="market-grid" id="marketGrid"></div>
         </div>
@@ -963,7 +963,7 @@
       });
 
       const now = new Date();
-      marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • auto refresh every 2 min`;
+      marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
 
     async function loadSummary() {
