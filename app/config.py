@@ -21,9 +21,9 @@ BASIC_AUTH_USERNAME = os.getenv("BASIC_AUTH_USERNAME", "").strip()
 BASIC_AUTH_PASSWORD = os.getenv("BASIC_AUTH_PASSWORD", "").strip()
 
 try:
-    PRICE_CACHE_SECONDS = int(os.getenv("PRICE_CACHE_SECONDS", "300"))
+    PRICE_CACHE_SECONDS = int(os.getenv("PRICE_CACHE_SECONDS", "120"))
 except ValueError:
-    PRICE_CACHE_SECONDS = 300
+    PRICE_CACHE_SECONDS = 120
 
 
 def auth_is_enabled() -> bool:

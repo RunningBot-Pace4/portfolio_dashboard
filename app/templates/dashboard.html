@@ -21,9 +21,37 @@
       --negative: #fb7185;
       --warning: #fbbf24;
       --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      --body-bg:
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 26%),
+        radial-gradient(circle at top right, rgba(192, 132, 252, 0.20), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(110, 231, 183, 0.16), transparent 20%),
+        linear-gradient(180deg, #08111f 0%, #091423 30%, #07111f 100%);
       --radius: 22px;
       --radius-sm: 16px;
       --glass: blur(20px);
+    }
+
+    [data-theme="light"] {
+      --bg: #eef4ff;
+      --bg-soft: #f8fbff;
+      --panel: rgba(255, 255, 255, 0.82);
+      --panel-2: rgba(255, 255, 255, 0.94);
+      --border: rgba(15, 23, 42, 0.12);
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #059669;
+      --accent-2: #2563eb;
+      --accent-3: #7c3aed;
+      --danger: #e11d48;
+      --positive: #047857;
+      --negative: #be123c;
+      --warning: #b45309;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+      --body-bg:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.13), transparent 28%),
+        radial-gradient(circle at top right, rgba(124, 58, 237, 0.12), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(5, 150, 105, 0.10), transparent 24%),
+        linear-gradient(180deg, #f8fbff 0%, #eef4ff 42%, #e9f1ff 100%);
     }
 
     * { box-sizing: border-box; }
@@ -34,11 +62,7 @@
       margin: 0;
       color: var(--text);
       font-family: Inter, Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 26%),
-        radial-gradient(circle at top right, rgba(192, 132, 252, 0.20), transparent 22%),
-        radial-gradient(circle at bottom left, rgba(110, 231, 183, 0.16), transparent 20%),
-        linear-gradient(180deg, #08111f 0%, #091423 30%, #07111f 100%);
+      background: var(--body-bg);
       min-height: 100vh;
     }
 
@@ -74,6 +98,29 @@
       pointer-events: none;
     }
 
+    .hero-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .theme-toggle {
+      width: auto;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+    }
+
     .pill {
       display: inline-flex;
       align-items: center;
@@ -84,7 +131,7 @@
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.08);
       font-size: 13px;
-      margin-bottom: 16px;
+      margin-bottom: 0;
     }
 
     .pill-dot {
@@ -96,6 +143,8 @@
     }
 
     .hero h1 {
+      position: relative;
+      z-index: 1;
       margin: 0;
       font-size: clamp(28px, 4vw, 42px);
       line-height: 1.08;
@@ -103,6 +152,8 @@
     }
 
     .hero p {
+      position: relative;
+      z-index: 1;
       margin: 12px 0 0;
       max-width: 760px;
       color: #d2def0;
@@ -461,6 +512,56 @@
       font-size: 12px;
     }
 
+
+    [data-theme="light"] .hero p,
+    [data-theme="light"] .metric-sub,
+    [data-theme="light"] .quote-meta,
+    [data-theme="light"] .status-bar {
+      color: #475569;
+    }
+
+    [data-theme="light"] .pill,
+    [data-theme="light"] .theme-toggle,
+    [data-theme="light"] .chip,
+    [data-theme="light"] .btn-ghost {
+      color: #0f172a;
+      background: rgba(255, 255, 255, 0.72);
+      border-color: rgba(15, 23, 42, 0.10);
+    }
+
+    [data-theme="light"] input,
+    [data-theme="light"] select {
+      color: #0f172a;
+      background: rgba(255, 255, 255, 0.82);
+      border-color: rgba(15, 23, 42, 0.12);
+    }
+
+    [data-theme="light"] .status-bar,
+    [data-theme="light"] .quote-card,
+    [data-theme="light"] .table-wrap {
+      background: rgba(255, 255, 255, 0.62);
+      border-color: rgba(15, 23, 42, 0.10);
+    }
+
+    [data-theme="light"] .quote-card {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.62)),
+        rgba(255,255,255,0.55);
+    }
+
+    [data-theme="light"] th {
+      background: rgba(226, 232, 240, 0.96);
+      color: #0f172a;
+    }
+
+    [data-theme="light"] td {
+      color: #0f172a;
+    }
+
+    [data-theme="light"] tr:hover td {
+      background: rgba(37, 99, 235, 0.045);
+    }
+
     @media (max-width: 1180px) {
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .layout-2 { grid-template-columns: 1fr; }
@@ -473,15 +574,20 @@
       .form-grid { grid-template-columns: 1fr; }
       .section-body { padding: 16px; }
       .table-toolbar { flex-direction: column; align-items: flex-start; }
+      .hero-top { align-items: flex-start; }
+      .theme-toggle { width: 100%; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <section class="hero">
-      <div class="pill"><span class="pill-dot"></span> Live Portfolio Tracking • Modern Dashboard</div>
+      <div class="hero-top">
+        <div class="pill"><span class="pill-dot"></span> Live Portfolio Tracking • Auto refresh every 2 minutes</div>
+        <button id="themeToggleBtn" class="theme-toggle" type="button">☀️ Light Mode</button>
+      </div>
       <h1>Market Share Live Portfolio</h1>
-      <p>Track your stock purchases, watch live market prices, and monitor total profit or loss in one exciting dashboard. Built for simple daily use with a cleaner, more premium design.</p>
+      <p>Track your stock purchases, watch live market prices, and monitor total profit or loss in one exciting dashboard. Switch between dark and light mode anytime.</p>
     </section>
 
     <section class="summary-grid">
@@ -562,7 +668,7 @@
             </div>
           </form>
 
-          <div class="status-bar" id="statusText">Ready.</div>
+          <div class="status-bar" id="statusText">Ready. Live market data refreshes every 2 minutes.</div>
         </div>
       </div>
 
@@ -573,7 +679,7 @@
               <h2>Live Market Dashboard</h2>
               <p>Beautiful live watchlist for all your tracked share codes.</p>
             </div>
-            <span class="chip" id="marketRefreshText">Refreshing...</span>
+            <span class="chip" id="marketRefreshText">Auto refresh: 2 min</span>
           </div>
           <div class="market-grid" id="marketGrid"></div>
         </div>
@@ -661,6 +767,8 @@
     const formTitle = document.getElementById("formTitle");
     const marketRefreshText = document.getElementById("marketRefreshText");
     const exportPdfBtn = document.getElementById("exportPdfBtn");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const REFRESH_INTERVAL_MS = 120000;
 
     const money = new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 2,
@@ -670,6 +778,22 @@
     const numberFmt = new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 0,
       maximumFractionDigits: 8
+    });
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      themeToggleBtn.textContent = theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+      themeToggleBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    }
+
+    const savedTheme = localStorage.getItem("marketsharelive-theme") || "dark";
+    applyTheme(savedTheme);
+
+    themeToggleBtn.addEventListener("click", () => {
+      const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      localStorage.setItem("marketsharelive-theme", nextTheme);
+      applyTheme(nextTheme);
     });
 
     function setStatus(message) {
@@ -762,6 +886,7 @@
     }
 
     async function loadMarket() {
+      marketRefreshText.textContent = "Refreshing...";
       const data = await requestJson("/api/market");
       const grid = document.getElementById("marketGrid");
       grid.innerHTML = "";
@@ -778,7 +903,7 @@
       });
 
       const now = new Date();
-      marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • auto refresh every 2 min`;
     }
 
     async function loadSummary() {
@@ -924,7 +1049,7 @@
     setInterval(() => {
       loadMarket().catch(() => {});
       loadSummary().catch(() => {});
-    }, 300000);
+    }, REFRESH_INTERVAL_MS);
   </script>
 </body>
 </html>

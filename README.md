@@ -28,10 +28,12 @@ Add these in Vercel Project Settings → Environment Variables:
 DATABASE_URL=your_neon_connection_string
 BASIC_AUTH_USERNAME=admin
 BASIC_AUTH_PASSWORD=your_private_password
-PRICE_CACHE_SECONDS=300
+PRICE_CACHE_SECONDS=120
 ```
 
 Select Production, Preview, and Development, then redeploy.
+
+`PRICE_CACHE_SECONDS=120` keeps the backend quote cache aligned with the dashboard auto-refresh interval of 2 minutes.
 
 ## Deploy to Vercel
 
