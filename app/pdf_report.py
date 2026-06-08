@@ -19,6 +19,8 @@ TEXT_MUTED = colors.HexColor("#667085")
 GRID_LINE = colors.HexColor("#D6DAE2")
 ALT_ROW = colors.HexColor("#F7F9FC")
 METRIC_ROW = colors.HexColor("#EEF6FF")
+BUY_BG = colors.HexColor("#E8F8F1")
+SELL_BG = colors.HexColor("#FFF1F2")
 
 
 def _money(value: Any) -> str:
@@ -54,11 +56,6 @@ def _para(text: Any, style: ParagraphStyle) -> Paragraph:
 
 
 def _header_para(text: Any, style: ParagraphStyle) -> Paragraph:
-    """White paragraph text for dark PDF table headers.
-
-    Important: ReportLab TableStyle TEXTCOLOR does not override the text color
-    inside Paragraph objects, so header cells need their own white ParagraphStyle.
-    """
     return _para(text, style)
 
 
@@ -70,11 +67,11 @@ def _make_table(data: list[list[Any]], widths: list[float], header_color=DARK_HE
                 ("BACKGROUND", (0, 0), (-1, 0), header_color),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-                ("FONTSIZE", (0, 0), (-1, -1), 8),
-                ("BOTTOMPADDING", (0, 0), (-1, 0), 9),
-                ("TOPPADDING", (0, 0), (-1, 0), 9),
-                ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
-                ("TOPPADDING", (0, 1), (-1, -1), 6),
+                ("FONTSIZE", (0, 0), (-1, -1), 7.5),
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 8),
+                ("TOPPADDING", (0, 0), (-1, 0), 8),
+                ("BOTTOMPADDING", (0, 1), (-1, -1), 5),
+                ("TOPPADDING", (0, 1), (-1, -1), 5),
                 ("BACKGROUND", (0, 1), (-1, -1), ALT_ROW),
                 ("GRID", (0, 0), (-1, -1), 0.25, GRID_LINE),
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
@@ -93,10 +90,10 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
     doc = SimpleDocTemplate(
         buffer,
         pagesize=landscape(A4),
-        rightMargin=12 * mm,
-        leftMargin=12 * mm,
-        topMargin=12 * mm,
-        bottomMargin=12 * mm,
+        rightMargin=9 * mm,
+        leftMargin=9 * mm,
+        topMargin=11 * mm,
+        bottomMargin=10 * mm,
         title="Market Share Live Portfolio Report",
         author="Market Share Live",
     )
@@ -117,7 +114,7 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
         fontSize=9,
         leading=12,
         textColor=TEXT_MUTED,
-        spaceAfter=12,
+        spaceAfter=10,
     )
     h2_style = ParagraphStyle(
         "Heading2Custom",
@@ -126,14 +123,14 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
         fontSize=13,
         leading=16,
         textColor=TEXT_DARK,
-        spaceBefore=10,
-        spaceAfter=8,
+        spaceBefore=9,
+        spaceAfter=7,
     )
     cell_style = ParagraphStyle(
         "Cell",
         parent=styles["Normal"],
-        fontSize=8,
-        leading=10,
+        fontSize=7.5,
+        leading=9,
         textColor=TEXT_DARK,
     )
     right_style = ParagraphStyle(
@@ -141,12 +138,17 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
         parent=cell_style,
         alignment=TA_RIGHT,
     )
+    center_style = ParagraphStyle(
+        "CenterCell",
+        parent=cell_style,
+        alignment=TA_CENTER,
+    )
     header_style = ParagraphStyle(
         "HeaderCell",
         parent=styles["Normal"],
         fontName="Helvetica-Bold",
-        fontSize=8,
-        leading=10,
+        fontSize=7.2,
+        leading=9,
         textColor=colors.white,
         alignment=TA_CENTER,
     )
@@ -170,15 +172,17 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
     ]
 
     metrics_data = [
-        ["Total Invested", "Current Market Value", "Total Earn / Loss", "Portfolio Return"],
+        ["Total Buy Amount", "Current Value", "Realized Earn / Loss", "Unrealized Earn / Loss", "Total Earn / Loss", "Portfolio Return"],
         [
-            _money(portfolio.get("total_invested")),
+            _money(portfolio.get("total_buy_amount")),
             _money(portfolio.get("market_value")),
+            _money(portfolio.get("realized_return")),
+            _money(portfolio.get("unrealized_return")),
             _money(portfolio.get("total_return")),
             _pct(portfolio.get("return_percent")),
         ],
     ]
-    metrics = Table(metrics_data, colWidths=[65 * mm, 65 * mm, 65 * mm, 65 * mm])
+    metrics = Table(metrics_data, colWidths=[43 * mm, 43 * mm, 47 * mm, 48 * mm, 47 * mm, 41 * mm])
     metrics.setStyle(
         TableStyle(
             [
@@ -188,29 +192,32 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
                 ("TEXTCOLOR", (0, 1), (-1, 1), TEXT_DARK),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTNAME", (0, 1), (-1, 1), "Helvetica-Bold"),
-                ("FONTSIZE", (0, 0), (-1, -1), 11),
+                ("FONTSIZE", (0, 0), (-1, -1), 9.5),
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
                 ("GRID", (0, 0), (-1, -1), 0.25, GRID_LINE),
-                ("TOPPADDING", (0, 0), (-1, -1), 9),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 9),
+                ("TOPPADDING", (0, 0), (-1, -1), 8),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
             ]
         )
     )
     story.append(metrics)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 7))
 
     story.append(Paragraph("Summary by Share Code", h2_style))
 
     if holdings:
         holdings_data = [
             [
-                _header_para("Share Code", header_left_style),
-                _header_para("Total Invested", header_right_style),
-                _header_para("Total Units", header_right_style),
-                _header_para("Avg Price", header_right_style),
-                _header_para("Market Price", header_right_style),
+                _header_para("Share", header_left_style),
+                _header_para("Buy Amt", header_right_style),
+                _header_para("Sell Amt", header_right_style),
+                _header_para("Remain Units", header_right_style),
+                _header_para("Avg Cost", header_right_style),
+                _header_para("Market", header_right_style),
                 _header_para("Current Value", header_right_style),
-                _header_para("Earn / Loss", header_right_style),
+                _header_para("Realized", header_right_style),
+                _header_para("Unrealized", header_right_style),
+                _header_para("Total P/L", header_right_style),
                 _header_para("Return %", header_right_style),
                 _header_para("Txns", header_right_style),
             ]
@@ -219,51 +226,63 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
             holdings_data.append(
                 [
                     _para(row.get("share_code"), cell_style),
-                    _para(_money(row.get("total_invested")), right_style),
-                    _para(_number(row.get("total_units")), right_style),
+                    _para(_money(row.get("total_buy_amount")), right_style),
+                    _para(_money(row.get("total_sell_amount")), right_style),
+                    _para(_number(row.get("remaining_units")), right_style),
                     _para(_money(row.get("average_price")), right_style),
                     _para(_money(row.get("current_price")), right_style),
                     _para(_money(row.get("market_value")), right_style),
+                    _para(_money(row.get("realized_return")), right_style),
+                    _para(_money(row.get("unrealized_return")), right_style),
                     _para(_money(row.get("total_return")), right_style),
                     _para(_pct(row.get("return_percent")), right_style),
                     _para(row.get("transaction_count"), right_style),
                 ]
             )
-        story.append(_make_table(holdings_data, [28 * mm, 31 * mm, 30 * mm, 25 * mm, 28 * mm, 31 * mm, 31 * mm, 24 * mm, 17 * mm]))
+        story.append(
+            _make_table(
+                holdings_data,
+                [18 * mm, 24 * mm, 23 * mm, 25 * mm, 21 * mm, 22 * mm, 27 * mm, 24 * mm, 25 * mm, 24 * mm, 20 * mm, 13 * mm],
+            )
+        )
     else:
         story.append(Paragraph("No holdings yet.", subtitle_style))
 
-    story.append(Spacer(1, 8))
-    story.append(Paragraph("Purchase Records", h2_style))
+    story.append(Spacer(1, 7))
+    story.append(Paragraph("Buy / Sell Transaction Records", h2_style))
 
     if records:
         records_data = [
             [
                 _header_para("Date", header_left_style),
+                _header_para("Type", header_left_style),
                 _header_para("Share Code", header_left_style),
-                _header_para("Investment Amount", header_right_style),
-                _header_para("Total Purchase Unit", header_right_style),
-                _header_para("Average Price", header_right_style),
+                _header_para("Amount", header_right_style),
+                _header_para("Share Unit", header_right_style),
+                _header_para("Price / Share", header_right_style),
             ]
         ]
         for row in records:
+            tx_type = row.get("transaction_type", "BUY")
             records_data.append(
                 [
                     _para(row.get("purchase_date"), cell_style),
+                    _para(tx_type, center_style),
                     _para(row.get("share_code"), cell_style),
                     _para(_money(row.get("investment_amount")), right_style),
                     _para(_number(row.get("purchase_units")), right_style),
                     _para(_money(row.get("average_price")), right_style),
                 ]
             )
-        story.append(_make_table(records_data, [35 * mm, 35 * mm, 50 * mm, 50 * mm, 45 * mm], BLUE_HEADER))
+        record_table = _make_table(records_data, [31 * mm, 22 * mm, 31 * mm, 46 * mm, 46 * mm, 44 * mm], BLUE_HEADER)
+        story.append(record_table)
     else:
-        story.append(Paragraph("No purchase records yet.", subtitle_style))
+        story.append(Paragraph("No transaction records yet.", subtitle_style))
 
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 9))
     story.append(
         Paragraph(
-            "Note: Market prices are pulled from the configured live quote provider and may be delayed or unavailable for some symbols. This report is for personal portfolio tracking only.",
+            "Note: Sell profit uses average cost method and does not include broker fees. Market prices may be delayed or unavailable for some symbols. This report is for personal portfolio tracking only.",
             subtitle_style,
         )
     )

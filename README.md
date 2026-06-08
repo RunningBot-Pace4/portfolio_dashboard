@@ -1,6 +1,6 @@
 # Market Share Live Portfolio Dashboard
 
-A small FastAPI + Neon Postgres dashboard for tracking share purchases.
+A small FastAPI + Neon Postgres dashboard for tracking share BUY and SELL transactions.
 
 ## Important Vercel structure
 
@@ -33,6 +33,7 @@ PRICE_CACHE_SECONDS=120
 
 Select Production, Preview, and Development, then redeploy.
 
+`PRICE_CACHE_SECONDS=120` keeps the backend quote cache aligned with the dashboard auto-refresh interval of 2 minutes.
 
 ## Deploy to Vercel
 
@@ -130,7 +131,31 @@ marketsharelive-portfolio-report.pdf
 
 The PDF includes portfolio metrics, summary by share code, and purchase records.
 
-## UI Theme Fix
+## v12 UI Theme Fix
 
 - Fixed light mode live badge text visibility.
 - Improved light mode contrast for market cards, labels, badges, and action buttons.
+- Live and summary data still auto-refresh every 2 minutes.
+
+
+## Buy / Sell transaction support
+
+The dashboard now supports:
+
+```text
+BUY  = Buy Amount / Share Unit = Average Buy Price
+SELL = Sell Amount / Share Unit = Sell Price
+```
+
+Sell profit uses the **average cost method** and does not include broker fees.
+
+Example:
+
+```text
+Bought 2 GOOGL at average cost 169.95
+Sold 1 GOOGL for 500.00
+
+Realized Profit = 500.00 - 169.95
+```
+
+Existing Neon tables are migrated automatically. Old rows are treated as `BUY`.

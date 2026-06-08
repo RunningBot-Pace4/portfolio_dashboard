@@ -23,7 +23,7 @@ from .models import PortfolioRecordIn
 from .pdf_report import build_portfolio_pdf
 
 
-app = FastAPI(title="Market Share Live Portfolio Dashboard", version="1.0.0")
+app = FastAPI(title="Market Share Live Portfolio Dashboard", version="1.1.0")
 security = HTTPBasic(auto_error=False)
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
@@ -53,8 +53,13 @@ def require_auth(credentials: HTTPBasicCredentials | None = Depends(security)) -
 
 def build_summary_payload() -> dict:
     holdings = holdings_summary_rows()
-    total_invested = 0.0
+
+    total_buy_amount = 0.0
+    total_sell_amount = 0.0
+    total_cost_basis = 0.0
     total_market_value = 0.0
+    total_realized_return = 0.0
+    total_unrealized_return = 0.0
 
     for row in holdings:
         quote = fetch_market_price(row["share_code"])
@@ -65,31 +70,54 @@ def build_summary_payload() -> dict:
         row["market_symbol"] = quote.get("market_symbol", row["share_code"])
         row["price_error"] = quote.get("error")
 
+        remaining_units = float(row.get("remaining_units") or row.get("total_units") or 0)
+        cost_basis = float(row.get("cost_basis") or row.get("total_invested") or 0)
+        total_buy = float(row.get("total_buy_amount") or 0)
+        total_sell = float(row.get("total_sell_amount") or 0)
+        realized_return = float(row.get("realized_return") or 0)
+
         if price is not None:
-            market_value = float(row["total_units"]) * float(price)
-            total_return = market_value - float(row["total_invested"])
-            return_percent = (total_return / float(row["total_invested"]) * 100) if float(row["total_invested"]) else 0
+            market_value = remaining_units * float(price)
+            unrealized_return = market_value - cost_basis
         else:
             market_value = None
-            total_return = None
-            return_percent = None
+            unrealized_return = None
+
+        total_return = realized_return + (unrealized_return or 0)
+        return_percent = (total_return / total_buy * 100) if total_buy else 0
 
         row["market_value"] = market_value
+        row["unrealized_return"] = unrealized_return
         row["total_return"] = total_return
         row["return_percent"] = return_percent
 
-        total_invested += float(row["total_invested"])
+        # Backward-compatible aliases.
+        row["total_invested"] = cost_basis
+        row["total_units"] = remaining_units
+
+        total_buy_amount += total_buy
+        total_sell_amount += total_sell
+        total_cost_basis += cost_basis
+        total_realized_return += realized_return
+
         if market_value is not None:
             total_market_value += market_value
+        if unrealized_return is not None:
+            total_unrealized_return += unrealized_return
 
-    total_return = total_market_value - total_invested
-    portfolio_return_percent = (total_return / total_invested * 100) if total_invested else 0
+    total_return = total_realized_return + total_unrealized_return
+    portfolio_return_percent = (total_return / total_buy_amount * 100) if total_buy_amount else 0
 
     return {
         "holdings": holdings,
         "portfolio": {
-            "total_invested": total_invested,
+            "total_buy_amount": total_buy_amount,
+            "total_sell_amount": total_sell_amount,
+            "cost_basis": total_cost_basis,
+            "total_invested": total_cost_basis,
             "market_value": total_market_value,
+            "realized_return": total_realized_return,
+            "unrealized_return": total_unrealized_return,
             "total_return": total_return,
             "return_percent": portfolio_return_percent,
         },
@@ -139,24 +167,33 @@ def api_list_records(_: None = Depends(require_auth)):
 
 @app.post("/api/records", status_code=201)
 def api_create_record(record: PortfolioRecordIn, _: None = Depends(require_auth)):
-    saved = insert_record(
-        purchase_date=record.purchase_date.isoformat(),
-        share_code=record.share_code,
-        investment_amount=record.investment_amount,
-        purchase_units=record.purchase_units,
-    )
+    try:
+        saved = insert_record(
+            purchase_date=record.purchase_date.isoformat(),
+            share_code=record.share_code,
+            transaction_type=record.transaction_type,
+            investment_amount=record.investment_amount,
+            purchase_units=record.purchase_units,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     return {"record": saved}
 
 
 @app.put("/api/records/{record_id}")
 def api_update_record(record_id: int, record: PortfolioRecordIn, _: None = Depends(require_auth)):
-    saved = update_record(
-        record_id=record_id,
-        purchase_date=record.purchase_date.isoformat(),
-        share_code=record.share_code,
-        investment_amount=record.investment_amount,
-        purchase_units=record.purchase_units,
-    )
+    try:
+        saved = update_record(
+            record_id=record_id,
+            purchase_date=record.purchase_date.isoformat(),
+            share_code=record.share_code,
+            transaction_type=record.transaction_type,
+            investment_amount=record.investment_amount,
+            purchase_units=record.purchase_units,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
     if not saved:
         raise HTTPException(status_code=404, detail="Record not found")
     return {"record": saved}
@@ -183,7 +220,6 @@ def api_market(_: None = Depends(require_auth)):
 @app.get("/api/summary")
 def api_summary(_: None = Depends(require_auth)):
     return build_summary_payload()
-
 
 
 @app.get("/api/report.pdf")
