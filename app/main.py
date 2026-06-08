@@ -8,7 +8,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.templating import Jinja2Templates
 
-from .config import BASIC_AUTH_PASSWORD, BASIC_AUTH_USERNAME, DEFAULT_SHARE_CODES, auth_is_enabled
+from .config import BASIC_AUTH_PASSWORD, BASIC_AUTH_USERNAME, DEFAULT_SHARE_CODES, PORTFOLIO_CURRENCY, auth_is_enabled
 from .db import (
     DatabaseNotConfigured,
     delete_record,
@@ -67,6 +67,12 @@ def build_summary_payload() -> dict:
 
         row["current_price"] = price
         row["currency"] = quote.get("currency", "")
+        row["native_price"] = quote.get("native_price")
+        row["native_currency"] = quote.get("native_currency", "")
+        row["fx_rate"] = quote.get("fx_rate")
+        row["fx_symbol"] = quote.get("fx_symbol")
+        row["converted"] = quote.get("converted", False)
+        row["conversion_error"] = quote.get("conversion_error")
         row["market_symbol"] = quote.get("market_symbol", row["share_code"])
         row["price_error"] = quote.get("error")
 
@@ -111,6 +117,7 @@ def build_summary_payload() -> dict:
     return {
         "holdings": holdings,
         "portfolio": {
+            "portfolio_currency": PORTFOLIO_CURRENCY,
             "total_buy_amount": total_buy_amount,
             "total_sell_amount": total_sell_amount,
             "cost_basis": total_cost_basis,
@@ -156,6 +163,7 @@ def dashboard(request: Request, _: None = Depends(require_auth)):
         {
             "request": request,
             "share_codes": DEFAULT_SHARE_CODES,
+            "portfolio_currency": PORTFOLIO_CURRENCY,
         },
     )
 

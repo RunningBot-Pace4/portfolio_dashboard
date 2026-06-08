@@ -50,6 +50,32 @@ def _pct(value: Any) -> str:
         return "-"
 
 
+def _currency_money(value: Any, currency: str | None = None) -> str:
+    amount = _money(value)
+    if amount == "-":
+        return "-"
+    return f"{amount} {currency}".strip() if currency else amount
+
+
+def _fx(value: Any) -> str:
+    if value is None:
+        return "-"
+    try:
+        return f"{float(value):.6f}".rstrip("0").rstrip(".")
+    except (TypeError, ValueError):
+        return "-"
+
+
+
+def _market_price_text(row: dict[str, Any], portfolio_currency: str) -> str:
+    main = _currency_money(row.get("current_price"), portfolio_currency)
+    if not row.get("converted"):
+        return main
+    native = _currency_money(row.get("native_price"), row.get("native_currency"))
+    fx_rate = _fx(row.get("fx_rate"))
+    return f"{main} (Native: {native}, FX: {fx_rate})"
+
+
 def _para(text: Any, style: ParagraphStyle) -> Paragraph:
     safe = "" if text is None else str(text)
     return Paragraph(safe.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"), style)
@@ -164,15 +190,16 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
     )
 
     portfolio = summary.get("portfolio", {})
+    portfolio_currency = str(portfolio.get("portfolio_currency") or "USD")
     holdings = summary.get("holdings", [])
 
     story = [
         Paragraph("Market Share Live Portfolio Report", title_style),
-        Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", subtitle_style),
+        Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} • Portfolio currency: {portfolio_currency}", subtitle_style),
     ]
 
     metrics_data = [
-        ["Total Buy Amount", "Current Value", "Realized Earn / Loss", "Unrealized Earn / Loss", "Total Earn / Loss", "Portfolio Return"],
+        ["Total Buy Amount", f"Current Value ({portfolio_currency})", "Realized Earn / Loss", "Unrealized Earn / Loss", "Total Earn / Loss", "Portfolio Return"],
         [
             _money(portfolio.get("total_buy_amount")),
             _money(portfolio.get("market_value")),
@@ -213,8 +240,8 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
                 _header_para("Sell Amt", header_right_style),
                 _header_para("Remain Units", header_right_style),
                 _header_para("Avg Cost", header_right_style),
-                _header_para("Market", header_right_style),
-                _header_para("Current Value", header_right_style),
+                _header_para(f"Market ({portfolio_currency})", header_right_style),
+                _header_para(f"Current Value ({portfolio_currency})", header_right_style),
                 _header_para("Realized", header_right_style),
                 _header_para("Unrealized", header_right_style),
                 _header_para("Total P/L", header_right_style),
@@ -230,7 +257,7 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
                     _para(_money(row.get("total_sell_amount")), right_style),
                     _para(_number(row.get("remaining_units")), right_style),
                     _para(_money(row.get("average_price")), right_style),
-                    _para(_money(row.get("current_price")), right_style),
+                    _para(_market_price_text(row, portfolio_currency), right_style),
                     _para(_money(row.get("market_value")), right_style),
                     _para(_money(row.get("realized_return")), right_style),
                     _para(_money(row.get("unrealized_return")), right_style),
@@ -282,7 +309,7 @@ def build_portfolio_pdf(summary: dict[str, Any], records: list[dict[str, Any]]) 
     story.append(Spacer(1, 9))
     story.append(
         Paragraph(
-            "Note: Sell profit uses average cost method and does not include broker fees. Market prices may be delayed or unavailable for some symbols. This report is for personal portfolio tracking only.",
+            f"Note: Sell profit uses average cost method and does not include broker fees. Non-{portfolio_currency} market prices are converted to {portfolio_currency} using the quote provider FX rate. Market prices may be delayed or unavailable for some symbols. This report is for personal portfolio tracking only.",
             subtitle_style,
         )
     )

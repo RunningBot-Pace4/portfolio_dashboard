@@ -29,11 +29,14 @@ DATABASE_URL=your_neon_connection_string
 BASIC_AUTH_USERNAME=admin
 BASIC_AUTH_PASSWORD=your_private_password
 PRICE_CACHE_SECONDS=120
+PORTFOLIO_CURRENCY=USD
 ```
 
 Select Production, Preview, and Development, then redeploy.
 
 `PRICE_CACHE_SECONDS=120` keeps the backend quote cache aligned with the dashboard auto-refresh interval of 2 minutes.
+
+`PORTFOLIO_CURRENCY=USD` means all portfolio summary, profit/loss, and charts are calculated in USD. Non-USD market quotes such as `TLX.AX` in AUD are converted to USD using the same market-data provider FX quote.
 
 ## Deploy to Vercel
 
@@ -105,7 +108,7 @@ SGX:D05
 KLSE:MAYBANK
 ```
 
-`TLX` is mapped to `TLX.AX` by default. Change `SYMBOL_OVERRIDES` in `app/market_data.py` if needed.
+`TLX` is mapped to `TLX.AX` by default. `TLX.AX` is quoted in AUD, so the app now converts it to `PORTFOLIO_CURRENCY` for summary and profit/loss calculations. Change `SYMBOL_OVERRIDES` in `app/market_data.py` if needed.
 
 ## Clear test data directly in Neon
 
@@ -166,3 +169,11 @@ Existing Neon tables are migrated automatically. Old rows are treated as `BUY`.
 - Dashboard filters for summary and transaction records by share code, transaction type, and date range.
 - Transaction count beside the Buy / Sell Transaction Records title.
 - Portfolio charts: holding allocation, profit/loss by share, and buy vs sell amount.
+
+
+## v16 Currency conversion
+
+- Market quotes that are not in the portfolio currency are converted automatically.
+- Live Market Dashboard shows both converted price and native market price when conversion happens.
+- Summary Dashboard, metrics, charts, and PDF report use the converted portfolio currency value.
+- Default portfolio currency is USD. Change it with `PORTFOLIO_CURRENCY`.

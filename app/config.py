@@ -18,6 +18,7 @@ DEFAULT_SHARE_CODES = [
 ]
 
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
+PORTFOLIO_CURRENCY = os.getenv("PORTFOLIO_CURRENCY", "USD").strip().upper() or "USD"
 BASIC_AUTH_USERNAME = os.getenv("BASIC_AUTH_USERNAME", "").strip()
 BASIC_AUTH_PASSWORD = os.getenv("BASIC_AUTH_PASSWORD", "").strip()
 
