@@ -104,3 +104,27 @@ KLSE:MAYBANK
 ```
 
 `TLX` is mapped to `TLX.AX` by default. Change `SYMBOL_OVERRIDES` in `app/market_data.py` if needed.
+
+## Clear test data directly in Neon
+
+This project does not include a dashboard clear-all button. To clear test data, use Neon SQL Editor and run:
+
+```sql
+TRUNCATE TABLE portfolio_records RESTART IDENTITY;
+```
+
+## Export PDF report
+
+The dashboard now includes:
+
+```text
+Export PDF
+```
+
+This downloads:
+
+```text
+marketsharelive-portfolio-report.pdf
+```
+
+The PDF includes portfolio metrics, summary by share code, and purchase records.

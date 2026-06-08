@@ -622,7 +622,10 @@
               <p>Your detailed transaction list. Edit or delete any record anytime.</p>
             </div>
           </div>
-          <span class="eyebrow">Average price fixed to 2 decimal places</span>
+          <div class="actions">
+            <button id="exportPdfBtn" class="btn-primary" type="button">Export PDF</button>
+            <span class="eyebrow">Average price fixed to 2 decimal places</span>
+          </div>
         </div>
 
         <div class="table-wrap">
@@ -657,6 +660,7 @@
     const statusText = document.getElementById("statusText");
     const formTitle = document.getElementById("formTitle");
     const marketRefreshText = document.getElementById("marketRefreshText");
+    const exportPdfBtn = document.getElementById("exportPdfBtn");
 
     const money = new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 2,
@@ -910,6 +914,10 @@
       ]);
       saveBtn.disabled = false;
     }
+
+    exportPdfBtn.addEventListener("click", () => {
+      window.location.href = "/api/report.pdf";
+    });
 
     resetForm();
     refreshAll().catch(err => setStatus(`Error loading dashboard: ${err.message}`));

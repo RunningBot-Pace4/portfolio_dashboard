@@ -4,7 +4,7 @@ import secrets
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException, Request, status
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.templating import Jinja2Templates
 
@@ -20,6 +20,7 @@ from .db import (
 )
 from .market_data import fetch_market_price
 from .models import PortfolioRecordIn
+from .pdf_report import build_portfolio_pdf
 
 
 app = FastAPI(title="Market Share Live Portfolio Dashboard", version="1.0.0")
@@ -48,6 +49,51 @@ def require_auth(credentials: HTTPBasicCredentials | None = Depends(security)) -
             detail="Invalid username or password",
             headers={"WWW-Authenticate": "Basic"},
         )
+
+
+def build_summary_payload() -> dict:
+    holdings = holdings_summary_rows()
+    total_invested = 0.0
+    total_market_value = 0.0
+
+    for row in holdings:
+        quote = fetch_market_price(row["share_code"])
+        price = quote.get("price")
+
+        row["current_price"] = price
+        row["currency"] = quote.get("currency", "")
+        row["market_symbol"] = quote.get("market_symbol", row["share_code"])
+        row["price_error"] = quote.get("error")
+
+        if price is not None:
+            market_value = float(row["total_units"]) * float(price)
+            total_return = market_value - float(row["total_invested"])
+            return_percent = (total_return / float(row["total_invested"]) * 100) if float(row["total_invested"]) else 0
+        else:
+            market_value = None
+            total_return = None
+            return_percent = None
+
+        row["market_value"] = market_value
+        row["total_return"] = total_return
+        row["return_percent"] = return_percent
+
+        total_invested += float(row["total_invested"])
+        if market_value is not None:
+            total_market_value += market_value
+
+    total_return = total_market_value - total_invested
+    portfolio_return_percent = (total_return / total_invested * 100) if total_invested else 0
+
+    return {
+        "holdings": holdings,
+        "portfolio": {
+            "total_invested": total_invested,
+            "market_value": total_market_value,
+            "total_return": total_return,
+            "return_percent": portfolio_return_percent,
+        },
+    }
 
 
 @app.get("/healthz")
@@ -136,45 +182,29 @@ def api_market(_: None = Depends(require_auth)):
 
 @app.get("/api/summary")
 def api_summary(_: None = Depends(require_auth)):
-    holdings = holdings_summary_rows()
-    total_invested = 0.0
-    total_market_value = 0.0
+    return build_summary_payload()
 
-    for row in holdings:
-        quote = fetch_market_price(row["share_code"])
-        price = quote.get("price")
 
-        row["current_price"] = price
-        row["currency"] = quote.get("currency", "")
-        row["market_symbol"] = quote.get("market_symbol", row["share_code"])
-        row["price_error"] = quote.get("error")
 
-        if price is not None:
-            market_value = float(row["total_units"]) * float(price)
-            total_return = market_value - float(row["total_invested"])
-            return_percent = (total_return / float(row["total_invested"]) * 100) if float(row["total_invested"]) else 0
-        else:
-            market_value = None
-            total_return = None
-            return_percent = None
+@app.get("/api/report.pdf")
+def api_report_pdf(_: None = Depends(require_auth)):
+    summary = build_summary_payload()
+    records = list_records()
+    pdf_bytes = build_portfolio_pdf(summary=summary, records=records)
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": 'attachment; filename="marketsharelive-portfolio-report.pdf"'},
+    )
 
-        row["market_value"] = market_value
-        row["total_return"] = total_return
-        row["return_percent"] = return_percent
 
-        total_invested += float(row["total_invested"])
-        if market_value is not None:
-            total_market_value += market_value
-
-    total_return = total_market_value - total_invested
-    portfolio_return_percent = (total_return / total_invested * 100) if total_invested else 0
-
-    return {
-        "holdings": holdings,
-        "portfolio": {
-            "total_invested": total_invested,
-            "market_value": total_market_value,
-            "total_return": total_return,
-            "return_percent": portfolio_return_percent,
-        },
-    }
+@app.get("/report.pdf")
+def report_pdf(_: None = Depends(require_auth)):
+    summary = build_summary_payload()
+    records = list_records()
+    pdf_bytes = build_portfolio_pdf(summary=summary, records=records)
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": 'attachment; filename="marketsharelive-portfolio-report.pdf"'},
+    )

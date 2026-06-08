@@ -212,6 +212,7 @@ def delete_record(record_id: int) -> bool:
     return result.rowcount > 0
 
 
+
 def holdings_summary_rows() -> list[dict[str, Any]]:
     ensure_schema()
     with get_connection() as conn:
