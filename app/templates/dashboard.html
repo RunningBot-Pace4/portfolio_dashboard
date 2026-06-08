@@ -622,9 +622,212 @@
       color: #ffffff;
     }
 
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      align-items: end;
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .count-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #dce8f8;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      gap: 16px;
+    }
+
+    .chart-card {
+      min-height: 280px;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .chart-title {
+      margin: 0 0 6px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .chart-subtitle {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .donut-wrap {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .donut {
+      width: 160px;
+      height: 160px;
+      border-radius: 999px;
+      background: conic-gradient(#60a5fa 0deg, #60a5fa 360deg);
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .donut::after {
+      content: "";
+      width: 94px;
+      height: 94px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+    }
+
+    .legend {
+      display: grid;
+      gap: 8px;
+      max-height: 168px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .legend-item {
+      display: grid;
+      grid-template-columns: 10px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 64px 1fr 82px;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .bar-track {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #60a5fa, #6ee7b7);
+    }
+
+    .bar-fill.negative {
+      background: linear-gradient(90deg, #fb7185, #f97316);
+    }
+
+    .mini-bars {
+      display: grid;
+      gap: 16px;
+      padding-top: 8px;
+    }
+
+    .mini-bar-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .mini-bar {
+      height: 24px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .mini-bar span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+    }
+
+    .mini-buy { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+    .mini-sell { background: linear-gradient(90deg, #f43f5e, #fb7185); }
+
+    .chart-empty {
+      display: grid;
+      place-items: center;
+      min-height: 170px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+      border: 1px dashed rgba(255,255,255,0.14);
+      border-radius: 16px;
+    }
+
+    [data-theme="light"] .count-pill,
+    [data-theme="light"] .chart-card {
+      color: #0f172a;
+      background: rgba(255,255,255,0.62);
+      border-color: rgba(15, 23, 42, 0.10);
+    }
+
+    [data-theme="light"] .bar-track,
+    [data-theme="light"] .mini-bar {
+      background: rgba(15, 23, 42, 0.08);
+    }
+
+    [data-theme="light"] .donut::after {
+      background: #f8fbff;
+    }
+
+
     @media (max-width: 1180px) {
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .layout-2 { grid-template-columns: 1fr; }
+      .charts-grid { grid-template-columns: 1fr; }
+      .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 760px) {
@@ -632,6 +835,9 @@
       .hero { padding: 22px 18px; border-radius: 24px; }
       .summary-grid { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
+      .filter-grid { grid-template-columns: 1fr; }
+      .donut-wrap { grid-template-columns: 1fr; justify-items: center; }
+      .bar-row { grid-template-columns: 54px 1fr 72px; }
       .section-body { padding: 16px; }
       .table-toolbar { flex-direction: column; align-items: flex-start; }
       .hero-top { align-items: flex-start; }
@@ -796,12 +1002,93 @@
       </div>
     </section>
 
+
+    <section class="panel table-panel">
+      <div class="section-body">
+        <div class="section-header">
+          <div>
+            <h2>Dashboard Filters</h2>
+            <p>Filter the summary, transaction records, and charts by share, type, or date range.</p>
+          </div>
+          <span class="chip" id="filterResultText">All data</span>
+        </div>
+
+        <div class="filter-grid">
+          <div class="field">
+            <label for="filterShare">Share Code</label>
+            <select id="filterShare">
+              <option value="">All Shares</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="filterType">Transaction Type</label>
+            <select id="filterType">
+              <option value="">All Types</option>
+              <option value="BUY">BUY</option>
+              <option value="SELL">SELL</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="filterDateFrom">Date From</label>
+            <input id="filterDateFrom" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="filterDateTo">Date To</label>
+            <input id="filterDateTo" type="date" />
+          </div>
+
+          <div class="field">
+            <label>&nbsp;</label>
+            <div class="filter-actions">
+              <button id="applyFilterBtn" class="btn-primary" type="button">Apply</button>
+              <button id="resetFilterBtn" class="btn-secondary" type="button">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="section-body">
+        <div class="section-header">
+          <div>
+            <h2>Portfolio Charts</h2>
+            <p>Visual view of allocation, profit/loss, and buy/sell activity.</p>
+          </div>
+          <span class="chip">Filtered view</span>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3 class="chart-title">Holding Allocation</h3>
+            <p class="chart-subtitle">By current market value.</p>
+            <div id="allocationChart"></div>
+          </div>
+
+          <div class="chart-card">
+            <h3 class="chart-title">Profit / Loss by Share</h3>
+            <p class="chart-subtitle">Realized plus unrealized P/L.</p>
+            <div id="profitChart"></div>
+          </div>
+
+          <div class="chart-card">
+            <h3 class="chart-title">Buy vs Sell Amount</h3>
+            <p class="chart-subtitle">Based on visible transactions.</p>
+            <div id="buySellChart"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="panel table-panel">
       <div class="section-body">
         <div class="table-toolbar">
           <div>
             <div class="section-header" style="margin-bottom:0; display:block;">
-              <h2>Summary Dashboard of Shares You Bought and Sold</h2>
+              <div class="title-row"><h2>Summary Dashboard of Shares You Bought and Sold</h2><span class="count-pill" id="summaryCountText">0 shares</span></div>
               <p>Average cost method is used for sell profit. Broker fee is not included.</p>
             </div>
           </div>
@@ -837,7 +1124,7 @@
         <div class="table-toolbar">
           <div>
             <div class="section-header" style="margin-bottom:0; display:block;">
-              <h2>Buy / Sell Transaction Records</h2>
+              <div class="title-row"><h2>Buy / Sell Transaction Records</h2><span class="count-pill" id="recordCountText">BUY: 0 • SELL: 0</span></div>
               <p>Your detailed transaction list. Edit or delete any record anytime.</p>
             </div>
           </div>
@@ -887,7 +1174,22 @@
     const marketRefreshText = document.getElementById("marketRefreshText");
     const exportPdfBtn = document.getElementById("exportPdfBtn");
     const themeToggleBtn = document.getElementById("themeToggleBtn");
+
+    const filterShare = document.getElementById("filterShare");
+    const filterType = document.getElementById("filterType");
+    const filterDateFrom = document.getElementById("filterDateFrom");
+    const filterDateTo = document.getElementById("filterDateTo");
+    const applyFilterBtn = document.getElementById("applyFilterBtn");
+    const resetFilterBtn = document.getElementById("resetFilterBtn");
+    const filterResultText = document.getElementById("filterResultText");
+    const summaryCountText = document.getElementById("summaryCountText");
+    const recordCountText = document.getElementById("recordCountText");
+
     const REFRESH_INTERVAL_MS = 120000;
+    const chartColors = ["#60a5fa", "#6ee7b7", "#c084fc", "#fbbf24", "#fb7185", "#38bdf8", "#a3e635", "#f97316", "#818cf8", "#14b8a6", "#f472b6", "#93c5fd"];
+
+    let allSummary = null;
+    let allRecords = [];
 
     const money = new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 2,
@@ -1041,35 +1343,141 @@
       });
 
       const now = new Date();
-      marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
     }
 
-    async function loadSummary() {
-      const data = await requestJson("/api/summary");
+    function currentFilters() {
+      return {
+        share: filterShare.value.trim().toUpperCase(),
+        type: filterType.value.trim().toUpperCase(),
+        from: filterDateFrom.value,
+        to: filterDateTo.value
+      };
+    }
+
+    function hasActiveFilter(filters = currentFilters()) {
+      return Boolean(filters.share || filters.type || filters.from || filters.to);
+    }
+
+    function recordMatchesFilters(row, filters = currentFilters()) {
+      const rowShare = String(row.share_code || "").toUpperCase();
+      const rowType = String(row.transaction_type || "BUY").toUpperCase();
+      const rowDate = String(row.purchase_date || "");
+
+      if (filters.share && rowShare !== filters.share) return false;
+      if (filters.type && rowType !== filters.type) return false;
+      if (filters.from && rowDate < filters.from) return false;
+      if (filters.to && rowDate > filters.to) return false;
+      return true;
+    }
+
+    function filteredRecords() {
+      const filters = currentFilters();
+      return allRecords.filter(row => recordMatchesFilters(row, filters));
+    }
+
+    function filteredSummaryRows(records) {
+      if (!allSummary) return [];
+
+      const filters = currentFilters();
+      if (!hasActiveFilter(filters)) {
+        return allSummary.holdings;
+      }
+
+      const visibleShares = new Set(records.map(row => String(row.share_code || "").toUpperCase()));
+      return allSummary.holdings.filter(row => visibleShares.has(String(row.share_code || "").toUpperCase()));
+    }
+
+    function calculateVisiblePortfolio(rows) {
+      const portfolio = {
+        total_buy_amount: 0,
+        total_sell_amount: 0,
+        market_value: 0,
+        realized_return: 0,
+        unrealized_return: 0,
+        total_return: 0,
+        return_percent: 0
+      };
+
+      rows.forEach(row => {
+        portfolio.total_buy_amount += Number(row.total_buy_amount || 0);
+        portfolio.total_sell_amount += Number(row.total_sell_amount || 0);
+        portfolio.market_value += Number(row.market_value || 0);
+        portfolio.realized_return += Number(row.realized_return || 0);
+        portfolio.unrealized_return += Number(row.unrealized_return || 0);
+        portfolio.total_return += Number(row.total_return || 0);
+      });
+
+      portfolio.return_percent = portfolio.total_buy_amount ? (portfolio.total_return / portfolio.total_buy_amount * 100) : 0;
+      return portfolio;
+    }
+
+    function updateShareFilterOptions() {
+      const current = filterShare.value;
+      const codes = new Set();
+
+      document.querySelectorAll("#shareCode option").forEach(option => {
+        if (option.value) codes.add(option.value.toUpperCase());
+      });
+
+      allRecords.forEach(row => {
+        if (row.share_code) codes.add(String(row.share_code).toUpperCase());
+      });
+
+      if (allSummary) {
+        allSummary.holdings.forEach(row => {
+          if (row.share_code) codes.add(String(row.share_code).toUpperCase());
+        });
+      }
+
+      const sorted = Array.from(codes).sort();
+      filterShare.innerHTML = `<option value="">All Shares</option>` + sorted.map(code => `<option value="${code}">${code}</option>`).join("");
+      filterShare.value = sorted.includes(current) ? current : "";
+    }
+
+    function updateFilterResult(records, rows) {
+      const filters = currentFilters();
+      const parts = [];
+
+      if (filters.share) parts.push(filters.share);
+      if (filters.type) parts.push(filters.type);
+      if (filters.from) parts.push(`From ${filters.from}`);
+      if (filters.to) parts.push(`To ${filters.to}`);
+
+      filterResultText.textContent = parts.length
+        ? `${parts.join(" • ")} — ${rows.length} shares, ${records.length} records`
+        : `All data — ${rows.length} shares, ${records.length} records`;
+    }
+
+    function renderMetrics(portfolio) {
+      document.getElementById("metricBuyAmount").textContent = fmtMoney(portfolio.total_buy_amount);
+      document.getElementById("metricMarketValue").textContent = fmtMoney(portfolio.market_value);
+
+      const metricRealized = document.getElementById("metricRealized");
+      metricRealized.textContent = fmtMoney(portfolio.realized_return);
+      metricRealized.className = `metric-value ${cls(portfolio.realized_return)}`;
+
+      const metricReturn = document.getElementById("metricReturn");
+      metricReturn.textContent = fmtMoney(portfolio.total_return);
+      metricReturn.className = `metric-value ${cls(portfolio.total_return)}`;
+
+      const metricReturnPct = document.getElementById("metricReturnPct");
+      metricReturnPct.textContent = fmtPct(portfolio.return_percent);
+      metricReturnPct.className = `metric-value ${cls(portfolio.return_percent)}`;
+    }
+
+    function renderSummaryRows(rows) {
       const body = document.getElementById("summaryBody");
       body.innerHTML = "";
 
-      document.getElementById("metricBuyAmount").textContent = fmtMoney(data.portfolio.total_buy_amount);
-      document.getElementById("metricMarketValue").textContent = fmtMoney(data.portfolio.market_value);
+      summaryCountText.textContent = `${rows.length} ${rows.length === 1 ? "share" : "shares"}`;
 
-      const metricRealized = document.getElementById("metricRealized");
-      metricRealized.textContent = fmtMoney(data.portfolio.realized_return);
-      metricRealized.className = `metric-value ${cls(data.portfolio.realized_return)}`;
-
-      const metricReturn = document.getElementById("metricReturn");
-      metricReturn.textContent = fmtMoney(data.portfolio.total_return);
-      metricReturn.className = `metric-value ${cls(data.portfolio.total_return)}`;
-
-      const metricReturnPct = document.getElementById("metricReturnPct");
-      metricReturnPct.textContent = fmtPct(data.portfolio.return_percent);
-      metricReturnPct.className = `metric-value ${cls(data.portfolio.return_percent)}`;
-
-      if (!data.holdings.length) {
-        body.innerHTML = `<tr><td colspan="12" class="empty-state">No records yet.</td></tr>`;
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="12" class="empty-state">No matching summary rows.</td></tr>`;
         return;
       }
 
-      data.holdings.forEach(row => {
+      rows.forEach(row => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.share_code}</td>
@@ -1089,17 +1497,20 @@
       });
     }
 
-    async function loadRecords() {
-      const data = await requestJson("/api/records");
+    function renderRecords(records) {
       const body = document.getElementById("recordsBody");
       body.innerHTML = "";
 
-      if (!data.records.length) {
-        body.innerHTML = `<tr><td colspan="7" class="empty-state">No records yet.</td></tr>`;
+      const buyCount = records.filter(row => String(row.transaction_type || "BUY").toUpperCase() === "BUY").length;
+      const sellCount = records.filter(row => String(row.transaction_type || "BUY").toUpperCase() === "SELL").length;
+      recordCountText.textContent = `BUY: ${buyCount} • SELL: ${sellCount} • TOTAL: ${records.length}`;
+
+      if (!records.length) {
+        body.innerHTML = `<tr><td colspan="7" class="empty-state">No matching transaction records.</td></tr>`;
         return;
       }
 
-      data.records.forEach(row => {
+      records.forEach(row => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.purchase_date}</td>
@@ -1120,6 +1531,141 @@
         tr.querySelector("[data-edit]").addEventListener("click", () => editRecord(row));
         tr.querySelector("[data-delete]").addEventListener("click", () => deleteRecord(row.id));
       });
+    }
+
+    function renderAllocationChart(rows) {
+      const el = document.getElementById("allocationChart");
+      const items = rows
+        .map(row => ({ code: row.share_code, value: Math.max(0, Number(row.market_value || 0)) }))
+        .filter(item => item.value > 0)
+        .sort((a, b) => b.value - a.value);
+
+      const total = items.reduce((sum, item) => sum + item.value, 0);
+      if (!items.length || total <= 0) {
+        el.innerHTML = `<div class="chart-empty">No current holding value to chart.</div>`;
+        return;
+      }
+
+      let cursor = 0;
+      const stops = items.map((item, index) => {
+        const start = cursor;
+        const end = cursor + (item.value / total * 360);
+        cursor = end;
+        const color = chartColors[index % chartColors.length];
+        return `${color} ${start.toFixed(2)}deg ${end.toFixed(2)}deg`;
+      }).join(", ");
+
+      const legend = items.map((item, index) => {
+        const color = chartColors[index % chartColors.length];
+        const pct = (item.value / total * 100).toFixed(1);
+        return `
+          <div class="legend-item">
+            <span class="legend-dot" style="background:${color}"></span>
+            <span>${item.code}</span>
+            <span>${pct}%</span>
+          </div>
+        `;
+      }).join("");
+
+      el.innerHTML = `
+        <div class="donut-wrap">
+          <div class="donut" style="background: conic-gradient(${stops})"></div>
+          <div class="legend">${legend}</div>
+        </div>
+      `;
+    }
+
+    function renderProfitChart(rows) {
+      const el = document.getElementById("profitChart");
+      const items = rows
+        .map(row => ({ code: row.share_code, value: Number(row.total_return || 0) }))
+        .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+        .slice(0, 10);
+
+      const maxAbs = Math.max(...items.map(item => Math.abs(item.value)), 0);
+      if (!items.length || maxAbs <= 0) {
+        el.innerHTML = `<div class="chart-empty">No profit/loss data to chart.</div>`;
+        return;
+      }
+
+      el.innerHTML = `
+        <div class="bar-list">
+          ${items.map(item => {
+            const width = Math.max(3, Math.abs(item.value) / maxAbs * 100);
+            const negative = item.value < 0;
+            return `
+              <div class="bar-row">
+                <strong>${item.code}</strong>
+                <div class="bar-track"><div class="bar-fill ${negative ? "negative" : ""}" style="width:${width}%"></div></div>
+                <span class="${cls(item.value)}">${fmtMoney(item.value)}</span>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderBuySellChart(records) {
+      const el = document.getElementById("buySellChart");
+      const buyAmount = records
+        .filter(row => String(row.transaction_type || "BUY").toUpperCase() === "BUY")
+        .reduce((sum, row) => sum + Number(row.investment_amount || 0), 0);
+      const sellAmount = records
+        .filter(row => String(row.transaction_type || "BUY").toUpperCase() === "SELL")
+        .reduce((sum, row) => sum + Number(row.investment_amount || 0), 0);
+      const maxAmount = Math.max(buyAmount, sellAmount);
+
+      if (maxAmount <= 0) {
+        el.innerHTML = `<div class="chart-empty">No buy/sell amount to chart.</div>`;
+        return;
+      }
+
+      const buyWidth = Math.max(3, buyAmount / maxAmount * 100);
+      const sellWidth = Math.max(sellAmount > 0 ? 3 : 0, sellAmount / maxAmount * 100);
+
+      el.innerHTML = `
+        <div class="mini-bars">
+          <div>
+            <div class="mini-bar-label"><strong>BUY Amount</strong><span>${fmtMoney(buyAmount)}</span></div>
+            <div class="mini-bar"><span class="mini-buy" style="width:${buyWidth}%"></span></div>
+          </div>
+          <div>
+            <div class="mini-bar-label"><strong>SELL Amount</strong><span>${fmtMoney(sellAmount)}</span></div>
+            <div class="mini-bar"><span class="mini-sell" style="width:${sellWidth}%"></span></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCharts(rows, records) {
+      renderAllocationChart(rows);
+      renderProfitChart(rows);
+      renderBuySellChart(records);
+    }
+
+    function renderDashboardData() {
+      const records = filteredRecords();
+      const rows = filteredSummaryRows(records);
+      const portfolio = calculateVisiblePortfolio(rows);
+
+      renderMetrics(portfolio);
+      renderSummaryRows(rows);
+      renderRecords(records);
+      renderCharts(rows, records);
+      updateFilterResult(records, rows);
+    }
+
+    async function loadDashboardData() {
+      const [summaryData, recordsData] = await Promise.all([
+        requestJson("/api/summary"),
+        requestJson("/api/records")
+      ]);
+
+      allSummary = summaryData;
+      allRecords = recordsData.records || [];
+
+      updateShareFilterOptions();
+      renderDashboardData();
     }
 
     function editRecord(row) {
@@ -1180,11 +1726,23 @@
 
     cancelBtn.addEventListener("click", resetForm);
 
+    applyFilterBtn.addEventListener("click", renderDashboardData);
+    [filterShare, filterType, filterDateFrom, filterDateTo].forEach(el => {
+      el.addEventListener("change", renderDashboardData);
+    });
+
+    resetFilterBtn.addEventListener("click", () => {
+      filterShare.value = "";
+      filterType.value = "";
+      filterDateFrom.value = "";
+      filterDateTo.value = "";
+      renderDashboardData();
+    });
+
     async function refreshAll() {
       await Promise.all([
         loadMarket(),
-        loadSummary(),
-        loadRecords()
+        loadDashboardData()
       ]);
       saveBtn.disabled = false;
     }
@@ -1197,7 +1755,7 @@
     refreshAll().catch(err => setStatus(`Error loading dashboard: ${err.message}`));
     setInterval(() => {
       loadMarket().catch(() => {});
-      loadSummary().catch(() => {});
+      loadDashboardData().catch(() => {});
     }, REFRESH_INTERVAL_MS);
   </script>
 </body>

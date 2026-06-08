@@ -14,6 +14,7 @@ DEFAULT_SHARE_CODES = [
     "MSFT",
     "AVGO",
     "GLDM",
+    "P",
 ]
 
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()

@@ -159,3 +159,10 @@ Realized Profit = 500.00 - 169.95
 ```
 
 Existing Neon tables are migrated automatically. Old rows are treated as `BUY`.
+
+
+## v15 Features
+
+- Dashboard filters for summary and transaction records by share code, transaction type, and date range.
+- Transaction count beside the Buy / Sell Transaction Records title.
+- Portfolio charts: holding allocation, profit/loss by share, and buy vs sell amount.
