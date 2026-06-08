@@ -1225,6 +1225,256 @@
       .table-wrap { max-height: none; }
     }
 
+  
+    /* v18 redesign: market board + user-selectable table views */
+    .market-grid {
+      display: block;
+    }
+
+    .market-command {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .market-command-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(96,165,250,.14), rgba(110,231,183,.08));
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .market-command-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .market-command-card strong {
+      font-size: 22px;
+      letter-spacing: -.02em;
+    }
+
+    .market-board {
+      display: grid;
+      gap: 10px;
+      max-height: 512px;
+      overflow: auto;
+      padding-right: 3px;
+    }
+
+    .market-row {
+      display: grid;
+      grid-template-columns: minmax(112px, .85fr) minmax(138px, 1.1fr) minmax(150px, 1.15fr) minmax(96px, .75fr) minmax(108px, .72fr);
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.09);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.02)),
+        rgba(255,255,255,.035);
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .market-row:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96,165,250,.30);
+      background:
+        linear-gradient(135deg, rgba(96,165,250,.12), rgba(110,231,183,.05)),
+        rgba(255,255,255,.045);
+    }
+
+    .market-identity {
+      display: grid;
+      gap: 5px;
+    }
+
+    .market-code {
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: .08em;
+    }
+
+    .market-symbol {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .market-price-main,
+    .market-detail {
+      display: grid;
+      gap: 5px;
+    }
+
+    .market-label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .market-price {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1.05;
+    }
+
+    .market-detail strong {
+      font-size: 14px;
+    }
+
+    .market-detail span:last-child {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .market-status-badge {
+      justify-self: end;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 96px;
+      justify-content: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .market-status-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 14px currentColor;
+    }
+
+    .market-status-badge.live {
+      color: #bbf7d0;
+      background: rgba(34,197,94,.13);
+      border: 1px solid rgba(34,197,94,.22);
+    }
+
+    .market-status-badge.issue {
+      color: #fecdd3;
+      background: rgba(244,63,94,.13);
+      border: 1px solid rgba(244,63,94,.22);
+    }
+
+    .view-options {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      display: grid;
+      gap: 16px;
+    }
+
+    .view-sort-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .column-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .column-options details {
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      background: rgba(255,255,255,.035);
+      padding: 12px;
+    }
+
+    .column-options summary {
+      cursor: pointer;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .column-checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 10px;
+    }
+
+    .column-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+      user-select: none;
+    }
+
+    .column-check input {
+      width: 14px;
+      height: 14px;
+      min-height: 14px;
+      padding: 0;
+      accent-color: var(--accent-2);
+    }
+
+    .col-hidden {
+      display: none !important;
+    }
+
+    [data-theme="light"] .market-command-card,
+    [data-theme="light"] .market-row,
+    [data-theme="light"] .column-options details,
+    [data-theme="light"] .column-check {
+      background: rgba(255,255,255,.74);
+      border-color: rgba(15,23,42,.10);
+    }
+
+    [data-theme="light"] .market-row:hover {
+      background: linear-gradient(135deg, rgba(37,99,235,.08), rgba(5,150,105,.05)), rgba(255,255,255,.90);
+      border-color: rgba(37,99,235,.22);
+    }
+
+    [data-theme="light"] .market-status-badge.live {
+      color: #047857;
+      background: rgba(16,185,129,.14);
+      border-color: rgba(5,150,105,.26);
+    }
+
+    [data-theme="light"] .market-status-badge.issue {
+      color: #be123c;
+      background: rgba(244,63,94,.12);
+      border-color: rgba(225,29,72,.24);
+    }
+
+    @media (max-width: 980px) {
+      .market-command,
+      .view-sort-grid,
+      .column-options {
+        grid-template-columns: 1fr;
+      }
+
+      .market-row {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .market-status-badge {
+        justify-self: start;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1338,14 +1588,28 @@
           <div class="section-header">
             <div>
               <h2>Live Market Dashboard</h2>
-              <p>Beautiful live watchlist for all your tracked share codes.</p>
+              <p>Trading-board style view for your watchlist, converted prices, native currency, and quote status.</p>
             </div>
             <div class="market-header-actions">
               <span class="chip" id="marketLoadedText">Loading quotes</span>
               <span class="chip" id="marketRefreshText">Refreshing...</span>
             </div>
           </div>
-          <div class="market-grid" id="marketGrid"></div>
+          <div class="market-command">
+            <div class="market-command-card">
+              <span>Total Symbols</span>
+              <strong id="marketTotalSymbols">-</strong>
+            </div>
+            <div class="market-command-card">
+              <span>Loaded Quotes</span>
+              <strong id="marketUsdSymbols">-</strong>
+            </div>
+            <div class="market-command-card">
+              <span>FX Converted</span>
+              <strong id="marketFxSymbols">-</strong>
+            </div>
+          </div>
+          <div class="market-board" id="marketGrid"></div>
         </div>
       </div>
     </section>
@@ -1412,7 +1676,69 @@
             </div>
           </div>
         </div>
-        <div class="design-note">Tip: click the table headers to sort the visible rows.</div>
+        <div class="design-note">Tip: use the controls below to choose columns and sorting, or click table headers to sort the visible rows.</div>
+
+        <div class="view-options">
+          <div class="view-sort-grid">
+            <div class="field">
+              <label for="summarySortBy">Summary Sort By</label>
+              <select id="summarySortBy">
+                <option value="share_code">Share Code</option>
+                <option value="total_buy_amount">Buy Amount</option>
+                <option value="total_sell_amount">Sell Amount</option>
+                <option value="remaining_units">Remaining Units</option>
+                <option value="average_price">Avg Cost</option>
+                <option value="current_price">Market Price</option>
+                <option value="market_value">Current Value</option>
+                <option value="realized_return">Realized P/L</option>
+                <option value="unrealized_return">Unrealized P/L</option>
+                <option value="total_return">Total P/L</option>
+                <option value="return_percent">Return %</option>
+                <option value="transaction_count">Transactions</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="summarySortDir">Summary Direction</label>
+              <select id="summarySortDir">
+                <option value="asc">Small → Big / A → Z</option>
+                <option value="desc">Big → Small / Z → A</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="recordSortBy">Record Sort By</label>
+              <select id="recordSortBy">
+                <option value="purchase_date">Date</option>
+                <option value="transaction_type">Type</option>
+                <option value="share_code">Share Code</option>
+                <option value="investment_amount">Amount</option>
+                <option value="purchase_units">Share Unit</option>
+                <option value="average_price">Price / Share</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="recordSortDir">Record Direction</label>
+              <select id="recordSortDir">
+                <option value="desc">Newest / Big First</option>
+                <option value="asc">Oldest / Small First</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="column-options">
+            <details open>
+              <summary>Choose Summary Columns</summary>
+              <div class="column-checks" id="summaryColumnPicker"></div>
+            </details>
+
+            <details>
+              <summary>Choose Transaction Columns</summary>
+              <div class="column-checks" id="recordColumnPicker"></div>
+            </details>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1464,18 +1790,18 @@
           <table>
             <thead>
               <tr>
-                <th class="sortable" data-summary-sort="share_code">Share Code</th>
-                <th class="sortable" data-summary-sort="total_buy_amount">Buy Amount</th>
-                <th class="sortable" data-summary-sort="total_sell_amount">Sell Amount</th>
-                <th class="sortable" data-summary-sort="remaining_units">Remaining Units</th>
-                <th class="sortable" data-summary-sort="average_price">Avg Cost</th>
-                <th class="sortable" data-summary-sort="current_price">Market Price ({{ portfolio_currency }})</th>
-                <th class="sortable" data-summary-sort="market_value">Current Value ({{ portfolio_currency }})</th>
-                <th class="sortable" data-summary-sort="realized_return">Realized P/L</th>
-                <th class="sortable" data-summary-sort="unrealized_return">Unrealized P/L</th>
-                <th class="sortable" data-summary-sort="total_return">Total P/L</th>
-                <th class="sortable" data-summary-sort="return_percent">Return %</th>
-                <th class="sortable" data-summary-sort="transaction_count">Txns</th>
+                <th class="sortable" data-summary-sort="share_code" data-summary-col="share_code">Share Code</th>
+                <th class="sortable" data-summary-sort="total_buy_amount" data-summary-col="total_buy_amount">Buy Amount</th>
+                <th class="sortable" data-summary-sort="total_sell_amount" data-summary-col="total_sell_amount">Sell Amount</th>
+                <th class="sortable" data-summary-sort="remaining_units" data-summary-col="remaining_units">Remaining Units</th>
+                <th class="sortable" data-summary-sort="average_price" data-summary-col="average_price">Avg Cost</th>
+                <th class="sortable" data-summary-sort="current_price" data-summary-col="current_price">Market Price ({{ portfolio_currency }})</th>
+                <th class="sortable" data-summary-sort="market_value" data-summary-col="market_value">Current Value ({{ portfolio_currency }})</th>
+                <th class="sortable" data-summary-sort="realized_return" data-summary-col="realized_return">Realized P/L</th>
+                <th class="sortable" data-summary-sort="unrealized_return" data-summary-col="unrealized_return">Unrealized P/L</th>
+                <th class="sortable" data-summary-sort="total_return" data-summary-col="total_return">Total P/L</th>
+                <th class="sortable" data-summary-sort="return_percent" data-summary-col="return_percent">Return %</th>
+                <th class="sortable" data-summary-sort="transaction_count" data-summary-col="transaction_count">Txns</th>
               </tr>
             </thead>
             <tbody id="summaryBody"></tbody>
@@ -1503,13 +1829,13 @@
           <table>
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Share Code</th>
-                <th>Amount</th>
-                <th>Share Unit</th>
-                <th>Price / Share</th>
-                <th>Action</th>
+                <th class="sortable" data-record-sort="purchase_date" data-record-col="purchase_date">Date</th>
+                <th class="sortable" data-record-sort="transaction_type" data-record-col="transaction_type">Type</th>
+                <th class="sortable" data-record-sort="share_code" data-record-col="share_code">Share Code</th>
+                <th class="sortable" data-record-sort="investment_amount" data-record-col="investment_amount">Amount</th>
+                <th class="sortable" data-record-sort="purchase_units" data-record-col="purchase_units">Share Unit</th>
+                <th class="sortable" data-record-sort="average_price" data-record-col="average_price">Price / Share</th>
+                <th data-record-col="action">Action</th>
               </tr>
             </thead>
             <tbody id="recordsBody"></tbody>
@@ -1552,10 +1878,49 @@
     const filterResultText = document.getElementById("filterResultText");
     const summaryCountText = document.getElementById("summaryCountText");
     const recordCountText = document.getElementById("recordCountText");
+    const summarySortBy = document.getElementById("summarySortBy");
+    const summarySortDir = document.getElementById("summarySortDir");
+    const recordSortBy = document.getElementById("recordSortBy");
+    const recordSortDir = document.getElementById("recordSortDir");
+    const summaryColumnPicker = document.getElementById("summaryColumnPicker");
+    const recordColumnPicker = document.getElementById("recordColumnPicker");
+    const marketTotalSymbols = document.getElementById("marketTotalSymbols");
+    const marketUsdSymbols = document.getElementById("marketUsdSymbols");
+    const marketFxSymbols = document.getElementById("marketFxSymbols");
 
     const REFRESH_INTERVAL_MS = 120000;
     const PORTFOLIO_CURRENCY = "{{ portfolio_currency }}";
     const chartColors = ["#60a5fa", "#6ee7b7", "#c084fc", "#fbbf24", "#fb7185", "#38bdf8", "#a3e635", "#f97316", "#818cf8", "#14b8a6", "#f472b6", "#93c5fd"];
+
+    const summaryColumns = [
+      { key: "share_code", label: "Share Code" },
+      { key: "total_buy_amount", label: "Buy Amount" },
+      { key: "total_sell_amount", label: "Sell Amount" },
+      { key: "remaining_units", label: "Remaining Units" },
+      { key: "average_price", label: "Avg Cost" },
+      { key: "current_price", label: "Market Price" },
+      { key: "market_value", label: "Current Value" },
+      { key: "realized_return", label: "Realized P/L" },
+      { key: "unrealized_return", label: "Unrealized P/L" },
+      { key: "total_return", label: "Total P/L" },
+      { key: "return_percent", label: "Return %" },
+      { key: "transaction_count", label: "Transactions" }
+    ];
+
+    const recordColumns = [
+      { key: "purchase_date", label: "Date" },
+      { key: "transaction_type", label: "Type" },
+      { key: "share_code", label: "Share Code" },
+      { key: "investment_amount", label: "Amount" },
+      { key: "purchase_units", label: "Share Unit" },
+      { key: "average_price", label: "Price / Share" },
+      { key: "action", label: "Action" }
+    ];
+
+    const summaryColumnDefaults = summaryColumns.map(col => col.key);
+    const recordColumnDefaults = recordColumns.map(col => col.key);
+    let visibleSummaryColumns = new Set(loadColumnPreference("marketsharelive-summary-columns", summaryColumnDefaults));
+    let visibleRecordColumns = new Set(loadColumnPreference("marketsharelive-record-columns", recordColumnDefaults));
 
     let allSummary = null;
     let allRecords = [];
@@ -1587,6 +1952,74 @@
       localStorage.setItem("marketsharelive-theme", nextTheme);
       applyTheme(nextTheme);
     });
+
+    function loadColumnPreference(key, fallback) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(key) || "null");
+        if (Array.isArray(saved) && saved.length) return saved;
+      } catch {}
+      return [...fallback];
+    }
+
+    function saveColumnPreference(key, values) {
+      localStorage.setItem(key, JSON.stringify([...values]));
+    }
+
+    function renderColumnPicker(container, columns, visibleSet, storageKey, scope) {
+      container.innerHTML = "";
+      columns.forEach(col => {
+        const label = document.createElement("label");
+        label.className = "column-check";
+        label.innerHTML = `
+          <input type="checkbox" value="${col.key}" ${visibleSet.has(col.key) ? "checked" : ""}>
+          <span>${col.label}</span>
+        `;
+
+        const input = label.querySelector("input");
+        input.addEventListener("change", () => {
+          if (input.checked) {
+            visibleSet.add(col.key);
+          } else if (visibleSet.size > 1) {
+            visibleSet.delete(col.key);
+          } else {
+            input.checked = true;
+            setStatus("At least one column must stay visible.");
+            return;
+          }
+
+          saveColumnPreference(storageKey, visibleSet);
+          applyColumnVisibility(scope);
+        });
+
+        container.appendChild(label);
+      });
+    }
+
+    function renderColumnPickers() {
+      renderColumnPicker(summaryColumnPicker, summaryColumns, visibleSummaryColumns, "marketsharelive-summary-columns", "summary");
+      renderColumnPicker(recordColumnPicker, recordColumns, visibleRecordColumns, "marketsharelive-record-columns", "record");
+    }
+
+    function applyColumnVisibility(scope = "all") {
+      if (scope === "summary" || scope === "all") {
+        document.querySelectorAll("[data-summary-col]").forEach(el => {
+          el.classList.toggle("col-hidden", !visibleSummaryColumns.has(el.dataset.summaryCol));
+        });
+      }
+
+      if (scope === "record" || scope === "all") {
+        document.querySelectorAll("[data-record-col]").forEach(el => {
+          el.classList.toggle("col-hidden", !visibleRecordColumns.has(el.dataset.recordCol));
+        });
+      }
+    }
+
+    function syncSortControls() {
+      summarySortBy.value = summarySort.key;
+      summarySortDir.value = summarySort.direction;
+      recordSortBy.value = recordSort.key;
+      recordSortDir.value = recordSort.direction;
+    }
 
     function setStatus(message) {
       statusText.textContent = message;
@@ -1707,38 +2140,40 @@
 
     function quoteCardHtml(q) {
       const isError = Boolean(q.error);
-      const priceLabel = q.converted
-        ? `${fmtCurrency(q.price, PORTFOLIO_CURRENCY)}`
-        : `${fmtCurrency(q.price, q.currency || PORTFOLIO_CURRENCY)}`;
-
-      const nativeLine = q.converted
-        ? `<div class="quote-native">Native ${fmtCurrency(q.native_price, q.native_currency)} • FX ${fmtFxRate(q.fx_rate)}</div>`
-        : `<div class="quote-native">Native market currency</div>`;
-
-      const statusText = q.error
-        ? q.error
-        : (q.converted ? `Converted to ${PORTFOLIO_CURRENCY}` : "Price loaded successfully");
+      const mainCurrency = q.converted ? PORTFOLIO_CURRENCY : (q.currency || PORTFOLIO_CURRENCY);
+      const priceLabel = fmtCurrency(q.price, mainCurrency);
+      const nativeText = q.converted
+        ? fmtCurrency(q.native_price, q.native_currency)
+        : fmtCurrency(q.price, q.currency || PORTFOLIO_CURRENCY);
+      const fxText = q.converted ? fmtFxRate(q.fx_rate) : "1";
+      const statusText = isError ? "Issue" : (q.cached ? "Cached" : "Live");
+      const detailText = q.error || (q.converted ? `Converted from ${q.native_currency}` : "Native market currency");
 
       return `
-        <div class="quote-card ${isError ? "quote-error" : "quote-live"}">
-          <div class="quote-top">
-            <div>
-              <div class="quote-code">${q.share_code}</div>
-              <div class="quote-symbol">${q.market_symbol || "-"}</div>
-            </div>
-            <div class="badge ${isError ? "badge-error" : "badge-live"}">${isError ? "Issue" : "Live"}</div>
+        <div class="market-row ${isError ? "quote-error" : "quote-live"}">
+          <div class="market-identity">
+            <span class="market-code">${q.share_code}</span>
+            <span class="market-symbol">${q.market_symbol || "-"}</span>
           </div>
-          <div class="quote-main">
-            <div class="quote-price">${priceLabel}</div>
-            ${nativeLine}
+
+          <div class="market-price-main">
+            <span class="market-label">Market Price</span>
+            <span class="market-price">${priceLabel}</span>
           </div>
-          <div class="quote-footer">
-            <div class="quote-meta-row">
-              <span>${q.currency || PORTFOLIO_CURRENCY}</span>
-              <span>${q.cached ? "Cached" : "Fresh"}</span>
-            </div>
-            <div class="quote-status ${isError ? "value-negative" : "muted"}">${statusText}</div>
+
+          <div class="market-detail">
+            <span class="market-label">Native Price</span>
+            <strong>${nativeText}</strong>
+            <span>${detailText}</span>
           </div>
+
+          <div class="market-detail">
+            <span class="market-label">FX</span>
+            <strong>${q.converted ? fxText : "No conversion"}</strong>
+            <span>${q.converted ? `${q.native_currency}/${PORTFOLIO_CURRENCY}` : q.currency || PORTFOLIO_CURRENCY}</span>
+          </div>
+
+          <div class="market-status-badge ${isError ? "issue" : "live"}">${statusText}</div>
         </div>
       `;
     }
@@ -1753,17 +2188,27 @@
       if (!data.quotes.length) {
         grid.innerHTML = `<div class="empty-state panel">No market codes configured.</div>`;
         marketLoadedText.textContent = "0 quotes";
+        marketTotalSymbols.textContent = "0";
+        marketUsdSymbols.textContent = "0";
+        marketFxSymbols.textContent = "0";
         return;
       }
 
-      data.quotes.forEach(q => {
-        const wrapper = document.createElement("div");
-        wrapper.innerHTML = quoteCardHtml(q);
-        grid.appendChild(wrapper.firstElementChild);
-      });
+      data.quotes
+        .slice()
+        .sort((a, b) => String(a.share_code || "").localeCompare(String(b.share_code || "")))
+        .forEach(q => {
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = quoteCardHtml(q);
+          grid.appendChild(wrapper.firstElementChild);
+        });
 
       const errors = data.quotes.filter(q => q.error).length;
+      const converted = data.quotes.filter(q => q.converted).length;
       marketLoadedText.textContent = `${data.quotes.length - errors}/${data.quotes.length} live`;
+      marketTotalSymbols.textContent = data.quotes.length;
+      marketUsdSymbols.textContent = data.quotes.length - errors;
+      marketFxSymbols.textContent = converted;
       const now = new Date();
       marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
     }
@@ -1924,6 +2369,8 @@
           th.classList.add(recordSort.direction === "asc" ? "sorted-asc" : "sorted-desc");
         }
       });
+
+      syncSortControls();
     }
 
     function calculateVisiblePortfolio(rows) {
@@ -2020,18 +2467,18 @@
       rows.forEach(row => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${row.share_code}</td>
-          <td>${fmtMoney(row.total_buy_amount)}</td>
-          <td>${fmtMoney(row.total_sell_amount)}</td>
-          <td>${fmtNum(row.remaining_units)}</td>
-          <td>${fmtMoney(row.average_price)}</td>
-          <td>${summaryPriceCell(row)}</td>
-          <td>${fmtMoney(row.market_value)}</td>
-          <td class="${cls(row.realized_return)}">${fmtMoney(row.realized_return)}</td>
-          <td class="${cls(row.unrealized_return)}">${fmtMoney(row.unrealized_return)}</td>
-          <td class="${cls(row.total_return)}">${fmtMoney(row.total_return)}</td>
-          <td class="${cls(row.return_percent)}">${fmtPct(row.return_percent)}</td>
-          <td><span class="chip">${row.transaction_count}</span></td>
+          <td data-summary-col="share_code">${row.share_code}</td>
+          <td data-summary-col="total_buy_amount">${fmtMoney(row.total_buy_amount)}</td>
+          <td data-summary-col="total_sell_amount">${fmtMoney(row.total_sell_amount)}</td>
+          <td data-summary-col="remaining_units">${fmtNum(row.remaining_units)}</td>
+          <td data-summary-col="average_price">${fmtMoney(row.average_price)}</td>
+          <td data-summary-col="current_price">${summaryPriceCell(row)}</td>
+          <td data-summary-col="market_value">${fmtMoney(row.market_value)}</td>
+          <td data-summary-col="realized_return" class="${cls(row.realized_return)}">${fmtMoney(row.realized_return)}</td>
+          <td data-summary-col="unrealized_return" class="${cls(row.unrealized_return)}">${fmtMoney(row.unrealized_return)}</td>
+          <td data-summary-col="total_return" class="${cls(row.total_return)}">${fmtMoney(row.total_return)}</td>
+          <td data-summary-col="return_percent" class="${cls(row.return_percent)}">${fmtPct(row.return_percent)}</td>
+          <td data-summary-col="transaction_count"><span class="chip">${row.transaction_count}</span></td>
         `;
         body.appendChild(tr);
       });
@@ -2053,13 +2500,13 @@
       records.forEach(row => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${row.purchase_date}</td>
-          <td>${typeBadge(row.transaction_type)}</td>
-          <td>${row.share_code}</td>
-          <td>${fmtMoney(row.investment_amount)}</td>
-          <td>${fmtNum(row.purchase_units)}</td>
-          <td>${fmtMoney(row.average_price)}</td>
-          <td>
+          <td data-record-col="purchase_date">${row.purchase_date}</td>
+          <td data-record-col="transaction_type">${typeBadge(row.transaction_type)}</td>
+          <td data-record-col="share_code">${row.share_code}</td>
+          <td data-record-col="investment_amount">${fmtMoney(row.investment_amount)}</td>
+          <td data-record-col="purchase_units">${fmtNum(row.purchase_units)}</td>
+          <td data-record-col="average_price">${fmtMoney(row.average_price)}</td>
+          <td data-record-col="action">
             <div class="small-actions">
               <button type="button" class="btn-secondary" data-edit="${row.id}">Edit</button>
               <button type="button" class="btn-danger" data-delete="${row.id}">Delete</button>
@@ -2199,6 +2646,7 @@
       renderMetrics(portfolio);
       renderSummaryRows(rows);
       renderRecords(sortedRecords);
+      applyColumnVisibility();
       renderCharts(rows, sortedRecords);
       updateFilterResult(sortedRecords, rows);
       applySortIndicators();
@@ -2303,6 +2751,26 @@
       });
     });
 
+    [summarySortBy, summarySortDir].forEach(el => {
+      el.addEventListener("change", () => {
+        summarySort = {
+          key: summarySortBy.value,
+          direction: summarySortDir.value
+        };
+        renderDashboardData();
+      });
+    });
+
+    [recordSortBy, recordSortDir].forEach(el => {
+      el.addEventListener("change", () => {
+        recordSort = {
+          key: recordSortBy.value,
+          direction: recordSortDir.value
+        };
+        renderDashboardData();
+      });
+    });
+
     resetFilterBtn.addEventListener("click", () => {
       filterSearch.value = "";
       filterShare.value = "";
@@ -2325,6 +2793,8 @@
       window.location.href = "/api/report.pdf";
     });
 
+    renderColumnPickers();
+    syncSortControls();
     resetForm();
     refreshAll().catch(err => setStatus(`Error loading dashboard: ${err.message}`));
     setInterval(() => {
