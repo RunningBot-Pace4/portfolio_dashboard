@@ -23,7 +23,7 @@ from .models import PortfolioRecordIn
 from .pdf_report import build_portfolio_pdf
 
 
-app = FastAPI(title="Market Share Live Portfolio Dashboard", version="1.1.0")
+app = FastAPI(title="Market Share Live Portfolio Dashboard", version="1.2.0")
 security = HTTPBasic(auto_error=False)
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))

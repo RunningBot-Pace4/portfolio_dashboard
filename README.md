@@ -177,3 +177,11 @@ Existing Neon tables are migrated automatically. Old rows are treated as `BUY`.
 - Live Market Dashboard shows both converted price and native market price when conversion happens.
 - Summary Dashboard, metrics, charts, and PDF report use the converted portfolio currency value.
 - Default portfolio currency is USD. Change it with `PORTFOLIO_CURRENCY`.
+
+
+## v17 UI updates
+
+- Premium modern dashboard redesign for dark and light mode.
+- Live Market Dashboard cards redesigned with quote status, converted price, native price and FX note.
+- Smart Filters now include search, share code, transaction type, date range and holding status.
+- Summary and transaction table headers are clickable for sorting visible rows.

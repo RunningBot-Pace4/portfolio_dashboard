@@ -900,6 +900,331 @@
       border-color: rgba(225, 29, 72, 0.26);
     }
 
+
+    /* v17 premium redesign + filter/sort polish */
+    :root {
+      --radius: 24px;
+      --radius-sm: 18px;
+      --glass: blur(22px);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 22% 10%, rgba(96, 165, 250, 0.22), transparent 27%),
+        radial-gradient(circle at 76% 6%, rgba(192, 132, 252, 0.20), transparent 28%),
+        radial-gradient(circle at 52% 94%, rgba(45, 212, 191, 0.14), transparent 30%);
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    .hero {
+      min-height: 210px;
+      display: grid;
+      align-content: center;
+      background:
+        linear-gradient(135deg, rgba(30, 41, 59, 0.78), rgba(15, 23, 42, 0.72)),
+        radial-gradient(circle at 12% 10%, rgba(96,165,250,.34), transparent 32%),
+        radial-gradient(circle at 90% 30%, rgba(110,231,183,.18), transparent 28%);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 29px;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.12), transparent 26%, rgba(255,255,255,.06));
+      pointer-events: none;
+    }
+
+    .pill, .chip, .count-pill {
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .panel {
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+    }
+
+    .panel:hover {
+      border-color: rgba(96, 165, 250, .22);
+    }
+
+    .metric-card {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+        var(--panel);
+    }
+
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 18px 0 18px;
+      height: 3px;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(90deg, #60a5fa, #6ee7b7, #c084fc);
+      opacity: .68;
+    }
+
+    .market-header-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .market-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .quote-card {
+      position: relative;
+      min-height: 176px;
+      padding: 18px;
+      border-radius: 22px;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(96, 165, 250, .16), rgba(110, 231, 183, .06)),
+        rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.11);
+      box-shadow: 0 14px 34px rgba(0,0,0,.22);
+    }
+
+    .quote-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 86% 12%, rgba(110,231,183,.18), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.06), transparent 36%);
+    }
+
+    .quote-card::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 14px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(96,165,250,.9), rgba(110,231,183,.9));
+      opacity: .65;
+    }
+
+    .quote-card.quote-error::after {
+      background: linear-gradient(90deg, rgba(251,113,133,.95), rgba(251,191,36,.92));
+    }
+
+    .quote-top,
+    .quote-main,
+    .quote-footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .quote-code {
+      font-size: 24px;
+      letter-spacing: .05em;
+      line-height: 1;
+    }
+
+    .quote-symbol {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .quote-price {
+      margin-top: 8px;
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: .95;
+    }
+
+    .quote-footer {
+      display: grid;
+      gap: 6px;
+      margin-top: 14px;
+    }
+
+    .quote-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .quote-native {
+      font-size: 12px;
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+
+    .badge {
+      min-width: 74px;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .badge-live {
+      color: #dcfce7;
+      background: linear-gradient(135deg, rgba(16,185,129,.24), rgba(45,212,191,.15));
+      border-color: rgba(45,212,191,.30);
+    }
+
+    .badge-error {
+      color: #fff1f2;
+      background: linear-gradient(135deg, rgba(244,63,94,.24), rgba(251,191,36,.12));
+      border-color: rgba(251,113,133,.30);
+    }
+
+    .filter-grid {
+      grid-template-columns: 1.2fr repeat(5, minmax(0, 1fr)) auto;
+      align-items: end;
+    }
+
+    .filter-panel {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025)),
+        var(--panel);
+    }
+
+    .filter-actions button {
+      min-width: 92px;
+    }
+
+    .table-toolbar {
+      align-items: flex-start;
+    }
+
+    .table-wrap {
+      max-height: 640px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    th {
+      top: 0;
+      backdrop-filter: blur(14px);
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,.08);
+    }
+
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th.sortable:hover {
+      color: var(--accent);
+    }
+
+    th.sortable::after {
+      content: " ↕";
+      opacity: .42;
+      font-size: 11px;
+    }
+
+    th.sorted-asc::after {
+      content: " ↑";
+      opacity: .95;
+      color: var(--accent);
+    }
+
+    th.sorted-desc::after {
+      content: " ↓";
+      opacity: .95;
+      color: var(--accent);
+    }
+
+    tbody td:first-child,
+    thead th:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: rgba(15, 29, 49, 0.94);
+    }
+
+    tbody td:first-child {
+      background: rgba(13, 26, 45, 0.92);
+      font-weight: 800;
+    }
+
+    .design-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    [data-theme="light"] body::before {
+      background:
+        radial-gradient(circle at 18% 6%, rgba(59,130,246,.20), transparent 28%),
+        radial-gradient(circle at 86% 8%, rgba(168,85,247,.13), transparent 26%),
+        radial-gradient(circle at 58% 88%, rgba(20,184,166,.12), transparent 30%);
+    }
+
+    [data-theme="light"] .hero {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.92), rgba(241,245,249,.78)),
+        radial-gradient(circle at 14% 10%, rgba(59,130,246,.15), transparent 34%),
+        radial-gradient(circle at 92% 24%, rgba(16,185,129,.12), transparent 28%);
+    }
+
+    [data-theme="light"] .quote-card {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.96), rgba(248,250,252,.78)),
+        rgba(255,255,255,.72);
+      border-color: rgba(15,23,42,.10);
+      box-shadow: 0 16px 36px rgba(15,23,42,.08);
+    }
+
+    [data-theme="light"] .quote-card::before {
+      background:
+        radial-gradient(circle at 86% 12%, rgba(16,185,129,.12), transparent 24%),
+        linear-gradient(180deg, rgba(37,99,235,.06), transparent 40%);
+    }
+
+    [data-theme="light"] .quote-native {
+      color: #1d4ed8;
+    }
+
+    [data-theme="light"] tbody td:first-child,
+    [data-theme="light"] thead th:first-child {
+      background: rgba(226, 232, 240, 0.97);
+    }
+
+    [data-theme="light"] tbody td:first-child {
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    [data-theme="light"] .filter-panel {
+      background: rgba(255,255,255,.72);
+    }
+
+    @media (max-width: 1180px) {
+      .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .market-header-actions { width: 100%; justify-content: flex-start; }
+      .filter-actions { flex-direction: column; align-items: stretch; }
+      .filter-actions button { width: 100%; }
+      .table-wrap { max-height: none; }
+    }
+
   </style>
 </head>
 <body>
@@ -1015,7 +1340,10 @@
               <h2>Live Market Dashboard</h2>
               <p>Beautiful live watchlist for all your tracked share codes.</p>
             </div>
-            <span class="chip" id="marketRefreshText">Refreshing...</span>
+            <div class="market-header-actions">
+              <span class="chip" id="marketLoadedText">Loading quotes</span>
+              <span class="chip" id="marketRefreshText">Refreshing...</span>
+            </div>
           </div>
           <div class="market-grid" id="marketGrid"></div>
         </div>
@@ -1023,17 +1351,22 @@
     </section>
 
 
-    <section class="panel table-panel">
+    <section class="panel table-panel filter-panel">
       <div class="section-body">
         <div class="section-header">
           <div>
-            <h2>Dashboard Filters</h2>
-            <p>Filter the summary, transaction records, and charts by share, type, or date range.</p>
+            <h2>Smart Filters</h2>
+            <p>Filter the summary table, buy/sell records, and charts instantly.</p>
           </div>
           <span class="chip" id="filterResultText">All data</span>
         </div>
 
         <div class="filter-grid">
+          <div class="field">
+            <label for="filterSearch">Search</label>
+            <input id="filterSearch" type="search" placeholder="Search share code..." />
+          </div>
+
           <div class="field">
             <label for="filterShare">Share Code</label>
             <select id="filterShare">
@@ -1061,6 +1394,17 @@
           </div>
 
           <div class="field">
+            <label for="filterStatus">Holding Status</label>
+            <select id="filterStatus">
+              <option value="">All Status</option>
+              <option value="OPEN">Open Holdings</option>
+              <option value="CLOSED">Closed / Sold Out</option>
+              <option value="PROFIT">Profit Only</option>
+              <option value="LOSS">Loss Only</option>
+            </select>
+          </div>
+
+          <div class="field">
             <label>&nbsp;</label>
             <div class="filter-actions">
               <button id="applyFilterBtn" class="btn-primary" type="button">Apply</button>
@@ -1068,6 +1412,7 @@
             </div>
           </div>
         </div>
+        <div class="design-note">Tip: click the table headers to sort the visible rows.</div>
       </div>
     </section>
 
@@ -1119,18 +1464,18 @@
           <table>
             <thead>
               <tr>
-                <th>Share Code</th>
-                <th>Buy Amount</th>
-                <th>Sell Amount</th>
-                <th>Remaining Units</th>
-                <th>Avg Cost</th>
-                <th>Market Price ({{ portfolio_currency }})</th>
-                <th>Current Value ({{ portfolio_currency }})</th>
-                <th>Realized P/L</th>
-                <th>Unrealized P/L</th>
-                <th>Total P/L</th>
-                <th>Return %</th>
-                <th>Txns</th>
+                <th class="sortable" data-summary-sort="share_code">Share Code</th>
+                <th class="sortable" data-summary-sort="total_buy_amount">Buy Amount</th>
+                <th class="sortable" data-summary-sort="total_sell_amount">Sell Amount</th>
+                <th class="sortable" data-summary-sort="remaining_units">Remaining Units</th>
+                <th class="sortable" data-summary-sort="average_price">Avg Cost</th>
+                <th class="sortable" data-summary-sort="current_price">Market Price ({{ portfolio_currency }})</th>
+                <th class="sortable" data-summary-sort="market_value">Current Value ({{ portfolio_currency }})</th>
+                <th class="sortable" data-summary-sort="realized_return">Realized P/L</th>
+                <th class="sortable" data-summary-sort="unrealized_return">Unrealized P/L</th>
+                <th class="sortable" data-summary-sort="total_return">Total P/L</th>
+                <th class="sortable" data-summary-sort="return_percent">Return %</th>
+                <th class="sortable" data-summary-sort="transaction_count">Txns</th>
               </tr>
             </thead>
             <tbody id="summaryBody"></tbody>
@@ -1192,13 +1537,16 @@
     const statusText = document.getElementById("statusText");
     const formTitle = document.getElementById("formTitle");
     const marketRefreshText = document.getElementById("marketRefreshText");
+    const marketLoadedText = document.getElementById("marketLoadedText");
     const exportPdfBtn = document.getElementById("exportPdfBtn");
     const themeToggleBtn = document.getElementById("themeToggleBtn");
 
+    const filterSearch = document.getElementById("filterSearch");
     const filterShare = document.getElementById("filterShare");
     const filterType = document.getElementById("filterType");
     const filterDateFrom = document.getElementById("filterDateFrom");
     const filterDateTo = document.getElementById("filterDateTo");
+    const filterStatus = document.getElementById("filterStatus");
     const applyFilterBtn = document.getElementById("applyFilterBtn");
     const resetFilterBtn = document.getElementById("resetFilterBtn");
     const filterResultText = document.getElementById("filterResultText");
@@ -1211,6 +1559,8 @@
 
     let allSummary = null;
     let allRecords = [];
+    let summarySort = { key: "share_code", direction: "asc" };
+    let recordSort = { key: "purchase_date", direction: "desc" };
 
     const money = new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 2,
@@ -1360,26 +1710,33 @@
       const priceLabel = q.converted
         ? `${fmtCurrency(q.price, PORTFOLIO_CURRENCY)}`
         : `${fmtCurrency(q.price, q.currency || PORTFOLIO_CURRENCY)}`;
-      const metaText = q.converted
-        ? `Portfolio currency: ${PORTFOLIO_CURRENCY}`
-        : `Currency: ${q.currency || "-"}`;
+
+      const nativeLine = q.converted
+        ? `<div class="quote-native">Native ${fmtCurrency(q.native_price, q.native_currency)} • FX ${fmtFxRate(q.fx_rate)}</div>`
+        : `<div class="quote-native">Native market currency</div>`;
+
       const statusText = q.error
         ? q.error
-        : (q.converted ? `Converted from ${q.native_currency} to ${PORTFOLIO_CURRENCY}` : "Price loaded successfully");
+        : (q.converted ? `Converted to ${PORTFOLIO_CURRENCY}` : "Price loaded successfully");
 
       return `
-        <div class="quote-card">
-          <div class="quote-head">
-            <div class="quote-code">${q.share_code}</div>
+        <div class="quote-card ${isError ? "quote-error" : "quote-live"}">
+          <div class="quote-top">
+            <div>
+              <div class="quote-code">${q.share_code}</div>
+              <div class="quote-symbol">${q.market_symbol || "-"}</div>
+            </div>
             <div class="badge ${isError ? "badge-error" : "badge-live"}">${isError ? "Issue" : "Live"}</div>
           </div>
-          <div>
-            <div class="quote-symbol">${q.market_symbol || "-"}</div>
+          <div class="quote-main">
             <div class="quote-price">${priceLabel}</div>
-            ${conversionNote(q)}
+            ${nativeLine}
           </div>
-          <div>
-            <div class="quote-meta">${metaText}</div>
+          <div class="quote-footer">
+            <div class="quote-meta-row">
+              <span>${q.currency || PORTFOLIO_CURRENCY}</span>
+              <span>${q.cached ? "Cached" : "Fresh"}</span>
+            </div>
             <div class="quote-status ${isError ? "value-negative" : "muted"}">${statusText}</div>
           </div>
         </div>
@@ -1388,12 +1745,14 @@
 
     async function loadMarket() {
       marketRefreshText.textContent = "Refreshing...";
+      marketLoadedText.textContent = "Loading quotes";
       const data = await requestJson("/api/market");
       const grid = document.getElementById("marketGrid");
       grid.innerHTML = "";
 
       if (!data.quotes.length) {
         grid.innerHTML = `<div class="empty-state panel">No market codes configured.</div>`;
+        marketLoadedText.textContent = "0 quotes";
         return;
       }
 
@@ -1403,21 +1762,25 @@
         grid.appendChild(wrapper.firstElementChild);
       });
 
+      const errors = data.quotes.filter(q => q.error).length;
+      marketLoadedText.textContent = `${data.quotes.length - errors}/${data.quotes.length} live`;
       const now = new Date();
       marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
     }
 
     function currentFilters() {
       return {
+        search: filterSearch.value.trim().toUpperCase(),
         share: filterShare.value.trim().toUpperCase(),
         type: filterType.value.trim().toUpperCase(),
         from: filterDateFrom.value,
-        to: filterDateTo.value
+        to: filterDateTo.value,
+        status: filterStatus.value.trim().toUpperCase()
       };
     }
 
     function hasActiveFilter(filters = currentFilters()) {
-      return Boolean(filters.share || filters.type || filters.from || filters.to);
+      return Boolean(filters.search || filters.share || filters.type || filters.from || filters.to || filters.status);
     }
 
     function recordMatchesFilters(row, filters = currentFilters()) {
@@ -1425,6 +1788,7 @@
       const rowType = String(row.transaction_type || "BUY").toUpperCase();
       const rowDate = String(row.purchase_date || "");
 
+      if (filters.search && !rowShare.includes(filters.search)) return false;
       if (filters.share && rowShare !== filters.share) return false;
       if (filters.type && rowType !== filters.type) return false;
       if (filters.from && rowDate < filters.from) return false;
@@ -1432,21 +1796,134 @@
       return true;
     }
 
-    function filteredRecords() {
+    function filteredRecordsByForm() {
       const filters = currentFilters();
       return allRecords.filter(row => recordMatchesFilters(row, filters));
     }
 
-    function filteredSummaryRows(records) {
-      if (!allSummary) return [];
+    function quoteByShareCode() {
+      const map = new Map();
+      if (!allSummary || !Array.isArray(allSummary.holdings)) return map;
+      allSummary.holdings.forEach(row => {
+        map.set(String(row.share_code || "").toUpperCase(), row);
+      });
+      return map;
+    }
 
-      const filters = currentFilters();
-      if (!hasActiveFilter(filters)) {
-        return allSummary.holdings;
+    function calculateSummaryRowsFromRecords(records) {
+      const quotes = quoteByShareCode();
+      const grouped = new Map();
+
+      const sortedRecords = [...records].sort((a, b) => {
+        const dateCompare = String(a.purchase_date || "").localeCompare(String(b.purchase_date || ""));
+        if (dateCompare !== 0) return dateCompare;
+        return Number(a.id || 0) - Number(b.id || 0);
+      });
+
+      sortedRecords.forEach(record => {
+        const code = String(record.share_code || "").toUpperCase();
+        if (!code) return;
+
+        if (!grouped.has(code)) {
+          grouped.set(code, {
+            share_code: code,
+            total_buy_amount: 0,
+            total_sell_amount: 0,
+            remaining_units: 0,
+            cost_basis: 0,
+            realized_return: 0,
+            transaction_count: 0
+          });
+        }
+
+        const row = grouped.get(code);
+        const txType = String(record.transaction_type || "BUY").toUpperCase();
+        const amount = Number(record.investment_amount || 0);
+        const units = Number(record.purchase_units || 0);
+
+        row.transaction_count += 1;
+
+        if (txType === "SELL") {
+          const avgCost = row.remaining_units > 0 ? row.cost_basis / row.remaining_units : 0;
+          const costOfSoldUnits = avgCost * units;
+          row.total_sell_amount += amount;
+          row.realized_return += amount - costOfSoldUnits;
+          row.remaining_units = Math.max(0, row.remaining_units - units);
+          row.cost_basis = Math.max(0, row.cost_basis - costOfSoldUnits);
+        } else {
+          row.total_buy_amount += amount;
+          row.remaining_units += units;
+          row.cost_basis += amount;
+        }
+      });
+
+      return Array.from(grouped.values()).map(row => {
+        const quote = quotes.get(row.share_code) || {};
+        const currentPrice = Number(quote.current_price ?? quote.price ?? 0);
+        const hasPrice = quote.current_price !== null && quote.current_price !== undefined && !Number.isNaN(currentPrice);
+        const marketValue = hasPrice ? row.remaining_units * currentPrice : null;
+        const unrealizedReturn = hasPrice ? marketValue - row.cost_basis : null;
+        const totalReturn = row.realized_return + (unrealizedReturn || 0);
+
+        return {
+          ...quote,
+          ...row,
+          average_price: row.remaining_units > 0 ? row.cost_basis / row.remaining_units : 0,
+          current_price: hasPrice ? currentPrice : null,
+          market_value: marketValue,
+          unrealized_return: unrealizedReturn,
+          total_return: totalReturn,
+          return_percent: row.total_buy_amount ? (totalReturn / row.total_buy_amount * 100) : 0,
+          total_invested: row.cost_basis,
+          total_units: row.remaining_units
+        };
+      });
+    }
+
+    function rowMatchesStatus(row, status) {
+      if (!status) return true;
+      const units = Number(row.remaining_units || 0);
+      const totalReturn = Number(row.total_return || 0);
+
+      if (status === "OPEN") return units > 0;
+      if (status === "CLOSED") return units <= 0;
+      if (status === "PROFIT") return totalReturn > 0;
+      if (status === "LOSS") return totalReturn < 0;
+      return true;
+    }
+
+    function compareValues(a, b, key) {
+      const av = a[key];
+      const bv = b[key];
+
+      if (typeof av === "string" || typeof bv === "string") {
+        return String(av || "").localeCompare(String(bv || ""));
       }
 
-      const visibleShares = new Set(records.map(row => String(row.share_code || "").toUpperCase()));
-      return allSummary.holdings.filter(row => visibleShares.has(String(row.share_code || "").toUpperCase()));
+      return Number(av || 0) - Number(bv || 0);
+    }
+
+    function sortRows(rows, sortState) {
+      return [...rows].sort((a, b) => {
+        const result = compareValues(a, b, sortState.key);
+        return sortState.direction === "asc" ? result : -result;
+      });
+    }
+
+    function applySortIndicators() {
+      document.querySelectorAll("[data-summary-sort]").forEach(th => {
+        th.classList.remove("sorted-asc", "sorted-desc");
+        if (th.dataset.summarySort === summarySort.key) {
+          th.classList.add(summarySort.direction === "asc" ? "sorted-asc" : "sorted-desc");
+        }
+      });
+
+      document.querySelectorAll("[data-record-sort]").forEach(th => {
+        th.classList.remove("sorted-asc", "sorted-desc");
+        if (th.dataset.recordSort === recordSort.key) {
+          th.classList.add(recordSort.direction === "asc" ? "sorted-asc" : "sorted-desc");
+        }
+      });
     }
 
     function calculateVisiblePortfolio(rows) {
@@ -1500,10 +1977,12 @@
       const filters = currentFilters();
       const parts = [];
 
+      if (filters.search) parts.push(`Search: ${filters.search}`);
       if (filters.share) parts.push(filters.share);
       if (filters.type) parts.push(filters.type);
       if (filters.from) parts.push(`From ${filters.from}`);
       if (filters.to) parts.push(`To ${filters.to}`);
+      if (filters.status) parts.push(filters.status);
 
       filterResultText.textContent = parts.length
         ? `${parts.join(" • ")} — ${rows.length} shares, ${records.length} records`
@@ -1705,15 +2184,24 @@
     }
 
     function renderDashboardData() {
-      const records = filteredRecords();
-      const rows = filteredSummaryRows(records);
+      const filters = currentFilters();
+      const baseRecords = filteredRecordsByForm();
+      let rows = calculateSummaryRowsFromRecords(baseRecords).filter(row => rowMatchesStatus(row, filters.status));
+      const visibleShareCodes = new Set(rows.map(row => String(row.share_code || "").toUpperCase()));
+      const records = filters.status
+        ? baseRecords.filter(row => visibleShareCodes.has(String(row.share_code || "").toUpperCase()))
+        : baseRecords;
+
+      rows = sortRows(rows, summarySort);
+      const sortedRecords = sortRows(records, recordSort);
       const portfolio = calculateVisiblePortfolio(rows);
 
       renderMetrics(portfolio);
       renderSummaryRows(rows);
-      renderRecords(records);
-      renderCharts(rows, records);
-      updateFilterResult(records, rows);
+      renderRecords(sortedRecords);
+      renderCharts(rows, sortedRecords);
+      updateFilterResult(sortedRecords, rows);
+      applySortIndicators();
     }
 
     async function loadDashboardData() {
@@ -1788,15 +2276,40 @@
     cancelBtn.addEventListener("click", resetForm);
 
     applyFilterBtn.addEventListener("click", renderDashboardData);
-    [filterShare, filterType, filterDateFrom, filterDateTo].forEach(el => {
+    [filterSearch, filterShare, filterType, filterDateFrom, filterDateTo, filterStatus].forEach(el => {
+      el.addEventListener("input", renderDashboardData);
       el.addEventListener("change", renderDashboardData);
     });
 
+    document.querySelectorAll("[data-summary-sort]").forEach(th => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.summarySort;
+        summarySort = {
+          key,
+          direction: summarySort.key === key && summarySort.direction === "asc" ? "desc" : "asc"
+        };
+        renderDashboardData();
+      });
+    });
+
+    document.querySelectorAll("[data-record-sort]").forEach(th => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.recordSort;
+        recordSort = {
+          key,
+          direction: recordSort.key === key && recordSort.direction === "asc" ? "desc" : "asc"
+        };
+        renderDashboardData();
+      });
+    });
+
     resetFilterBtn.addEventListener("click", () => {
+      filterSearch.value = "";
       filterShare.value = "";
       filterType.value = "";
       filterDateFrom.value = "";
       filterDateTo.value = "";
+      filterStatus.value = "";
       renderDashboardData();
     });
 
