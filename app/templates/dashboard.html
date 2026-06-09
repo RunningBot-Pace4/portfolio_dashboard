@@ -2192,6 +2192,46 @@
       .checkbox-dropdown-menu { width: min(280px, calc(100vw - 32px)) !important; }
     }
 
+
+    /* Summary row coloring rule:
+       Only highlight rows where AVG COST is greater than MARKET PRICE.
+       All other summary rows use the normal table background with no profit/loss row fill. */
+    #summaryBody tr.summary-positive-row td,
+    #summaryBody tr.summary-negative-row td,
+    [data-theme="light"] #summaryBody tr.summary-positive-row td,
+    [data-theme="light"] #summaryBody tr.summary-negative-row td {
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    #summaryBody tr.summary-positive-row:hover td,
+    #summaryBody tr.summary-negative-row:hover td,
+    [data-theme="light"] #summaryBody tr.summary-positive-row:hover td,
+    [data-theme="light"] #summaryBody tr.summary-negative-row:hover td {
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    #summaryBody tr.avg-above-market-row td {
+      background: rgba(16, 185, 129, 0.22) !important;
+      box-shadow: none !important;
+    }
+
+    #summaryBody tr.avg-above-market-row:hover td {
+      background: rgba(16, 185, 129, 0.30) !important;
+      box-shadow: none !important;
+    }
+
+    [data-theme="light"] #summaryBody tr.avg-above-market-row td {
+      background: #dcfce7 !important;
+      box-shadow: none !important;
+    }
+
+    [data-theme="light"] #summaryBody tr.avg-above-market-row:hover td {
+      background: #bbf7d0 !important;
+      box-shadow: none !important;
+    }
+
   </style>
 </head>
 <body>
@@ -3369,13 +3409,6 @@
 
       rows.forEach(row => {
         const tr = document.createElement("tr");
-        const totalReturn = Number(row.total_return || 0);
-
-        if (totalReturn >= 0) {
-          tr.classList.add("summary-positive-row");
-        } else {
-          tr.classList.add("summary-negative-row");
-        }
 
         if (
           row.current_price !== null &&
