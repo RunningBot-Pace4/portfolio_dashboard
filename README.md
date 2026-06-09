@@ -190,3 +190,10 @@ Existing Neon tables are migrated automatically. Old rows are treated as `BUY`.
 ## Charts page
 
 Open `/charts` to view the separate analytics page. Smart Filters on the charts page only affect chart analytics; dashboard tables use their own column filters.
+
+
+## v24 update
+
+- Share Code column filters now use checkbox dropdowns.
+- Summary rows have stronger profit/loss and average-cost highlight colors in both dark and light mode.
+- Fixed transaction share-code multi-filter logic.

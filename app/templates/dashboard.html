@@ -1747,48 +1747,200 @@
 
 
 
-    /* v23 multi-select share filters + green highlight rows */
-    .share-multi-filter {
-      min-width: 150px;
-      min-height: 72px;
-      height: 72px;
-      padding: 6px 8px;
-      line-height: 1.35;
-      overflow: auto;
+    /* v24 checkbox dropdown column filters + stronger row colors */
+    .share-multi-filter[hidden] {
+      display: none !important;
     }
 
-    .share-multi-filter option {
-      padding: 4px 6px;
-      border-radius: 7px;
+    .checkbox-dropdown {
+      position: relative;
+      width: 100%;
+      min-width: 170px;
     }
 
-    .share-multi-hint {
-      display: block;
-      margin-top: 4px;
-      font-size: 10px;
+    .checkbox-dropdown-button {
+      width: 100%;
+      min-height: 38px;
+      height: 38px;
+      border-radius: 12px;
+      padding: 0 34px 0 12px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 850;
+      color: var(--text);
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: none;
+      position: relative;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .checkbox-dropdown-button::after {
+      content: "▾";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
       color: var(--muted);
-      font-weight: 700;
-      line-height: 1.2;
+      font-size: 13px;
+    }
+
+    .checkbox-dropdown.open .checkbox-dropdown-button {
+      border-color: rgba(96,165,250,.52);
+      box-shadow: 0 0 0 4px rgba(96,165,250,.14);
+      background: rgba(96,165,250,.12);
+    }
+
+    .checkbox-dropdown-menu {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      min-width: 220px;
+      max-height: 300px;
+      overflow: auto;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(15, 29, 49, .98);
+      box-shadow: 0 24px 60px rgba(0,0,0,.38);
+      backdrop-filter: blur(18px);
+    }
+
+    .checkbox-dropdown.open .checkbox-dropdown-menu {
+      display: block;
+    }
+
+    .checkbox-dropdown-actions {
+      display: flex;
+      gap: 8px;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .checkbox-dropdown-actions button {
+      min-height: 30px;
+      height: 30px;
+      border-radius: 10px;
+      font-size: 12px;
+      padding: 0 10px;
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.10);
+      width: auto;
+    }
+
+    .checkbox-option {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 34px;
+      padding: 7px 8px;
+      border-radius: 11px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-option:hover {
+      background: rgba(96,165,250,.14);
+    }
+
+    .checkbox-option input {
+      width: 16px;
+      height: 16px;
+      min-height: 16px;
+      margin: 0;
+      accent-color: #34d399;
+    }
+
+    .checkbox-empty {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 10px 8px;
+    }
+
+    tbody tr.summary-positive-row td {
+      background: rgba(52, 211, 153, 0.075) !important;
+      box-shadow: inset 3px 0 0 rgba(52, 211, 153, .46);
+    }
+
+    tbody tr.summary-negative-row td {
+      background: rgba(251, 113, 133, 0.075) !important;
+      box-shadow: inset 3px 0 0 rgba(251, 113, 133, .46);
     }
 
     tbody tr.avg-above-market-row td {
-      background: rgba(16, 185, 129, 0.18) !important;
-      box-shadow: inset 0 1px 0 rgba(16, 185, 129, 0.16), inset 0 -1px 0 rgba(16, 185, 129, 0.16);
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.30), rgba(16, 185, 129, 0.18)) !important;
+      box-shadow: inset 3px 0 0 rgba(52, 211, 153, .90), inset 0 1px 0 rgba(16, 185, 129, 0.18), inset 0 -1px 0 rgba(16, 185, 129, 0.18) !important;
     }
 
     tbody tr.avg-above-market-row:hover td {
-      background: rgba(16, 185, 129, 0.24) !important;
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.38), rgba(16, 185, 129, 0.23)) !important;
+    }
+
+    tbody tr.summary-negative-row:not(.avg-above-market-row):hover td {
+      background: rgba(251, 113, 133, 0.12) !important;
+    }
+
+    tbody tr.summary-positive-row:not(.avg-above-market-row):hover td {
+      background: rgba(52, 211, 153, 0.12) !important;
+    }
+
+    [data-theme="light"] .checkbox-dropdown-button {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: rgba(15,23,42,.14);
+    }
+
+    [data-theme="light"] .checkbox-dropdown.open .checkbox-dropdown-button {
+      border-color: rgba(37,99,235,.36);
+      background: #eff6ff;
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+
+    [data-theme="light"] .checkbox-dropdown-menu {
+      background: rgba(255,255,255,.98);
+      border-color: rgba(15,23,42,.12);
+      box-shadow: 0 24px 60px rgba(15,23,42,.18);
+    }
+
+    [data-theme="light"] .checkbox-dropdown-actions {
+      border-bottom-color: rgba(15,23,42,.10);
+    }
+
+    [data-theme="light"] .checkbox-dropdown-actions button {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: rgba(15,23,42,.12);
+    }
+
+    [data-theme="light"] .checkbox-option:hover {
+      background: #eff6ff;
+    }
+
+    [data-theme="light"] tbody tr.summary-positive-row td {
+      background: #ecfdf5 !important;
+      box-shadow: inset 4px 0 0 #10b981 !important;
+    }
+
+    [data-theme="light"] tbody tr.summary-negative-row td {
+      background: #fff1f2 !important;
+      box-shadow: inset 4px 0 0 #f43f5e !important;
     }
 
     [data-theme="light"] tbody tr.avg-above-market-row td {
-      background: #dcfce7 !important;
-      box-shadow: inset 0 1px 0 rgba(22, 163, 74, 0.14), inset 0 -1px 0 rgba(22, 163, 74, 0.14);
+      background: linear-gradient(90deg, #bbf7d0, #dcfce7) !important;
+      box-shadow: inset 4px 0 0 #16a34a, inset 0 1px 0 rgba(22, 163, 74, 0.18), inset 0 -1px 0 rgba(22, 163, 74, 0.18) !important;
     }
 
     [data-theme="light"] tbody tr.avg-above-market-row:hover td {
-      background: #bbf7d0 !important;
+      background: linear-gradient(90deg, #86efac, #bbf7d0) !important;
     }
-
 
     @media (min-width: 1181px) {
       .layout-2 {
@@ -2044,7 +2196,11 @@
                 <th class="sortable" data-summary-sort="transaction_count" data-summary-col="transaction_count">Txns</th>
               </tr>
               <tr class="column-filter-row">
-                <th data-summary-col="share_code"><select id="summaryColumnShareFilter" class="column-filter share-multi-filter" multiple size="4" title="Hold Ctrl/Cmd to select multiple share codes"><option value="">All Shares</option></select></th>
+                <th data-summary-col="share_code"><div class="checkbox-dropdown" data-filter-widget="summaryColumnShareFilter">
+                    <button id="summaryShareDropdownBtn" class="checkbox-dropdown-button" type="button">All Shares</button>
+                    <div id="summaryShareDropdownMenu" class="checkbox-dropdown-menu"></div>
+                    <select id="summaryColumnShareFilter" class="column-filter share-multi-filter" multiple hidden aria-hidden="true"><option value="">All Shares</option></select>
+                  </div></th>
                 <th data-summary-col="total_buy_amount"><input id="summaryMinBuyFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
                 <th data-summary-col="total_sell_amount"><input id="summaryMinSellFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
                 <th data-summary-col="remaining_units"><select id="summaryHoldingFilter" class="column-filter"><option value="">All</option><option value="OPEN">Open</option><option value="CLOSED">Closed</option></select></th>
@@ -2094,7 +2250,11 @@
               <tr class="column-filter-row">
                 <th data-record-col="purchase_date"><input id="recordColumnDateFilter" class="column-filter" type="date" /></th>
                 <th data-record-col="transaction_type"><select id="recordColumnTypeFilter" class="column-filter"><option value="">All</option><option value="BUY">BUY</option><option value="SELL">SELL</option></select></th>
-                <th data-record-col="share_code"><select id="recordColumnShareFilter" class="column-filter share-multi-filter" multiple size="4" title="Hold Ctrl/Cmd to select multiple share codes"><option value="">All Shares</option></select></th>
+                <th data-record-col="share_code"><div class="checkbox-dropdown" data-filter-widget="recordColumnShareFilter">
+                    <button id="recordShareDropdownBtn" class="checkbox-dropdown-button" type="button">All Shares</button>
+                    <div id="recordShareDropdownMenu" class="checkbox-dropdown-menu"></div>
+                    <select id="recordColumnShareFilter" class="column-filter share-multi-filter" multiple hidden aria-hidden="true"><option value="">All Shares</option></select>
+                  </div></th>
                 <th data-record-col="investment_amount"><input id="recordMinAmountFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
                 <th data-record-col="purchase_units"><input id="recordMinUnitFilter" class="column-filter" type="number" step="0.0001" placeholder="Min" /></th>
                 <th data-record-col="average_price"><input id="recordMinPriceFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
@@ -2152,6 +2312,10 @@
     const marketFxSymbols = document.getElementById("marketFxSymbols");
 
     const summaryColumnShareFilter = document.getElementById("summaryColumnShareFilter");
+    const summaryShareDropdownBtn = document.getElementById("summaryShareDropdownBtn");
+    const summaryShareDropdownMenu = document.getElementById("summaryShareDropdownMenu");
+    const recordShareDropdownBtn = document.getElementById("recordShareDropdownBtn");
+    const recordShareDropdownMenu = document.getElementById("recordShareDropdownMenu");
     const summaryMinBuyFilter = document.getElementById("summaryMinBuyFilter");
     const summaryMinSellFilter = document.getElementById("summaryMinSellFilter");
     const summaryHoldingFilter = document.getElementById("summaryHoldingFilter");
@@ -2548,8 +2712,134 @@
       const selected = new Set((values || []).map(value => String(value || "").trim().toUpperCase()).filter(Boolean));
       Array.from(select.options || []).forEach(option => {
         const optionValue = String(option.value || "").trim().toUpperCase();
-        option.selected = optionValue ? selected.has(optionValue) : selected.size === 0;
+        option.selected = optionValue ? selected.has(optionValue) : false;
       });
+      syncCheckboxDropdown(select);
+    }
+
+    function checkboxDropdownElements(select) {
+      if (!select) return {};
+      if (select.id === "summaryColumnShareFilter") {
+        return { button: summaryShareDropdownBtn, menu: summaryShareDropdownMenu };
+      }
+      if (select.id === "recordColumnShareFilter") {
+        return { button: recordShareDropdownBtn, menu: recordShareDropdownMenu };
+      }
+      return {};
+    }
+
+    function dropdownLabelFromValues(values) {
+      if (!values.length) return "All Shares";
+      if (values.length <= 2) return values.join(", ");
+      return `${values.length} selected`;
+    }
+
+    function positionCheckboxDropdown(menu, button) {
+      if (!menu || !button) return;
+      const rect = button.getBoundingClientRect();
+      const width = Math.max(rect.width, 220);
+      const availableBelow = window.innerHeight - rect.bottom - 8;
+      const desiredHeight = Math.min(300, Math.max(190, availableBelow));
+      menu.style.width = `${width}px`;
+      menu.style.maxHeight = `${desiredHeight}px`;
+      menu.style.left = `${Math.max(8, Math.min(rect.left, window.innerWidth - width - 8))}px`;
+      menu.style.top = `${Math.min(rect.bottom + 6, window.innerHeight - desiredHeight - 8)}px`;
+    }
+
+    function syncCheckboxDropdown(select) {
+      const { button, menu } = checkboxDropdownElements(select);
+      if (!select || !button) return;
+      const values = getMultiSelectValues(select);
+      button.textContent = dropdownLabelFromValues(values);
+
+      if (!menu) return;
+      const selected = new Set(values);
+      menu.querySelectorAll("input[type='checkbox'][data-share]").forEach(checkbox => {
+        checkbox.checked = selected.has(String(checkbox.value || "").toUpperCase());
+      });
+    }
+
+    function renderCheckboxDropdown(select) {
+      const { button, menu } = checkboxDropdownElements(select);
+      if (!select || !button || !menu) return;
+
+      const values = Array.from(select.options || [])
+        .map(option => String(option.value || "").trim().toUpperCase())
+        .filter(Boolean);
+
+      menu.innerHTML = "";
+
+      const actions = document.createElement("div");
+      actions.className = "checkbox-dropdown-actions";
+      actions.innerHTML = `
+        <button type="button" data-action="clear">Clear</button>
+        <button type="button" data-action="all">Select All</button>
+      `;
+      menu.appendChild(actions);
+
+      if (!values.length) {
+        const empty = document.createElement("div");
+        empty.className = "checkbox-empty";
+        empty.textContent = "No share codes";
+        menu.appendChild(empty);
+      }
+
+      values.forEach(value => {
+        const label = document.createElement("label");
+        label.className = "checkbox-option";
+        label.innerHTML = `<input type="checkbox" data-share value="${value}"><span>${value}</span>`;
+        menu.appendChild(label);
+      });
+
+      actions.querySelector("[data-action='clear']").addEventListener("click", event => {
+        event.stopPropagation();
+        Array.from(select.options || []).forEach(option => option.selected = false);
+        syncCheckboxDropdown(select);
+        renderDashboardData();
+      });
+
+      actions.querySelector("[data-action='all']").addEventListener("click", event => {
+        event.stopPropagation();
+        Array.from(select.options || []).forEach(option => {
+          option.selected = Boolean(option.value);
+        });
+        syncCheckboxDropdown(select);
+        renderDashboardData();
+      });
+
+      menu.querySelectorAll("input[type='checkbox'][data-share]").forEach(checkbox => {
+        checkbox.addEventListener("change", event => {
+          event.stopPropagation();
+          const selected = new Set(
+            Array.from(menu.querySelectorAll("input[type='checkbox'][data-share]:checked"))
+              .map(input => String(input.value || "").toUpperCase())
+          );
+          Array.from(select.options || []).forEach(option => {
+            const value = String(option.value || "").trim().toUpperCase();
+            option.selected = value ? selected.has(value) : false;
+          });
+          syncCheckboxDropdown(select);
+          renderDashboardData();
+        });
+      });
+
+      button.onclick = event => {
+        event.stopPropagation();
+        const wrapper = button.closest(".checkbox-dropdown");
+        const isOpen = wrapper.classList.contains("open");
+        closeCheckboxDropdowns();
+        if (!isOpen) {
+          wrapper.classList.add("open");
+          positionCheckboxDropdown(menu, button);
+        }
+      };
+
+      menu.addEventListener("click", event => event.stopPropagation());
+      syncCheckboxDropdown(select);
+    }
+
+    function closeCheckboxDropdowns() {
+      document.querySelectorAll(".checkbox-dropdown.open").forEach(dropdown => dropdown.classList.remove("open"));
     }
 
     function isProfitLossMatch(value, mode) {
@@ -2616,10 +2906,12 @@
         if (!input) return;
         if (input.multiple) {
           Array.from(input.options || []).forEach(option => option.selected = false);
+          syncCheckboxDropdown(input);
         } else {
           input.value = "";
         }
       });
+      closeCheckboxDropdowns();
       renderDashboardData();
     }
 
@@ -2803,11 +3095,13 @@
       if (summaryColumnShareFilter) {
         summaryColumnShareFilter.innerHTML = options;
         setMultiSelectValues(summaryColumnShareFilter, currentSummaryColumns.filter(code => sorted.includes(code)));
+        renderCheckboxDropdown(summaryColumnShareFilter);
       }
 
       if (recordColumnShareFilter) {
         recordColumnShareFilter.innerHTML = options;
         setMultiSelectValues(recordColumnShareFilter, currentRecordColumns.filter(code => sorted.includes(code)));
+        renderCheckboxDropdown(recordColumnShareFilter);
       }
     }
 
@@ -2857,6 +3151,14 @@
 
       rows.forEach(row => {
         const tr = document.createElement("tr");
+        const totalReturn = Number(row.total_return || 0);
+
+        if (totalReturn >= 0) {
+          tr.classList.add("summary-positive-row");
+        } else {
+          tr.classList.add("summary-negative-row");
+        }
+
         if (
           row.current_price !== null &&
           row.current_price !== undefined &&
@@ -3193,6 +3495,10 @@
         resetColumnFilters();
       });
     }
+
+    document.addEventListener("click", closeCheckboxDropdowns);
+    window.addEventListener("resize", closeCheckboxDropdowns);
+    window.addEventListener("scroll", closeCheckboxDropdowns, true);
 
     resetFilterBtn.addEventListener("click", () => {
       filterSearch.value = "";
