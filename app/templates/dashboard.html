@@ -1,2341 +1,678 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Market Share Live Portfolio</title>
   <style>
     :root {
-      color-scheme: dark;
       --bg: #07111f;
-      --bg-soft: #0b1729;
-      --panel: rgba(13, 26, 45, 0.76);
-      --panel-2: rgba(18, 34, 58, 0.92);
-      --border: rgba(255, 255, 255, 0.09);
+      --bg2: #0b1729;
+      --panel: rgba(13, 26, 45, .82);
+      --panel2: rgba(18, 34, 58, .96);
+      --card: rgba(255,255,255,.055);
       --text: #f8fbff;
-      --muted: #93a4bd;
-      --accent: #6ee7b7;
-      --accent-2: #60a5fa;
-      --accent-3: #c084fc;
-      --danger: #fb7185;
-      --positive: #34d399;
-      --negative: #fb7185;
-      --warning: #fbbf24;
-      --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-      --body-bg:
-        radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 26%),
-        radial-gradient(circle at top right, rgba(192, 132, 252, 0.20), transparent 22%),
-        radial-gradient(circle at bottom left, rgba(110, 231, 183, 0.16), transparent 20%),
-        linear-gradient(180deg, #08111f 0%, #091423 30%, #07111f 100%);
-      --radius: 22px;
-      --radius-sm: 16px;
-      --glass: blur(20px);
+      --muted: #91a3bb;
+      --line: rgba(148, 163, 184, .18);
+      --soft-line: rgba(148, 163, 184, .10);
+      --blue: #60a5fa;
+      --purple: #8b5cf6;
+      --green: #34d399;
+      --green-soft: rgba(16, 185, 129, .17);
+      --red: #fb7185;
+      --red-soft: rgba(251, 113, 133, .14);
+      --yellow: #fbbf24;
+      --shadow: 0 24px 60px rgba(0,0,0,.35);
+      --radius: 24px;
+      --input: rgba(255,255,255,.07);
+      --input-border: rgba(148,163,184,.22);
     }
 
     [data-theme="light"] {
-      color-scheme: light;
-      --bg: #eef4ff;
-      --bg-soft: #f8fbff;
-      --panel: rgba(255, 255, 255, 0.82);
-      --panel-2: rgba(255, 255, 255, 0.94);
-      --border: rgba(15, 23, 42, 0.12);
+      --bg: #f3f7ff;
+      --bg2: #eaf1fb;
+      --panel: rgba(255,255,255,.88);
+      --panel2: rgba(255,255,255,.96);
+      --card: rgba(248,251,255,.94);
       --text: #0f172a;
       --muted: #64748b;
-      --accent: #059669;
-      --accent-2: #2563eb;
-      --accent-3: #7c3aed;
-      --danger: #e11d48;
-      --positive: #047857;
-      --negative: #be123c;
-      --warning: #b45309;
-      --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
-      --body-bg:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.13), transparent 28%),
-        radial-gradient(circle at top right, rgba(124, 58, 237, 0.12), transparent 24%),
-        radial-gradient(circle at bottom left, rgba(5, 150, 105, 0.10), transparent 24%),
-        linear-gradient(180deg, #f8fbff 0%, #eef4ff 42%, #e9f1ff 100%);
+      --line: rgba(15, 23, 42, .12);
+      --soft-line: rgba(15, 23, 42, .08);
+      --green-soft: rgba(16, 185, 129, .14);
+      --red-soft: rgba(251, 113, 133, .10);
+      --shadow: 0 22px 50px rgba(15,23,42,.10);
+      --input: #fff;
+      --input-border: rgba(15,23,42,.14);
     }
 
     * { box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
-      color: var(--text);
-      font-family: Inter, Arial, Helvetica, sans-serif;
-      background: var(--body-bg);
       min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(96,165,250,.20), transparent 30%),
+        radial-gradient(circle at 100% 0%, rgba(139,92,246,.19), transparent 24%),
+        radial-gradient(circle at 20% 100%, rgba(52,211,153,.15), transparent 22%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
     }
 
-    .container {
-      max-width: 1380px;
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1440px;
       margin: 0 auto;
-      padding: 26px 18px 34px;
+      padding: 22px;
     }
 
     .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 28px;
-      border-radius: 30px;
-      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
       background:
-        linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(110, 231, 183, 0.08)),
+        linear-gradient(135deg, rgba(96,165,250,.15), rgba(52,211,153,.06)),
         var(--panel);
-      backdrop-filter: var(--glass);
       box-shadow: var(--shadow);
-      margin-bottom: 22px;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: -60px;
-      top: -60px;
-      width: 220px;
-      height: 220px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(192, 132, 252, 0.32), transparent 62%);
-      pointer-events: none;
-    }
-
-    .hero-top {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-
-    .hero-actions {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .nav-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 0 14px;
-      border-radius: 999px;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 14px;
-      backdrop-filter: blur(10px);
-      white-space: nowrap;
-    }
-
-    .nav-link:hover {
-      border-color: rgba(96, 165, 250, 0.38);
-      background: rgba(96, 165, 250, 0.12);
-    }
-
-    .theme-toggle {
-      width: auto;
-      min-height: 40px;
-      padding: 0 14px;
-      border-radius: 999px;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      backdrop-filter: blur(10px);
-      white-space: nowrap;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      color: #dce8f8;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 13px;
-      margin-bottom: 0;
-    }
-
-    .pill-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--accent);
-      box-shadow: 0 0 12px rgba(110, 231, 183, 0.85);
+      backdrop-filter: blur(18px);
+      margin-bottom: 18px;
     }
 
     .hero h1 {
-      position: relative;
-      z-index: 1;
       margin: 0;
-      font-size: clamp(28px, 4vw, 42px);
-      line-height: 1.08;
-      letter-spacing: -0.02em;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: -.04em;
+      line-height: 1.05;
     }
 
     .hero p {
-      position: relative;
-      z-index: 1;
-      margin: 12px 0 0;
-      max-width: 760px;
-      color: #d2def0;
+      margin: 10px 0 0;
+      color: var(--muted);
       font-size: 15px;
       line-height: 1.6;
+      max-width: 800px;
     }
 
-    .summary-grid, .market-grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    .summary-grid {
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      margin-bottom: 22px;
-    }
-
-    .panel {
-      position: relative;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: var(--panel);
-      backdrop-filter: var(--glass);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(180deg, rgba(255,255,255,0.05), transparent 20%);
-    }
-
-    .metric-card {
-      padding: 18px 18px 20px;
-      min-height: 126px;
-    }
-
-    .metric-label {
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.02em;
-      margin-bottom: 10px;
-    }
-
-    .metric-value {
-      font-size: clamp(24px, 2.8vw, 34px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-    }
-
-    .metric-sub {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #d0ddf0;
-      opacity: 0.85;
-    }
-
-    .layout-2 {
-      display: grid;
-      grid-template-columns: 1.15fr 1.85fr;
-      gap: 18px;
-      margin-bottom: 22px;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .section-header h2 {
-      margin: 0;
-      font-size: 22px;
-      letter-spacing: -0.02em;
-    }
-
-    .section-header p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .section-body {
-      padding: 20px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .field { display: block; }
-
-    .field label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    input, select, button {
-      width: 100%;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 14px;
-      min-height: 46px;
-      padding: 0 14px;
-      outline: none;
-      font-size: 14px;
-    }
-
-    input, select {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
-      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
-    }
-
-    input:focus, select:focus {
-      border-color: rgba(96, 165, 250, 0.72);
-      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
-      transform: translateY(-1px);
-    }
-
-    select option {
-      color: #0b1729;
-    }
-
-    .input-note {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .actions {
+    .hero-actions {
       display: flex;
       gap: 10px;
       align-items: center;
+      justify-content: flex-end;
       flex-wrap: wrap;
     }
 
-    button {
-      cursor: pointer;
-      font-weight: 700;
-      color: white;
-      border: none;
-      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      border-radius: var(--radius);
+      overflow: visible;
     }
 
-    button:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.22);
-    }
+    .section-body { padding: 20px; }
 
-    button:disabled {
-      opacity: .58;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    .btn-primary { background: linear-gradient(135deg, #2563eb, #7c3aed); }
-    .btn-secondary { background: linear-gradient(135deg, #334155, #475569); }
-    .btn-danger { background: linear-gradient(135deg, #dc2626, #fb7185); }
-    .btn-ghost {
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .status-bar {
-      margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.05);
-      color: #d5e1f2;
-      font-size: 14px;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .market-grid {
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-
-    .quote-card {
-      padding: 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
-        rgba(255, 255, 255, 0.03);
-      min-height: 148px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      justify-content: space-between;
-    }
-
-    .quote-head {
+    .section-head {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .quote-code {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: .02em;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .badge-live {
-      color: #dffcf2;
-      background: rgba(52, 211, 153, 0.14);
-      border: 1px solid rgba(52, 211, 153, 0.22);
-    }
-
-    .badge-error {
-      color: #ffe4eb;
-      background: rgba(251, 113, 133, 0.14);
-      border: 1px solid rgba(251, 113, 133, 0.22);
-    }
-
-    .badge::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: currentColor;
-      opacity: 0.85;
-    }
-
-    .quote-symbol {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .quote-price {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
-
-    .quote-meta {
-      font-size: 12px;
-      color: #d2def0;
-      opacity: .86;
-    }
-
-    .quote-status {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .table-panel { margin-bottom: 22px; }
-
-    .table-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
+      gap: 16px;
+      align-items: flex-start;
       margin-bottom: 16px;
-    }
-
-    .table-toolbar .eyebrow {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .table-wrap {
-      overflow: auto;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(4, 12, 23, 0.34);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 980px;
-    }
-
-    th, td {
-      padding: 14px 14px;
-      text-align: right;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      white-space: nowrap;
-      font-size: 14px;
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background: rgba(15, 29, 49, 0.95);
-      color: #dce8f8;
-      text-transform: uppercase;
-      font-size: 12px;
-      letter-spacing: 0.06em;
-    }
-
-    td:first-child, th:first-child,
-    td:nth-child(2), th:nth-child(2) {
-      text-align: left;
-    }
-
-    tr:hover td {
-      background: rgba(255, 255, 255, 0.025);
-    }
-
-    tr:last-child td { border-bottom: none; }
-
-    .value-positive { color: var(--positive); font-weight: 800; }
-    .value-negative { color: var(--negative); font-weight: 800; }
-    .muted { color: var(--muted); }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      background: rgba(255,255,255,0.06);
-      color: #d9e5f4;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .empty-state {
-      padding: 26px;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    .small-actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-    }
-
-    .small-actions button {
-      width: auto;
-      min-height: 36px;
-      padding: 0 12px;
-      border-radius: 12px;
-      font-size: 13px;
-    }
-
-    .footer-note {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-
-    [data-theme="light"] .hero p,
-    [data-theme="light"] .metric-sub,
-    [data-theme="light"] .quote-meta,
-    [data-theme="light"] .status-bar {
-      color: #475569;
-    }
-
-    [data-theme="light"] .pill,
-    [data-theme="light"] .theme-toggle,
-    [data-theme="light"] .chip,
-    [data-theme="light"] .btn-ghost {
-      color: #0f172a;
-      background: rgba(255, 255, 255, 0.72);
-      border-color: rgba(15, 23, 42, 0.10);
-    }
-
-    [data-theme="light"] input,
-    [data-theme="light"] select {
-      color: #0f172a;
-      background: rgba(255, 255, 255, 0.82);
-      border-color: rgba(15, 23, 42, 0.12);
-    }
-
-    [data-theme="light"] .status-bar,
-    [data-theme="light"] .quote-card,
-    [data-theme="light"] .table-wrap {
-      background: rgba(255, 255, 255, 0.62);
-      border-color: rgba(15, 23, 42, 0.10);
-    }
-
-    [data-theme="light"] .quote-card {
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.62)),
-        rgba(255,255,255,0.55);
-    }
-
-    [data-theme="light"] th {
-      background: rgba(226, 232, 240, 0.96);
-      color: #0f172a;
-    }
-
-    [data-theme="light"] td {
-      color: #0f172a;
-    }
-
-    [data-theme="light"] tr:hover td {
-      background: rgba(37, 99, 235, 0.045);
-    }
-
-
-    /* Light mode bug fixes: keep badge and secondary text readable. */
-    [data-theme="light"] .badge-live {
-      color: #065f46;
-      background: rgba(16, 185, 129, 0.16);
-      border-color: rgba(5, 150, 105, 0.28);
-      box-shadow: 0 8px 20px rgba(5, 150, 105, 0.08);
-    }
-
-    [data-theme="light"] .badge-error {
-      color: #9f1239;
-      background: rgba(244, 63, 94, 0.12);
-      border-color: rgba(225, 29, 72, 0.26);
-      box-shadow: 0 8px 20px rgba(225, 29, 72, 0.08);
-    }
-
-    [data-theme="light"] .quote-symbol,
-    [data-theme="light"] .quote-status,
-    [data-theme="light"] .table-toolbar .eyebrow,
-    [data-theme="light"] .field label,
-    [data-theme="light"] .input-note,
-    [data-theme="light"] .footer-note {
-      color: #475569;
-    }
-
-    [data-theme="light"] .quote-price,
-    [data-theme="light"] .quote-code,
-    [data-theme="light"] .metric-value,
-    [data-theme="light"] .section-header h2 {
-      color: #0f172a;
-    }
-
-    [data-theme="light"] .btn-secondary {
-      background: linear-gradient(135deg, #475569, #64748b);
-      color: #ffffff;
-    }
-
-    [data-theme="light"] .btn-danger {
-      background: linear-gradient(135deg, #e11d48, #f43f5e);
-      color: #ffffff;
-    }
-
-    [data-theme="light"] .small-actions button,
-    [data-theme="light"] #exportPdfBtn,
-    [data-theme="light"] #saveBtn,
-    [data-theme="light"] #cancelBtn {
-      color: #ffffff;
-    }
-
-
-    .filter-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
-      align-items: end;
-    }
-
-    .filter-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
     }
 
     .title-row {
       display: flex;
       align-items: center;
-      gap: 10px;
       flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .count-pill {
+    h2 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -.03em;
+    }
+
+    .section-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .badge, .count-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
+      gap: 7px;
+      min-height: 30px;
+      padding: 5px 12px;
       border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      color: #dce8f8;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.09);
-    }
-
-    .charts-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr 1fr;
-      gap: 16px;
-    }
-
-    .chart-card {
-      min-height: 280px;
-      padding: 18px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.035);
-    }
-
-    .chart-title {
-      margin: 0 0 6px;
-      font-size: 16px;
-      font-weight: 800;
-    }
-
-    .chart-subtitle {
-      margin: 0 0 14px;
-      color: var(--muted);
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-weight: 850;
       font-size: 13px;
+      white-space: nowrap;
     }
 
-    .donut-wrap {
-      display: grid;
-      grid-template-columns: 160px 1fr;
-      gap: 14px;
+    [data-theme="light"] .badge,
+    [data-theme="light"] .count-pill {
+      background: #fff;
+    }
+
+    .badge.live {
+      color: #065f46;
+      background: rgba(110,231,183,.22);
+      border-color: rgba(16,185,129,.32);
+    }
+
+    .badge.issue {
+      color: #9f1239;
+      background: rgba(251,113,133,.18);
+      border-color: rgba(251,113,133,.30);
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 0 4px rgba(52,211,153,.12);
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
       align-items: center;
-    }
-
-    .donut {
-      width: 160px;
-      height: 160px;
-      border-radius: 999px;
-      background: conic-gradient(#60a5fa 0deg, #60a5fa 360deg);
-      display: grid;
-      place-items: center;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-    }
-
-    .donut::after {
-      content: "";
-      width: 94px;
-      height: 94px;
-      border-radius: 999px;
-      background: var(--bg-soft);
-      border: 1px solid var(--border);
-    }
-
-    .legend {
-      display: grid;
       gap: 8px;
-      max-height: 168px;
-      overflow: auto;
-      padding-right: 4px;
-    }
-
-    .legend-item {
-      display: grid;
-      grid-template-columns: 10px 1fr auto;
-      gap: 8px;
-      align-items: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-    }
-
-    .bar-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .bar-row {
-      display: grid;
-      grid-template-columns: 64px 1fr 82px;
-      gap: 10px;
-      align-items: center;
-      font-size: 12px;
-    }
-
-    .bar-track {
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .bar-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #60a5fa, #6ee7b7);
-    }
-
-    .bar-fill.negative {
-      background: linear-gradient(90deg, #fb7185, #f97316);
-    }
-
-    .mini-bars {
-      display: grid;
-      gap: 16px;
-      padding-top: 8px;
-    }
-
-    .mini-bar-label {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .mini-bar {
-      height: 24px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .mini-bar span {
-      display: block;
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-    }
-
-    .mini-buy { background: linear-gradient(90deg, #2563eb, #60a5fa); }
-    .mini-sell { background: linear-gradient(90deg, #f43f5e, #fb7185); }
-
-    .chart-empty {
-      display: grid;
-      place-items: center;
-      min-height: 170px;
-      color: var(--muted);
-      text-align: center;
-      font-size: 14px;
-      border: 1px dashed rgba(255,255,255,0.14);
+      min-height: 44px;
+      border: 0;
       border-radius: 16px;
+      padding: 0 16px;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 850;
+      font-size: 14px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease;
     }
 
-    [data-theme="light"] .count-pill,
-    [data-theme="light"] .chart-card {
-      color: #0f172a;
-      background: rgba(255,255,255,0.62);
-      border-color: rgba(15, 23, 42, 0.10);
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(37,99,235,.22); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn.secondary { background: linear-gradient(135deg, #334155, #475569); }
+    .btn.soft {
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--line);
+    }
+    .btn.danger { background: linear-gradient(135deg, #dc2626, #fb7185); }
+    .btn.small { min-height: 36px; border-radius: 12px; padding: 0 12px; font-size: 13px; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
     }
 
-    [data-theme="light"] .bar-track,
-    [data-theme="light"] .mini-bar {
-      background: rgba(15, 23, 42, 0.08);
+    .metric {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
     }
 
-    [data-theme="light"] .donut::after {
-      background: #f8fbff;
-    }
-
-
-
-    .cell-note {
-      margin-top: 4px;
+    .metric-label {
       color: var(--muted);
-      font-size: 12px;
-      line-height: 1.35;
+      font-size: 13px;
+      margin-bottom: 8px;
     }
 
-    .conversion-note {
-      margin-top: 6px;
-      color: var(--accent-2);
-      font-size: 12px;
-      line-height: 1.35;
+    .metric-value {
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 420px minmax(0,1fr);
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    input, select, .dropdown-button {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--input-border);
+      border-radius: 16px;
+      padding: 0 14px;
+      background: var(--input);
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
       font-weight: 700;
     }
 
-    [data-theme="light"] .conversion-note {
-      color: #1d4ed8;
+    input:focus, select:focus, .dropdown.open .dropdown-button {
+      border-color: rgba(96,165,250,.65);
+      box-shadow: 0 0 0 4px rgba(96,165,250,.14);
     }
 
-    @media (max-width: 1180px) {
-      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .layout-2 { grid-template-columns: 1fr; }
-      .charts-grid { grid-template-columns: 1fr; }
-      .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
+    select option { color: #0f172a; }
 
-    @media (max-width: 760px) {
-      .container { padding: 14px; }
-      .hero { padding: 22px 18px; border-radius: 24px; }
-      .summary-grid { grid-template-columns: 1fr; }
-      .form-grid { grid-template-columns: 1fr; }
-      .filter-grid { grid-template-columns: 1fr; }
-      .donut-wrap { grid-template-columns: 1fr; justify-items: center; }
-      .bar-row { grid-template-columns: 54px 1fr 72px; }
-      .section-body { padding: 16px; }
-      .table-toolbar { flex-direction: column; align-items: flex-start; }
-      .hero-top { align-items: flex-start; }
-      .theme-toggle { width: 100%; }
-    }
-
-    .type-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 52px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-    }
-
-    .type-buy {
-      color: #dffcf2;
-      background: rgba(52, 211, 153, 0.14);
-      border: 1px solid rgba(52, 211, 153, 0.22);
-    }
-
-    .type-sell {
-      color: #ffe4eb;
-      background: rgba(251, 113, 133, 0.14);
-      border: 1px solid rgba(251, 113, 133, 0.22);
-    }
-
-    [data-theme="light"] .type-buy {
-      color: #065f46;
-      background: rgba(16, 185, 129, 0.16);
-      border-color: rgba(5, 150, 105, 0.28);
-    }
-
-    [data-theme="light"] .type-sell {
-      color: #9f1239;
-      background: rgba(244, 63, 94, 0.12);
-      border-color: rgba(225, 29, 72, 0.26);
-    }
-
-
-    /* v17 premium redesign + filter/sort polish */
-    :root {
-      --radius: 24px;
-      --radius-sm: 18px;
-      --glass: blur(22px);
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: -20%;
-      z-index: -1;
-      background:
-        radial-gradient(circle at 22% 10%, rgba(96, 165, 250, 0.22), transparent 27%),
-        radial-gradient(circle at 76% 6%, rgba(192, 132, 252, 0.20), transparent 28%),
-        radial-gradient(circle at 52% 94%, rgba(45, 212, 191, 0.14), transparent 30%);
-      filter: blur(2px);
-      pointer-events: none;
-    }
-
-    .hero {
-      min-height: 210px;
+    .form-grid, .filter-grid {
       display: grid;
-      align-content: center;
-      background:
-        linear-gradient(135deg, rgba(30, 41, 59, 0.78), rgba(15, 23, 42, 0.72)),
-        radial-gradient(circle at 12% 10%, rgba(96,165,250,.34), transparent 32%),
-        radial-gradient(circle at 90% 30%, rgba(110,231,183,.18), transparent 28%);
+      gap: 12px;
     }
 
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 1px;
-      border-radius: 29px;
-      background:
-        linear-gradient(120deg, rgba(255,255,255,.12), transparent 26%, rgba(255,255,255,.06));
-      pointer-events: none;
+    .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .filter-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: end; }
+
+    .field.full { grid-column: 1 / -1; }
+
+    .status {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--card);
+      border: 1px solid var(--soft-line);
+      color: var(--muted);
+      font-size: 14px;
     }
 
-    .pill, .chip, .count-pill {
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    .market-board {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
     }
 
-    .panel {
-      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
-    }
-
-    .panel:hover {
-      border-color: rgba(96, 165, 250, .22);
-    }
-
-    .metric-card {
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
-        var(--panel);
-    }
-
-    .metric-card::after {
-      content: "";
-      position: absolute;
-      inset: auto 18px 0 18px;
-      height: 3px;
-      border-radius: 999px 999px 0 0;
-      background: linear-gradient(90deg, #60a5fa, #6ee7b7, #c084fc);
-      opacity: .68;
-    }
-
-    .market-header-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .market-grid {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-    }
-
-    .quote-card {
-      position: relative;
-      min-height: 176px;
-      padding: 18px;
-      border-radius: 22px;
-      overflow: hidden;
-      background:
-        linear-gradient(135deg, rgba(96, 165, 250, .16), rgba(110, 231, 183, .06)),
-        rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.11);
-      box-shadow: 0 14px 34px rgba(0,0,0,.22);
-    }
-
-    .quote-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 86% 12%, rgba(110,231,183,.18), transparent 24%),
-        linear-gradient(180deg, rgba(255,255,255,.06), transparent 36%);
-    }
-
-    .quote-card::after {
-      content: "";
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 14px;
-      height: 3px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(96,165,250,.9), rgba(110,231,183,.9));
-      opacity: .65;
-    }
-
-    .quote-card.quote-error::after {
-      background: linear-gradient(90deg, rgba(251,113,133,.95), rgba(251,191,36,.92));
-    }
-
-    .quote-top,
-    .quote-main,
-    .quote-footer {
-      position: relative;
-      z-index: 1;
+    .quote {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--card);
     }
 
     .quote-top {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 10px;
+      align-items: center;
     }
 
     .quote-code {
-      font-size: 24px;
-      letter-spacing: .05em;
-      line-height: 1;
-    }
-
-    .quote-symbol {
-      margin-top: 8px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .quote-price {
-      margin-top: 8px;
-      font-size: clamp(30px, 4vw, 42px);
-      line-height: .95;
-    }
-
-    .quote-footer {
-      display: grid;
-      gap: 6px;
-      margin-top: 14px;
-    }
-
-    .quote-meta-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .quote-native {
-      font-size: 12px;
-      color: var(--accent-2);
-      font-weight: 700;
-    }
-
-    .badge {
-      min-width: 74px;
-      justify-content: center;
-      font-weight: 800;
-    }
-
-    .badge-live {
-      color: #dcfce7;
-      background: linear-gradient(135deg, rgba(16,185,129,.24), rgba(45,212,191,.15));
-      border-color: rgba(45,212,191,.30);
-    }
-
-    .badge-error {
-      color: #fff1f2;
-      background: linear-gradient(135deg, rgba(244,63,94,.24), rgba(251,191,36,.12));
-      border-color: rgba(251,113,133,.30);
-    }
-
-    .filter-grid {
-      grid-template-columns: 1.2fr repeat(5, minmax(0, 1fr)) auto;
-      align-items: end;
-    }
-
-    .filter-panel {
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025)),
-        var(--panel);
-    }
-
-    .filter-actions button {
-      min-width: 92px;
-    }
-
-    .table-toolbar {
-      align-items: flex-start;
-    }
-
-    .table-wrap {
-      max-height: 640px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
-    }
-
-    th {
-      top: 0;
-      backdrop-filter: blur(14px);
-      box-shadow: inset 0 -1px 0 rgba(255,255,255,.08);
-    }
-
-    th.sortable {
-      cursor: pointer;
-      user-select: none;
-    }
-
-    th.sortable:hover {
-      color: var(--accent);
-    }
-
-    th.sortable::after {
-      content: " ↕";
-      opacity: .42;
-      font-size: 11px;
-    }
-
-    th.sorted-asc::after {
-      content: " ↑";
-      opacity: .95;
-      color: var(--accent);
-    }
-
-    th.sorted-desc::after {
-      content: " ↓";
-      opacity: .95;
-      color: var(--accent);
-    }
-
-    tbody td:first-child,
-    thead th:first-child {
-      position: sticky;
-      left: 0;
-      z-index: 2;
-      background: rgba(15, 29, 49, 0.94);
-    }
-
-    tbody td:first-child {
-      background: rgba(13, 26, 45, 0.92);
-      font-weight: 800;
-    }
-
-    .design-note {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    [data-theme="light"] body::before {
-      background:
-        radial-gradient(circle at 18% 6%, rgba(59,130,246,.20), transparent 28%),
-        radial-gradient(circle at 86% 8%, rgba(168,85,247,.13), transparent 26%),
-        radial-gradient(circle at 58% 88%, rgba(20,184,166,.12), transparent 30%);
-    }
-
-    [data-theme="light"] .hero {
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.92), rgba(241,245,249,.78)),
-        radial-gradient(circle at 14% 10%, rgba(59,130,246,.15), transparent 34%),
-        radial-gradient(circle at 92% 24%, rgba(16,185,129,.12), transparent 28%);
-    }
-
-    [data-theme="light"] .quote-card {
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.96), rgba(248,250,252,.78)),
-        rgba(255,255,255,.72);
-      border-color: rgba(15,23,42,.10);
-      box-shadow: 0 16px 36px rgba(15,23,42,.08);
-    }
-
-    [data-theme="light"] .quote-card::before {
-      background:
-        radial-gradient(circle at 86% 12%, rgba(16,185,129,.12), transparent 24%),
-        linear-gradient(180deg, rgba(37,99,235,.06), transparent 40%);
-    }
-
-    [data-theme="light"] .quote-native {
-      color: #1d4ed8;
-    }
-
-    [data-theme="light"] tbody td:first-child,
-    [data-theme="light"] thead th:first-child {
-      background: rgba(226, 232, 240, 0.97);
-    }
-
-    [data-theme="light"] tbody td:first-child {
-      background: rgba(255, 255, 255, 0.96);
-    }
-
-    [data-theme="light"] .filter-panel {
-      background: rgba(255,255,255,.72);
-    }
-
-    @media (max-width: 1180px) {
-      .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 760px) {
-      .market-header-actions { width: 100%; justify-content: flex-start; }
-      .filter-actions { flex-direction: column; align-items: stretch; }
-      .filter-actions button { width: 100%; }
-      .table-wrap { max-height: none; }
-    }
-
-  
-    /* v18 redesign: market board + user-selectable table views */
-    .market-grid {
-      display: block;
-    }
-
-    .market-command {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .market-command-card {
-      padding: 14px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(96,165,250,.14), rgba(110,231,183,.08));
-      border: 1px solid rgba(255,255,255,.10);
-    }
-
-    .market-command-card span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-
-    .market-command-card strong {
-      font-size: 22px;
+      font-weight: 950;
+      font-size: 20px;
       letter-spacing: -.02em;
     }
 
-    .market-board {
+    .quote-price {
       display: grid;
-      gap: 10px;
-      max-height: 512px;
-      overflow: auto;
-      padding-right: 3px;
-    }
-
-    .market-row {
-      display: grid;
-      grid-template-columns: minmax(112px, .85fr) minmax(138px, 1.1fr) minmax(150px, 1.15fr) minmax(96px, .75fr) minmax(108px, .72fr);
-      align-items: center;
-      gap: 12px;
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.09);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.02)),
-        rgba(255,255,255,.035);
-      transition: transform .16s ease, border-color .16s ease, background .16s ease;
-    }
-
-    .market-row:hover {
-      transform: translateY(-1px);
-      border-color: rgba(96,165,250,.30);
-      background:
-        linear-gradient(135deg, rgba(96,165,250,.12), rgba(110,231,183,.05)),
-        rgba(255,255,255,.045);
-    }
-
-    .market-identity {
-      display: grid;
-      gap: 5px;
-    }
-
-    .market-code {
-      font-weight: 900;
-      font-size: 18px;
-      letter-spacing: .08em;
-    }
-
-    .market-symbol {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .market-price-main,
-    .market-detail {
-      display: grid;
-      gap: 5px;
-    }
-
-    .market-label {
-      color: var(--muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .market-price {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: -.03em;
-      line-height: 1.05;
-    }
-
-    .market-detail strong {
-      font-size: 14px;
-    }
-
-    .market-detail span:last-child {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .market-status-badge {
-      justify-self: end;
-      display: inline-flex;
-      align-items: center;
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
-      min-width: 96px;
-      justify-content: center;
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 900;
     }
 
-    .market-status-badge::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: currentColor;
-      box-shadow: 0 0 14px currentColor;
-    }
-
-    .market-status-badge.live {
-      color: #bbf7d0;
-      background: rgba(34,197,94,.13);
-      border: 1px solid rgba(34,197,94,.22);
-    }
-
-    .market-status-badge.issue {
-      color: #fecdd3;
-      background: rgba(244,63,94,.13);
-      border: 1px solid rgba(244,63,94,.22);
-    }
-
-    .view-options {
-      margin-top: 18px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      display: grid;
-      gap: 16px;
-    }
-
-    .view-sort-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .column-options {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .column-options details {
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 16px;
-      background: rgba(255,255,255,.035);
-      padding: 12px;
-    }
-
-    .column-options summary {
-      cursor: pointer;
-      font-weight: 900;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
-
-    .column-checks {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding-top: 10px;
-    }
-
-    .column-check {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.08);
-      color: var(--text);
-      font-size: 12px;
-      font-weight: 800;
-      user-select: none;
-    }
-
-    .column-check input {
-      width: 14px;
-      height: 14px;
-      min-height: 14px;
-      padding: 0;
-      accent-color: var(--accent-2);
-    }
-
-    .col-hidden {
-      display: none !important;
-    }
-
-    .hidden-controls { display: none !important; }
-
-    [data-theme="light"] .market-command-card,
-    [data-theme="light"] .market-row,
-    [data-theme="light"] .column-options details,
-    [data-theme="light"] .column-check {
-      background: rgba(255,255,255,.74);
-      border-color: rgba(15,23,42,.10);
-    }
-
-    [data-theme="light"] .market-row:hover {
-      background: linear-gradient(135deg, rgba(37,99,235,.08), rgba(5,150,105,.05)), rgba(255,255,255,.90);
-      border-color: rgba(37,99,235,.22);
-    }
-
-    [data-theme="light"] .market-status-badge.live {
-      color: #047857;
-      background: rgba(16,185,129,.14);
-      border-color: rgba(5,150,105,.26);
-    }
-
-    [data-theme="light"] .market-status-badge.issue {
-      color: #be123c;
-      background: rgba(244,63,94,.12);
-      border-color: rgba(225,29,72,.24);
-    }
-
-    @media (max-width: 980px) {
-      .market-command,
-      .view-sort-grid,
-      .column-options {
-        grid-template-columns: 1fr;
-      }
-
-      .market-row {
-        grid-template-columns: 1fr;
-        align-items: stretch;
-      }
-
-      .market-status-badge {
-        justify-self: start;
-      }
-    }
-
-
-    /* v19 compact market board and per-column filters */
-    .market-panel {
-      min-width: 0;
-    }
-
-    .market-mini-stats {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .market-mini-stats span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.055);
-      border: 1px solid rgba(255,255,255,.08);
-    }
-
-    .market-mini-stats strong {
-      color: var(--text);
-    }
-
-    .market-board {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 7px;
-      max-height: none;
-      overflow: visible;
-      padding-right: 0;
-    }
-
-    .market-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 6px 8px;
-      align-items: center;
-      padding: 10px 11px;
+    .quote-stat {
+      padding: 10px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.09);
-      background: rgba(255,255,255,.035);
-      min-height: 86px;
-      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+      background: rgba(255,255,255,.045);
+      border: 1px solid var(--soft-line);
     }
 
-    .market-row:hover {
-      transform: translateY(-1px);
-      border-color: rgba(96,165,250,.28);
-      background: rgba(96,165,250,.06);
-    }
+    [data-theme="light"] .quote-stat { background: #f8fafc; }
 
-    .market-identity {
-      display: grid;
-      gap: 3px;
-      min-width: 0;
-    }
-
-    .market-code {
-      font-size: 17px;
-      line-height: 1.1;
-      font-weight: 900;
-      letter-spacing: .08em;
-    }
-
-    .market-symbol {
-      color: var(--muted);
-      font-size: 12px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .market-status-badge {
-      justify-self: end;
-      padding: 5px 9px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .market-detail {
-      display: grid;
-      gap: 3px;
-    }
-
-
-    .market-price-block {
-      grid-column: 1 / -1;
-    }
-
-    .market-label {
+    .quote-label {
       color: var(--muted);
       font-size: 11px;
+      font-weight: 850;
       text-transform: uppercase;
       letter-spacing: .08em;
     }
 
-    .market-price,
-    .market-detail strong {
-      font-size: 14px;
+    .quote-value {
+      margin-top: 4px;
+      font-size: 15px;
       font-weight: 900;
-      letter-spacing: 0;
-      line-height: 1.2;
+      word-break: break-word;
     }
 
-    .market-native-line,
-    .market-fx-line {
+    .quote-note {
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
       line-height: 1.35;
-      grid-column: 1 / -1;
     }
 
-    .column-filter-row th {
-      position: sticky;
-      top: 42px;
-      z-index: 2;
-      background: rgba(15, 29, 49, 0.98);
-      padding: 8px;
+    .toolbar {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr)) auto;
+      gap: 12px;
+      align-items: end;
+      padding: 14px;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      margin-bottom: 16px;
     }
 
-    .column-filter {
-      width: 100%;
-      min-height: 34px;
-      height: 34px;
-      border-radius: 10px;
-      padding: 0 8px;
-      font-size: 12px;
-      font-weight: 700;
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,.10);
-    }
-
-    .column-filter::placeholder {
-      color: var(--muted);
-    }
-
-    .mini-filter-button {
-      min-height: 34px;
-      height: 34px;
-      border-radius: 10px;
-      padding: 0 10px;
-      font-size: 12px;
-      background: rgba(255,255,255,.08);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,.10);
-    }
-
-    .table-wrap thead tr:first-child th {
-      top: 0;
-    }
-
-    [data-theme="light"] .market-mini-stats span,
-    [data-theme="light"] .market-row {
-      background: rgba(255,255,255,.78);
-      border-color: rgba(15,23,42,.10);
-    }
-
-    [data-theme="light"] .market-row:hover {
-      background: rgba(37,99,235,.055);
-      border-color: rgba(37,99,235,.20);
-    }
-
-    [data-theme="light"] .column-filter-row th {
-      background: rgba(232, 240, 252, 0.98);
-    }
-
-    [data-theme="light"] .column-filter,
-    [data-theme="light"] .mini-filter-button {
-      background: #ffffff;
-      color: #0f172a;
-      border-color: rgba(15,23,42,.14);
-    }
-
-
-    /* v22 table-scroll fix:
-       Keep the full header/filter block aligned during vertical/horizontal scroll.
-       Previous version mixed sticky first column + sticky individual header cells, which caused the first column/filter row to visually drift. */
-    .table-wrap {
+    .dropdown { position: relative; }
+    .dropdown-button {
       position: relative;
-      overflow: auto;
-    }
-
-    .table-wrap table {
-      border-collapse: separate;
-      border-spacing: 0;
-      table-layout: auto;
-    }
-
-    .table-wrap thead {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-    }
-
-    .table-wrap thead th {
-      position: static !important;
-      top: auto !important;
-      left: auto !important;
-      z-index: auto !important;
-    }
-
-    .table-wrap thead tr:first-child th {
-      background: rgba(15, 29, 49, 0.98);
-      box-shadow: inset 0 -1px 0 rgba(255,255,255,.08);
-    }
-
-    .table-wrap .column-filter-row th {
-      background: rgba(15, 29, 49, 0.98);
-      padding: 8px;
-    }
-
-    .table-wrap tbody td:first-child,
-    .table-wrap thead th:first-child {
-      position: static !important;
-      left: auto !important;
-      z-index: auto !important;
-    }
-
-    .table-wrap tbody td:first-child {
-      background: transparent;
-      font-weight: 800;
-    }
-
-    [data-theme="light"] .table-wrap thead tr:first-child th,
-    [data-theme="light"] .table-wrap .column-filter-row th {
-      background: rgba(232, 240, 252, 0.98);
-    }
-
-
-
-    /* v24 checkbox dropdown column filters + stronger row colors */
-    .share-multi-filter[hidden] {
-      display: none !important;
-    }
-
-    .checkbox-dropdown {
-      position: relative;
-      width: 100%;
-      min-width: 170px;
-    }
-
-    .checkbox-dropdown-button {
-      width: 100%;
-      min-height: 38px;
-      height: 38px;
-      border-radius: 12px;
-      padding: 0 34px 0 12px;
       text-align: left;
-      font-size: 12px;
-      font-weight: 850;
-      color: var(--text);
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: none;
-      position: relative;
+      padding-right: 38px;
+      cursor: pointer;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .checkbox-dropdown-button::after {
+    .dropdown-button::after {
       content: "▾";
       position: absolute;
-      right: 12px;
+      right: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--muted);
-      font-size: 13px;
     }
 
-    .checkbox-dropdown.open .checkbox-dropdown-button {
-      border-color: rgba(96,165,250,.52);
-      box-shadow: 0 0 0 4px rgba(96,165,250,.14);
-      background: rgba(96,165,250,.12);
-    }
-
-    .checkbox-dropdown-menu {
+    .dropdown-menu {
       display: none;
-      position: fixed;
-      z-index: 9999;
-      min-width: 220px;
-      max-height: 300px;
+      position: absolute;
+      left: 0;
+      top: calc(100% + 8px);
+      z-index: 60;
+      width: min(320px, calc(100vw - 44px));
+      max-height: 360px;
       overflow: auto;
       padding: 10px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(15, 29, 49, .98);
-      box-shadow: 0 24px 60px rgba(0,0,0,.38);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: 0 24px 60px rgba(0,0,0,.25);
       backdrop-filter: blur(18px);
     }
 
-    .checkbox-dropdown.open .checkbox-dropdown-menu {
-      display: block;
-    }
+    .dropdown.open .dropdown-menu { display: block; }
 
-    .checkbox-dropdown-actions {
+    .dropdown-actions {
       display: flex;
       gap: 8px;
-      padding-bottom: 8px;
+      position: sticky;
+      top: -10px;
+      padding: 0 0 9px;
       margin-bottom: 8px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: var(--panel2);
+      border-bottom: 1px solid var(--soft-line);
     }
 
-    .checkbox-dropdown-actions button {
-      min-height: 30px;
-      height: 30px;
-      border-radius: 10px;
-      font-size: 12px;
-      padding: 0 10px;
-      background: rgba(255,255,255,.08);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,.10);
-      width: auto;
-    }
-
-    .checkbox-option {
+    .check-row {
       display: flex;
       align-items: center;
-      gap: 9px;
-      min-height: 34px;
-      padding: 7px 8px;
-      border-radius: 11px;
-      color: var(--text);
-      font-size: 13px;
-      font-weight: 800;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 12px;
       cursor: pointer;
-      user-select: none;
+      font-weight: 850;
     }
 
-    .checkbox-option:hover {
-      background: rgba(96,165,250,.14);
-    }
-
-    .checkbox-option input {
-      width: 16px;
-      height: 16px;
-      min-height: 16px;
+    .check-row:hover { background: rgba(96,165,250,.12); }
+    .check-row input {
+      width: 18px;
+      height: 18px;
+      min-height: 18px;
       margin: 0;
-      accent-color: #34d399;
+      accent-color: var(--green);
     }
 
-    .checkbox-empty {
+    .summary-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .holding-card {
+      display: grid;
+      grid-template-columns: 140px minmax(0, 1fr) 210px;
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(0,0,0,.08);
+    }
+
+    .holding-card.below-market {
+      background: linear-gradient(90deg, rgba(16,185,129,.20), rgba(16,185,129,.09));
+      border-color: rgba(16,185,129,.38);
+    }
+
+    [data-theme="light"] .holding-card.below-market {
+      background: linear-gradient(90deg, rgba(187,247,208,.75), rgba(236,253,245,.96));
+      border-color: rgba(16,185,129,.34);
+    }
+
+    .ticker {
+      font-size: 26px;
+      font-weight: 950;
+      letter-spacing: -.03em;
+    }
+
+    .ticker-sub {
       color: var(--muted);
       font-size: 12px;
-      padding: 10px 8px;
+      margin-top: 4px;
     }
 
-    tbody tr.summary-positive-row td {
-      background: rgba(52, 211, 153, 0.075) !important;
-      box-shadow: inset 3px 0 0 rgba(52, 211, 153, .46);
+    .holding-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(110px, 1fr));
+      gap: 10px;
     }
 
-    tbody tr.summary-negative-row td {
-      background: rgba(251, 113, 133, 0.075) !important;
-      box-shadow: inset 3px 0 0 rgba(251, 113, 133, .46);
+    .mini-metric {
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--soft-line);
     }
 
-    tbody tr.avg-above-market-row td {
-      background: linear-gradient(90deg, rgba(16, 185, 129, 0.30), rgba(16, 185, 129, 0.18)) !important;
-      box-shadow: inset 3px 0 0 rgba(52, 211, 153, .90), inset 0 1px 0 rgba(16, 185, 129, 0.18), inset 0 -1px 0 rgba(16, 185, 129, 0.18) !important;
+    [data-theme="light"] .mini-metric { background: rgba(255,255,255,.65); }
+
+    .mini-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .06em;
     }
 
-    tbody tr.avg-above-market-row:hover td {
-      background: linear-gradient(90deg, rgba(16, 185, 129, 0.38), rgba(16, 185, 129, 0.23)) !important;
-    }
-
-    tbody tr.summary-negative-row:not(.avg-above-market-row):hover td {
-      background: rgba(251, 113, 133, 0.12) !important;
-    }
-
-    tbody tr.summary-positive-row:not(.avg-above-market-row):hover td {
-      background: rgba(52, 211, 153, 0.12) !important;
-    }
-
-    [data-theme="light"] .checkbox-dropdown-button {
-      background: #ffffff;
-      color: #0f172a;
-      border-color: rgba(15,23,42,.14);
-    }
-
-    [data-theme="light"] .checkbox-dropdown.open .checkbox-dropdown-button {
-      border-color: rgba(37,99,235,.36);
-      background: #eff6ff;
-      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
-    }
-
-    [data-theme="light"] .checkbox-dropdown-menu {
-      background: rgba(255,255,255,.98);
-      border-color: rgba(15,23,42,.12);
-      box-shadow: 0 24px 60px rgba(15,23,42,.18);
-    }
-
-    [data-theme="light"] .checkbox-dropdown-actions {
-      border-bottom-color: rgba(15,23,42,.10);
-    }
-
-    [data-theme="light"] .checkbox-dropdown-actions button {
-      background: #f1f5f9;
-      color: #0f172a;
-      border-color: rgba(15,23,42,.12);
-    }
-
-    [data-theme="light"] .checkbox-option:hover {
-      background: #eff6ff;
-    }
-
-    [data-theme="light"] tbody tr.summary-positive-row td {
-      background: #ecfdf5 !important;
-      box-shadow: inset 4px 0 0 #10b981 !important;
-    }
-
-    [data-theme="light"] tbody tr.summary-negative-row td {
-      background: #fff1f2 !important;
-      box-shadow: inset 4px 0 0 #f43f5e !important;
-    }
-
-    [data-theme="light"] tbody tr.avg-above-market-row td {
-      background: linear-gradient(90deg, #bbf7d0, #dcfce7) !important;
-      box-shadow: inset 4px 0 0 #16a34a, inset 0 1px 0 rgba(22, 163, 74, 0.18), inset 0 -1px 0 rgba(22, 163, 74, 0.18) !important;
-    }
-
-    [data-theme="light"] tbody tr.avg-above-market-row:hover td {
-      background: linear-gradient(90deg, #86efac, #bbf7d0) !important;
-    }
-
-    @media (min-width: 1181px) {
-      .layout-2 {
-        grid-template-columns: minmax(320px, .8fr) minmax(720px, 2.2fr);
-      }
-    }
-
-    .market-row {
-      min-height: 86px;
-      padding: 10px 11px;
-    }
-
-    .market-board {
-      grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
-    }
-
-    .market-price,
-    .market-detail strong {
-      font-size: 14px;
-    }
-
-    .market-code {
-      font-size: 15px;
-    }
-
-
-    @media (max-width: 1180px) {
-      .market-board {
-        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      }
-    }
-
-
-
-    /* v25 table/design fixes: cleaner light/dark colors + anchored checkbox dropdown */
-    .table-wrap {
-      border-radius: 24px;
-      border: 1px solid var(--border);
-      background: color-mix(in srgb, var(--panel-2) 86%, transparent);
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.20);
-    }
-
-    .table-wrap.dropdown-open {
-      overflow: visible;
-      position: relative;
-      z-index: 120;
-    }
-
-    table {
-      border-collapse: separate;
-      border-spacing: 0;
-    }
-
-    .table-wrap thead tr:first-child th {
-      background: linear-gradient(180deg, rgba(20, 35, 58, 0.98), rgba(14, 28, 48, 0.98)) !important;
-      color: #eef6ff;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-      padding-top: 16px;
-      padding-bottom: 16px;
-    }
-
-    .table-wrap .column-filter-row th {
-      background: rgba(13, 26, 45, 0.98) !important;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-      padding: 10px 10px 14px;
-    }
-
-    .column-filter-row input,
-    .column-filter-row select,
-    .checkbox-dropdown-button {
-      min-height: 44px;
-      height: 44px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(148,163,184,0.22);
-      color: var(--text);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-    }
-
-    tbody td {
-      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
-      font-size: 15px;
-      font-weight: 650;
-      letter-spacing: -0.01em;
-    }
-
-    tbody tr:not(.summary-positive-row):not(.summary-negative-row):nth-child(even) td {
-      background: rgba(255,255,255,0.025);
-    }
-
-    tbody tr:hover td {
-      background: rgba(96,165,250,0.08) !important;
-    }
-
-    tbody tr.summary-positive-row td {
-      background: rgba(16,185,129,0.055) !important;
-      box-shadow: none !important;
-    }
-
-    tbody tr.summary-negative-row td {
-      background: rgba(244,63,94,0.055) !important;
-      box-shadow: none !important;
-    }
-
-    tbody tr.avg-above-market-row td {
-      background: linear-gradient(90deg, rgba(6,78,59,0.42), rgba(6,78,59,0.20)) !important;
-      box-shadow: none !important;
-    }
-
-    tbody tr.summary-positive-row td:first-child,
-    tbody tr.summary-negative-row td:first-child,
-    tbody tr.avg-above-market-row td:first-child {
-      box-shadow: inset 5px 0 0 rgba(52,211,153,0.88) !important;
-    }
-
-    tbody tr.summary-negative-row:not(.avg-above-market-row) td:first-child {
-      box-shadow: inset 5px 0 0 rgba(251,113,133,0.82) !important;
-    }
-
-    .value-positive,
-    td.value-positive {
-      color: #34d399 !important;
-      font-weight: 900 !important;
-    }
-
-    .value-negative,
-    td.value-negative {
-      color: #fb7185 !important;
-      font-weight: 900 !important;
-    }
-
-    .checkbox-dropdown {
-      position: relative;
-      z-index: 140;
-    }
-
-    .checkbox-dropdown-menu {
-      position: absolute !important;
-      left: 0 !important;
-      top: calc(100% + 8px) !important;
-      width: max(260px, 100%) !important;
-      max-height: 340px !important;
-      z-index: 5000;
-      border-radius: 18px;
-      padding: 12px;
-    }
-
-    .checkbox-option {
-      min-height: 38px;
-      padding: 9px 10px;
-    }
-
-    .checkbox-option span {
-      line-height: 1.2;
-    }
-
-    .checkbox-dropdown-actions button {
-      border-radius: 12px;
+    .mini-value {
+      margin-top: 4px;
+      font-size: 16px;
       font-weight: 900;
     }
 
-    [data-theme="light"] .table-wrap {
-      background: rgba(255,255,255,0.78);
-      border-color: rgba(15,23,42,0.10);
-      box-shadow: 0 18px 45px rgba(15,23,42,0.10);
+    .result-box {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+      text-align: right;
     }
 
-    [data-theme="light"] .table-wrap thead tr:first-child th {
-      background: linear-gradient(180deg, #f8fbff, #e8f0fc) !important;
-      color: #0f172a;
-      border-bottom-color: rgba(15,23,42,0.10);
+    .result-main {
+      font-size: 24px;
+      font-weight: 950;
+      letter-spacing: -.03em;
     }
 
-    [data-theme="light"] .table-wrap .column-filter-row th {
-      background: #f4f8ff !important;
-      border-bottom-color: rgba(15,23,42,0.10);
+    .result-sub {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
     }
 
-    [data-theme="light"] .column-filter-row input,
-    [data-theme="light"] .column-filter-row select,
-    [data-theme="light"] .checkbox-dropdown-button {
-      background: #ffffff;
-      color: #0f172a;
-      border-color: rgba(15,23,42,0.14);
-      box-shadow: 0 1px 0 rgba(15,23,42,0.04);
+    .records-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
     }
 
-    [data-theme="light"] tbody td {
-      color: #0f172a;
-      border-bottom-color: rgba(15,23,42,0.08);
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
     }
 
-    [data-theme="light"] tbody tr:not(.summary-positive-row):not(.summary-negative-row):nth-child(even) td {
-      background: #f8fbff;
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid var(--soft-line);
+      white-space: nowrap;
+      text-align: right;
     }
 
-    [data-theme="light"] tbody tr.summary-positive-row td {
-      background: #f0fdf4 !important;
-      box-shadow: none !important;
+    th {
+      background: rgba(96,165,250,.10);
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      font-size: 12px;
+      font-weight: 950;
     }
 
-    [data-theme="light"] tbody tr.summary-negative-row td {
-      background: #fff1f2 !important;
-      box-shadow: none !important;
+    th:first-child, td:first-child,
+    th:nth-child(2), td:nth-child(2),
+    th:nth-child(3), td:nth-child(3) { text-align: left; }
+
+    tbody tr:hover td { background: rgba(96,165,250,.06); }
+    tr:last-child td { border-bottom: 0; }
+
+    .type {
+      display: inline-flex;
+      min-width: 52px;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 950;
+      font-size: 12px;
+    }
+    .type.buy { color: #065f46; background: rgba(52,211,153,.18); }
+    .type.sell { color: #9f1239; background: rgba(251,113,133,.18); }
+
+    .positive { color: var(--green); font-weight: 950; }
+    .negative { color: var(--red); font-weight: 950; }
+    .muted { color: var(--muted); }
+    .empty {
+      padding: 26px;
+      color: var(--muted);
+      text-align: center;
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      background: var(--card);
     }
 
-    [data-theme="light"] tbody tr.avg-above-market-row td {
-      background: linear-gradient(90deg, #e8fff1, #f2fff7) !important;
-      box-shadow: none !important;
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
     }
 
-    [data-theme="light"] tbody tr.summary-positive-row td:first-child,
-    [data-theme="light"] tbody tr.avg-above-market-row td:first-child {
-      box-shadow: inset 5px 0 0 #10b981 !important;
+    @media (max-width: 1180px) {
+      .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .layout { grid-template-columns: 1fr; }
+      .filter-grid, .toolbar { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .holding-card { grid-template-columns: 1fr; }
+      .holding-metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .result-box { justify-items: start; text-align: left; }
     }
 
-    [data-theme="light"] tbody tr.summary-negative-row:not(.avg-above-market-row) td:first-child {
-      box-shadow: inset 5px 0 0 #f43f5e !important;
+    @media (max-width: 720px) {
+      .page { padding: 12px; }
+      .hero { grid-template-columns: 1fr; padding: 20px; border-radius: 24px; }
+      .hero-actions { justify-content: flex-start; }
+      .metrics { grid-template-columns: 1fr; }
+      .form-grid, .filter-grid, .toolbar { grid-template-columns: 1fr; }
+      .holding-metrics { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .section-head > * + * { margin-top: 12px; }
     }
-
-    [data-theme="light"] tbody tr:hover td {
-      background: #eff6ff !important;
-    }
-
-    [data-theme="light"] tbody tr.avg-above-market-row:hover td {
-      background: linear-gradient(90deg, #d9fbe8, #ecfff4) !important;
-    }
-
-    [data-theme="light"] .value-positive,
-    [data-theme="light"] td.value-positive {
-      color: #047857 !important;
-      font-weight: 900 !important;
-    }
-
-    [data-theme="light"] .value-negative,
-    [data-theme="light"] td.value-negative {
-      color: #dc2626 !important;
-      font-weight: 900 !important;
-    }
-
-    [data-theme="light"] .checkbox-dropdown-menu {
-      background: rgba(255,255,255,0.98);
-      border-color: rgba(15,23,42,0.12);
-      box-shadow: 0 24px 60px rgba(15,23,42,0.18);
-    }
-
-    @media (max-width: 760px) {
-      th, td { padding: 12px 14px; }
-      .checkbox-dropdown-menu { width: min(280px, calc(100vw - 32px)) !important; }
-    }
-
-
-    /* Summary row coloring rule:
-       Only highlight rows where AVG COST is greater than MARKET PRICE.
-       All other summary rows use the normal table background with no profit/loss row fill. */
-    #summaryBody tr.summary-positive-row td,
-    #summaryBody tr.summary-negative-row td,
-    [data-theme="light"] #summaryBody tr.summary-positive-row td,
-    [data-theme="light"] #summaryBody tr.summary-negative-row td {
-      background: transparent !important;
-      box-shadow: none !important;
-    }
-
-    #summaryBody tr.summary-positive-row:hover td,
-    #summaryBody tr.summary-negative-row:hover td,
-    [data-theme="light"] #summaryBody tr.summary-positive-row:hover td,
-    [data-theme="light"] #summaryBody tr.summary-negative-row:hover td {
-      background: transparent !important;
-      box-shadow: none !important;
-    }
-
-    #summaryBody tr.avg-above-market-row td {
-      background: rgba(16, 185, 129, 0.22) !important;
-      box-shadow: none !important;
-    }
-
-    #summaryBody tr.avg-above-market-row:hover td {
-      background: rgba(16, 185, 129, 0.30) !important;
-      box-shadow: none !important;
-    }
-
-    [data-theme="light"] #summaryBody tr.avg-above-market-row td {
-      background: #dcfce7 !important;
-      box-shadow: none !important;
-    }
-
-    [data-theme="light"] #summaryBody tr.avg-above-market-row:hover td {
-      background: #bbf7d0 !important;
-      box-shadow: none !important;
-    }
-
-
-    /* v28 dropdown bug fix:
-       Keep checkbox dropdowns aligned, scrollable, and open while selecting many shares. */
-    .checkbox-dropdown {
-      position: relative;
-    }
-
-    .checkbox-dropdown-menu {
-      position: fixed !important;
-      left: 12px;
-      top: 12px;
-      z-index: 20000 !important;
-      max-height: min(360px, calc(100vh - 24px)) !important;
-      overflow-y: auto !important;
-      overscroll-behavior: contain;
-      scroll-behavior: auto;
-    }
-
-    .checkbox-dropdown-menu .checkbox-option {
-      cursor: pointer;
-    }
-
-    .checkbox-dropdown-menu .checkbox-option input {
-      flex: 0 0 auto;
-      cursor: pointer;
-    }
-
-    .table-wrap.dropdown-open {
-      overflow: auto;
-    }
-
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="page">
     <section class="hero">
-      <div class="hero-top">
-        <div class="pill"><span class="pill-dot"></span> Live Portfolio Tracking</div>
-        <div class="hero-actions">
-          <a class="nav-link" href="/charts">📊 Charts</a>
-          <button id="themeToggleBtn" class="theme-toggle" type="button">☀️ Light Mode</button>
-        </div>
+      <div>
+        <div class="badge live"><span class="dot"></span> Market Share Live</div>
+        <h1>Portfolio Dashboard</h1>
+        <p>Simple share tracking with buy/sell records, live market prices, {{ portfolio_currency }} conversion, charts, and PDF export.</p>
       </div>
-      <h1>Market Share Live Portfolio</h1>
-      <p>Track buy and sell transactions, watch live market prices, and monitor realized plus unrealized profit or loss. Switch between dark and light mode anytime.</p>
+      <div class="hero-actions">
+        <a class="btn soft" href="/charts">Charts</a>
+        <button id="themeToggleBtn" class="btn soft" type="button">Light Mode</button>
+      </div>
     </section>
 
-    <section class="summary-grid">
-      <div class="panel metric-card">
-        <div class="metric-label">Total Buy Amount</div>
-        <div class="metric-value" id="metricBuyAmount">-</div>
-        <div class="metric-sub">Total amount used to buy shares.</div>
+    <section class="metrics">
+      <div class="metric">
+        <div class="metric-label">Net Cost Basis</div>
+        <div class="metric-value" id="metricCost">-</div>
       </div>
-      <div class="panel metric-card">
-        <div class="metric-label">Current Holding Value</div>
+      <div class="metric">
+        <div class="metric-label">Current Market Value</div>
         <div class="metric-value" id="metricMarketValue">-</div>
-        <div class="metric-sub">Live value of shares still held.</div>
       </div>
-      <div class="panel metric-card">
-        <div class="metric-label">Realized Earn / Loss</div>
-        <div class="metric-value" id="metricRealized">-</div>
-        <div class="metric-sub">Profit or loss from shares already sold.</div>
-      </div>
-      <div class="panel metric-card">
-        <div class="metric-label">Total Earn / Loss</div>
+      <div class="metric">
+        <div class="metric-label">Total P/L</div>
         <div class="metric-value" id="metricReturn">-</div>
-        <div class="metric-sub">Realized plus unrealized profit or loss.</div>
       </div>
-      <div class="panel metric-card">
+      <div class="metric">
         <div class="metric-label">Portfolio Return</div>
         <div class="metric-value" id="metricReturnPct">-</div>
-        <div class="metric-sub">Total return based on total buy amount.</div>
       </div>
     </section>
 
-    <section class="layout-2">
+    <section class="layout">
       <div class="panel">
         <div class="section-body">
-          <div class="section-header">
+          <div class="section-head">
             <div>
-              <h2 id="formTitle">Add Transaction</h2>
-              <p>Record a BUY or SELL using amount divided by share unit.</p>
+              <h2 id="formTitle">Add Buy / Sell Record</h2>
+              <p>Amount ÷ units = price per share.</p>
             </div>
-            <span class="chip">Manual Entry</span>
           </div>
 
           <form id="recordForm">
             <input type="hidden" id="recordId" />
-
             <div class="form-grid">
-              <div class="field">
+              <div>
                 <label for="purchaseDate">Date</label>
                 <input id="purchaseDate" type="date" required />
               </div>
-
-              <div class="field">
-                <label for="transactionType">Transaction Type</label>
+              <div>
+                <label for="transactionType">Type</label>
                 <select id="transactionType" required>
                   <option value="BUY">BUY</option>
                   <option value="SELL">SELL</option>
                 </select>
               </div>
-
-              <div class="field">
+              <div>
                 <label for="shareCode">Share Code</label>
                 <select id="shareCode" required>
                   {% for code in share_codes %}
@@ -2343,211 +680,173 @@
                   {% endfor %}
                 </select>
               </div>
-
-              <div class="field">
-                <label for="investmentAmount" id="amountLabel">Buy Amount</label>
-                <input id="investmentAmount" type="number" step="0.0001" min="0" required />
-              </div>
-
-              <div class="field">
-                <label for="purchaseUnits" id="unitLabel">Share Unit Bought</label>
+              <div>
+                <label id="unitLabel" for="purchaseUnits">Share Unit</label>
                 <input id="purchaseUnits" type="number" step="0.00000001" min="0.00000001" required />
               </div>
-
-              <div class="field">
-                <label for="averagePrice" id="priceLabel">Average Buy Price</label>
-                <input id="averagePrice" type="text" readonly />
-                <div class="input-note" id="priceNote">Price is calculated as amount ÷ share unit and shown in 2 decimals.</div>
+              <div>
+                <label id="amountLabel" for="investmentAmount">Amount</label>
+                <input id="investmentAmount" type="number" step="0.0001" min="0" required />
               </div>
-
-              <div class="field">
-                <label>&nbsp;</label>
-                <div class="actions">
-                  <button id="saveBtn" class="btn-primary" type="submit">Save</button>
-                  <button id="cancelBtn" class="btn-secondary" type="button">Cancel</button>
+              <div>
+                <label id="priceLabel" for="averagePrice">Price / Share</label>
+                <input id="averagePrice" type="text" readonly />
+              </div>
+              <div class="field full">
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button id="saveBtn" class="btn" type="submit">Save</button>
+                  <button id="cancelBtn" class="btn secondary" type="button">Cancel</button>
                 </div>
               </div>
             </div>
           </form>
-
-          <div class="status-bar" id="statusText">Ready.</div>
+          <div id="statusText" class="status">Ready.</div>
         </div>
       </div>
 
-      <div class="panel market-panel">
+      <div class="panel">
         <div class="section-body">
-          <div class="section-header market-section-header">
+          <div class="section-head">
             <div>
-              <h2>Live Market Dashboard</h2>
-              <p>Compact one-page market board with cleaner price display.</p>
-            </div>
-            <div class="market-header-actions">
-              <span class="chip" id="marketLoadedText">Loading quotes</span>
-              <span class="chip" id="marketRefreshText">Refreshing...</span>
+              <div class="title-row"><h2>Live Market Dashboard</h2><span id="marketLoadedText" class="count-pill">0 loaded</span></div>
+              <p id="marketRefreshText">Loading live prices...</p>
             </div>
           </div>
-
-          <div class="market-mini-stats">
-            <span>Total: <strong id="marketTotalSymbols">-</strong></span>
-            <span>Loaded: <strong id="marketUsdSymbols">-</strong></span>
-            <span>FX: <strong id="marketFxSymbols">-</strong></span>
-          </div>
-
-          <div class="market-board" id="marketGrid"></div>
+          <div id="marketBoard" class="market-board"></div>
         </div>
       </div>
     </section>
 
-
-
-    <div class="hidden-controls" hidden aria-hidden="true">
-      <input id="filterSearch" type="search" value="" />
-      <select id="filterShare"><option value="">All Shares</option></select>
-      <select id="filterType">
-        <option value="">All Types</option>
-        <option value="BUY">BUY</option>
-        <option value="SELL">SELL</option>
-      </select>
-      <input id="filterDateFrom" type="date" value="" />
-      <input id="filterDateTo" type="date" value="" />
-      <select id="filterStatus">
-        <option value="">All Status</option>
-        <option value="OPEN">Open Holdings</option>
-        <option value="CLOSED">Closed / Sold Out</option>
-        <option value="PROFIT">Profit Only</option>
-        <option value="LOSS">Loss Only</option>
-      </select>
-      <button id="applyFilterBtn" type="button">Apply</button>
-      <button id="resetFilterBtn" type="button">Reset</button>
-      <span id="filterResultText">All data</span>
-
-      <select id="summarySortBy">
-        <option value="share_code">Share Code</option>
-        <option value="total_buy_amount">Buy Amount</option>
-        <option value="total_sell_amount">Sell Amount</option>
-        <option value="remaining_units">Remaining Units</option>
-        <option value="average_price">Avg Cost</option>
-        <option value="current_price">Market Price</option>
-        <option value="market_value">Current Value</option>
-        <option value="realized_return">Realized P/L</option>
-        <option value="unrealized_return">Unrealized P/L</option>
-        <option value="total_return">Total P/L</option>
-        <option value="return_percent">Return %</option>
-        <option value="transaction_count">Transactions</option>
-      </select>
-      <select id="summarySortDir">
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-      </select>
-      <select id="recordSortBy">
-        <option value="purchase_date">Date</option>
-        <option value="transaction_type">Type</option>
-        <option value="share_code">Share Code</option>
-        <option value="investment_amount">Amount</option>
-        <option value="purchase_units">Share Unit</option>
-        <option value="average_price">Price / Share</option>
-      </select>
-      <select id="recordSortDir">
-        <option value="desc">Descending</option>
-        <option value="asc">Ascending</option>
-      </select>
-      <div id="summaryColumnPicker"></div>
-      <div id="recordColumnPicker"></div>
-    </div>
-
-    <section class="panel table-panel">
+    <section class="panel" style="margin-bottom:18px;">
       <div class="section-body">
-        <div class="table-toolbar">
+        <div class="section-head">
           <div>
-            <div class="section-header" style="margin-bottom:0; display:block;">
-              <div class="title-row"><h2>Summary Dashboard of Shares You Bought and Sold</h2><span class="count-pill" id="summaryCountText">0 shares</span></div>
-              <p>Average cost method is used for sell profit. Market prices are converted to {{ portfolio_currency }} when needed.</p>
+            <div class="title-row">
+              <h2>Summary Dashboard of Shares You Bought and Sold</h2>
+              <span id="summaryCountText" class="count-pill">0 shares</span>
             </div>
+            <p>Green card means average cost is higher than market price. Other cards have no fill color.</p>
           </div>
-          <span class="eyebrow">Grouped by share code</span>
+          <span class="badge">Grouped by share code</span>
         </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th class="sortable" data-summary-sort="share_code" data-summary-col="share_code">Share Code</th>
-                <th class="sortable" data-summary-sort="total_buy_amount" data-summary-col="total_buy_amount">Buy Amount</th>
-                <th class="sortable" data-summary-sort="total_sell_amount" data-summary-col="total_sell_amount">Sell Amount</th>
-                <th class="sortable" data-summary-sort="remaining_units" data-summary-col="remaining_units">Remaining Units</th>
-                <th class="sortable" data-summary-sort="average_price" data-summary-col="average_price">Avg Cost</th>
-                <th class="sortable" data-summary-sort="current_price" data-summary-col="current_price">Market Price ({{ portfolio_currency }})</th>
-                <th class="sortable" data-summary-sort="market_value" data-summary-col="market_value">Current Value ({{ portfolio_currency }})</th>
-                <th class="sortable" data-summary-sort="realized_return" data-summary-col="realized_return">Realized P/L</th>
-                <th class="sortable" data-summary-sort="unrealized_return" data-summary-col="unrealized_return">Unrealized P/L</th>
-                <th class="sortable" data-summary-sort="total_return" data-summary-col="total_return">Total P/L</th>
-                <th class="sortable" data-summary-sort="return_percent" data-summary-col="return_percent">Return %</th>
-                <th class="sortable" data-summary-sort="transaction_count" data-summary-col="transaction_count">Txns</th>
-              </tr>
-              <tr class="column-filter-row">
-                <th data-summary-col="share_code"><div class="checkbox-dropdown" data-filter-widget="summaryColumnShareFilter">
-                    <button id="summaryShareDropdownBtn" class="checkbox-dropdown-button" type="button">All Shares</button>
-                    <div id="summaryShareDropdownMenu" class="checkbox-dropdown-menu"></div>
-                    <select id="summaryColumnShareFilter" class="column-filter share-multi-filter" multiple hidden aria-hidden="true"><option value="">All Shares</option></select>
-                  </div></th>
-                <th data-summary-col="total_buy_amount"><input id="summaryMinBuyFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="total_sell_amount"><input id="summaryMinSellFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="remaining_units"><select id="summaryHoldingFilter" class="column-filter"><option value="">All</option><option value="OPEN">Open</option><option value="CLOSED">Closed</option></select></th>
-                <th data-summary-col="average_price"><input id="summaryMinAvgFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="current_price"><input id="summaryMinPriceFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="market_value"><input id="summaryMinValueFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="realized_return"><select id="summaryRealizedFilter" class="column-filter"><option value="">All</option><option value="PROFIT">Profit</option><option value="LOSS">Loss</option></select></th>
-                <th data-summary-col="unrealized_return"><select id="summaryUnrealizedFilter" class="column-filter"><option value="">All</option><option value="PROFIT">Profit</option><option value="LOSS">Loss</option></select></th>
-                <th data-summary-col="total_return"><select id="summaryProfitFilter" class="column-filter"><option value="">All</option><option value="PROFIT">Profit</option><option value="LOSS">Loss</option></select></th>
-                <th data-summary-col="return_percent"><input id="summaryMinReturnPctFilter" class="column-filter" type="number" step="0.01" placeholder="Min %" /></th>
-                <th data-summary-col="transaction_count"><input id="summaryMinTxFilter" class="column-filter" type="number" step="1" placeholder="Min" /></th>
-              </tr>
-            </thead>
-            <tbody id="summaryBody"></tbody>
-          </table>
+        <div class="toolbar">
+          <div class="dropdown" id="summaryShareDropdown">
+            <label>Share Code</label>
+            <button class="dropdown-button" id="summaryShareButton" type="button">All Shares</button>
+            <div class="dropdown-menu" id="summaryShareMenu"></div>
+          </div>
+          <div>
+            <label>Status</label>
+            <select id="summaryStatusFilter">
+              <option value="">All Status</option>
+              <option value="OPEN">Open Holding</option>
+              <option value="CLOSED">Closed / Sold Out</option>
+              <option value="BELOW">Avg Cost > Market Price</option>
+            </select>
+          </div>
+          <div>
+            <label>P/L</label>
+            <select id="summaryProfitFilter">
+              <option value="">All P/L</option>
+              <option value="PROFIT">Profit Only</option>
+              <option value="LOSS">Loss Only</option>
+            </select>
+          </div>
+          <div>
+            <label>Sort By</label>
+            <select id="summarySortBy">
+              <option value="share_code">Share Code</option>
+              <option value="market_value">Current Value</option>
+              <option value="total_return">Total P/L</option>
+              <option value="return_percent">Return %</option>
+              <option value="current_price">Market Price</option>
+              <option value="average_price">Avg Cost</option>
+              <option value="remaining_units">Remaining Units</option>
+            </select>
+          </div>
+          <div>
+            <label>Direction</label>
+            <select id="summarySortDir">
+              <option value="asc">Small → Big / A → Z</option>
+              <option value="desc">Big → Small / Z → A</option>
+            </select>
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button id="resetSummaryFiltersBtn" class="btn secondary" type="button">Reset</button>
+          </div>
         </div>
+
+        <div id="summaryList" class="summary-list"></div>
       </div>
     </section>
 
-    <section class="panel table-panel">
+    <section class="panel">
       <div class="section-body">
-        <div class="table-toolbar">
+        <div class="section-head">
           <div>
-            <div class="section-header" style="margin-bottom:0; display:block;">
-              <div class="title-row"><h2>Buy / Sell Transaction Records</h2><span class="count-pill" id="recordCountText">BUY: 0 • SELL: 0</span></div>
-              <p>Your detailed transaction list. Edit or delete any record anytime.</p>
+            <div class="title-row">
+              <h2>Buy / Sell Transaction Records</h2>
+              <span id="recordCountText" class="count-pill">BUY: 0 • SELL: 0</span>
             </div>
+            <p>Your detailed transaction list. Filters are above the table to keep the table clean.</p>
           </div>
-          <div class="actions">
-            <button id="exportPdfBtn" class="btn-primary" type="button">Export PDF</button>
-            <span class="eyebrow">Price = Amount / Share Unit</span>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button id="exportPdfBtn" class="btn" type="button">Export PDF</button>
           </div>
         </div>
 
-        <div class="table-wrap">
+        <div class="toolbar">
+          <div class="dropdown" id="recordShareDropdown">
+            <label>Share Code</label>
+            <button class="dropdown-button" id="recordShareButton" type="button">All Shares</button>
+            <div class="dropdown-menu" id="recordShareMenu"></div>
+          </div>
+          <div>
+            <label>Type</label>
+            <select id="recordTypeFilter">
+              <option value="">All Types</option>
+              <option value="BUY">BUY</option>
+              <option value="SELL">SELL</option>
+            </select>
+          </div>
+          <div>
+            <label>Date From</label>
+            <input id="recordDateFromFilter" type="date" />
+          </div>
+          <div>
+            <label>Date To</label>
+            <input id="recordDateToFilter" type="date" />
+          </div>
+          <div>
+            <label>Sort By</label>
+            <select id="recordSortBy">
+              <option value="purchase_date">Date</option>
+              <option value="share_code">Share Code</option>
+              <option value="transaction_type">Type</option>
+              <option value="investment_amount">Amount</option>
+              <option value="purchase_units">Share Unit</option>
+              <option value="average_price">Price / Share</option>
+            </select>
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button id="resetRecordFiltersBtn" class="btn secondary" type="button">Reset</button>
+          </div>
+        </div>
+
+        <div class="records-table-wrap">
           <table>
             <thead>
               <tr>
-                <th class="sortable" data-record-sort="purchase_date" data-record-col="purchase_date">Date</th>
-                <th class="sortable" data-record-sort="transaction_type" data-record-col="transaction_type">Type</th>
-                <th class="sortable" data-record-sort="share_code" data-record-col="share_code">Share Code</th>
-                <th class="sortable" data-record-sort="investment_amount" data-record-col="investment_amount">Amount</th>
-                <th class="sortable" data-record-sort="purchase_units" data-record-col="purchase_units">Share Unit</th>
-                <th class="sortable" data-record-sort="average_price" data-record-col="average_price">Price / Share</th>
-                <th data-record-col="action">Action</th>
-              </tr>
-              <tr class="column-filter-row">
-                <th data-record-col="purchase_date"><input id="recordColumnDateFilter" class="column-filter" type="date" /></th>
-                <th data-record-col="transaction_type"><select id="recordColumnTypeFilter" class="column-filter"><option value="">All</option><option value="BUY">BUY</option><option value="SELL">SELL</option></select></th>
-                <th data-record-col="share_code"><div class="checkbox-dropdown" data-filter-widget="recordColumnShareFilter">
-                    <button id="recordShareDropdownBtn" class="checkbox-dropdown-button" type="button">All Shares</button>
-                    <div id="recordShareDropdownMenu" class="checkbox-dropdown-menu"></div>
-                    <select id="recordColumnShareFilter" class="column-filter share-multi-filter" multiple hidden aria-hidden="true"><option value="">All Shares</option></select>
-                  </div></th>
-                <th data-record-col="investment_amount"><input id="recordMinAmountFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-record-col="purchase_units"><input id="recordMinUnitFilter" class="column-filter" type="number" step="0.0001" placeholder="Min" /></th>
-                <th data-record-col="average_price"><input id="recordMinPriceFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-record-col="action"><button id="resetColumnFiltersBtn" class="mini-filter-button" type="button">Clear</button></th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Share Code</th>
+                <th>Amount</th>
+                <th>Share Unit</th>
+                <th>Price / Share</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="recordsBody"></tbody>
@@ -2558,297 +857,88 @@
   </div>
 
   <script>
-    const form = document.getElementById("recordForm");
-    const recordId = document.getElementById("recordId");
-    const purchaseDate = document.getElementById("purchaseDate");
-    const transactionType = document.getElementById("transactionType");
-    const shareCode = document.getElementById("shareCode");
-    const investmentAmount = document.getElementById("investmentAmount");
-    const purchaseUnits = document.getElementById("purchaseUnits");
-    const averagePrice = document.getElementById("averagePrice");
-    const amountLabel = document.getElementById("amountLabel");
-    const unitLabel = document.getElementById("unitLabel");
-    const priceLabel = document.getElementById("priceLabel");
-    const priceNote = document.getElementById("priceNote");
-    const saveBtn = document.getElementById("saveBtn");
-    const cancelBtn = document.getElementById("cancelBtn");
-    const statusText = document.getElementById("statusText");
-    const formTitle = document.getElementById("formTitle");
-    const marketRefreshText = document.getElementById("marketRefreshText");
-    const marketLoadedText = document.getElementById("marketLoadedText");
-    const exportPdfBtn = document.getElementById("exportPdfBtn");
-    const themeToggleBtn = document.getElementById("themeToggleBtn");
-
-    const filterSearch = document.getElementById("filterSearch");
-    const filterShare = document.getElementById("filterShare");
-    const filterType = document.getElementById("filterType");
-    const filterDateFrom = document.getElementById("filterDateFrom");
-    const filterDateTo = document.getElementById("filterDateTo");
-    const filterStatus = document.getElementById("filterStatus");
-    const applyFilterBtn = document.getElementById("applyFilterBtn");
-    const resetFilterBtn = document.getElementById("resetFilterBtn");
-    const filterResultText = document.getElementById("filterResultText");
-    const summaryCountText = document.getElementById("summaryCountText");
-    const recordCountText = document.getElementById("recordCountText");
-    const summarySortBy = document.getElementById("summarySortBy");
-    const summarySortDir = document.getElementById("summarySortDir");
-    const recordSortBy = document.getElementById("recordSortBy");
-    const recordSortDir = document.getElementById("recordSortDir");
-    const summaryColumnPicker = document.getElementById("summaryColumnPicker");
-    const recordColumnPicker = document.getElementById("recordColumnPicker");
-    const marketTotalSymbols = document.getElementById("marketTotalSymbols");
-    const marketUsdSymbols = document.getElementById("marketUsdSymbols");
-    const marketFxSymbols = document.getElementById("marketFxSymbols");
-
-    const summaryColumnShareFilter = document.getElementById("summaryColumnShareFilter");
-    const summaryShareDropdownBtn = document.getElementById("summaryShareDropdownBtn");
-    const summaryShareDropdownMenu = document.getElementById("summaryShareDropdownMenu");
-    const recordShareDropdownBtn = document.getElementById("recordShareDropdownBtn");
-    const recordShareDropdownMenu = document.getElementById("recordShareDropdownMenu");
-    const summaryMinBuyFilter = document.getElementById("summaryMinBuyFilter");
-    const summaryMinSellFilter = document.getElementById("summaryMinSellFilter");
-    const summaryHoldingFilter = document.getElementById("summaryHoldingFilter");
-    const summaryMinAvgFilter = document.getElementById("summaryMinAvgFilter");
-    const summaryMinPriceFilter = document.getElementById("summaryMinPriceFilter");
-    const summaryMinValueFilter = document.getElementById("summaryMinValueFilter");
-    const summaryRealizedFilter = document.getElementById("summaryRealizedFilter");
-    const summaryUnrealizedFilter = document.getElementById("summaryUnrealizedFilter");
-    const summaryProfitFilter = document.getElementById("summaryProfitFilter");
-    const summaryMinReturnPctFilter = document.getElementById("summaryMinReturnPctFilter");
-    const summaryMinTxFilter = document.getElementById("summaryMinTxFilter");
-    const recordColumnDateFilter = document.getElementById("recordColumnDateFilter");
-    const recordColumnTypeFilter = document.getElementById("recordColumnTypeFilter");
-    const recordColumnShareFilter = document.getElementById("recordColumnShareFilter");
-    const recordMinAmountFilter = document.getElementById("recordMinAmountFilter");
-    const recordMinUnitFilter = document.getElementById("recordMinUnitFilter");
-    const recordMinPriceFilter = document.getElementById("recordMinPriceFilter");
-    const resetColumnFiltersBtn = document.getElementById("resetColumnFiltersBtn");
-
-    const columnFilterInputs = [
-      summaryColumnShareFilter, summaryMinBuyFilter, summaryMinSellFilter, summaryHoldingFilter,
-      summaryMinAvgFilter, summaryMinPriceFilter, summaryMinValueFilter, summaryRealizedFilter,
-      summaryUnrealizedFilter, summaryProfitFilter, summaryMinReturnPctFilter, summaryMinTxFilter,
-      recordColumnDateFilter, recordColumnTypeFilter, recordColumnShareFilter, recordMinAmountFilter,
-      recordMinUnitFilter, recordMinPriceFilter
-    ].filter(Boolean);
-
-    const REFRESH_INTERVAL_MS = 120000;
     const PORTFOLIO_CURRENCY = "{{ portfolio_currency }}";
-    const chartColors = ["#60a5fa", "#6ee7b7", "#c084fc", "#fbbf24", "#fb7185", "#38bdf8", "#a3e635", "#f97316", "#818cf8", "#14b8a6", "#f472b6", "#93c5fd"];
 
-    const summaryColumns = [
-      { key: "share_code", label: "Share Code" },
-      { key: "total_buy_amount", label: "Buy Amount" },
-      { key: "total_sell_amount", label: "Sell Amount" },
-      { key: "remaining_units", label: "Remaining Units" },
-      { key: "average_price", label: "Avg Cost" },
-      { key: "current_price", label: "Market Price" },
-      { key: "market_value", label: "Current Value" },
-      { key: "realized_return", label: "Realized P/L" },
-      { key: "unrealized_return", label: "Unrealized P/L" },
-      { key: "total_return", label: "Total P/L" },
-      { key: "return_percent", label: "Return %" },
-      { key: "transaction_count", label: "Transactions" }
-    ];
+    const state = {
+      records: [],
+      summary: null,
+      market: [],
+      selectedSummaryShares: new Set(),
+      selectedRecordShares: new Set()
+    };
 
-    const recordColumns = [
-      { key: "purchase_date", label: "Date" },
-      { key: "transaction_type", label: "Type" },
-      { key: "share_code", label: "Share Code" },
-      { key: "investment_amount", label: "Amount" },
-      { key: "purchase_units", label: "Share Unit" },
-      { key: "average_price", label: "Price / Share" },
-      { key: "action", label: "Action" }
-    ];
+    const el = id => document.getElementById(id);
 
-    const summaryColumnDefaults = summaryColumns.map(col => col.key);
-    const recordColumnDefaults = recordColumns.map(col => col.key);
-    let visibleSummaryColumns = new Set(summaryColumnDefaults);
-    let visibleRecordColumns = new Set(recordColumnDefaults);
+    const recordForm = el("recordForm");
+    const recordId = el("recordId");
+    const purchaseDate = el("purchaseDate");
+    const transactionType = el("transactionType");
+    const shareCode = el("shareCode");
+    const investmentAmount = el("investmentAmount");
+    const purchaseUnits = el("purchaseUnits");
+    const averagePrice = el("averagePrice");
+    const saveBtn = el("saveBtn");
+    const cancelBtn = el("cancelBtn");
+    const statusText = el("statusText");
+    const formTitle = el("formTitle");
 
-    let allSummary = null;
-    let allRecords = [];
-    let summarySort = { key: "share_code", direction: "asc" };
-    let recordSort = { key: "purchase_date", direction: "desc" };
-
-    const money = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-
-    const numberFmt = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 8
-    });
+    const money = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const units = new Intl.NumberFormat("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 8 });
 
     function applyTheme(theme) {
       document.documentElement.setAttribute("data-theme", theme);
-      themeToggleBtn.textContent = theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
-      themeToggleBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+      localStorage.setItem("portfolio-theme", theme);
+      el("themeToggleBtn").textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
     }
 
-    const savedTheme = localStorage.getItem("marketsharelive-theme") || "dark";
-    applyTheme(savedTheme);
-
-    themeToggleBtn.addEventListener("click", () => {
-      const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
-      const nextTheme = currentTheme === "dark" ? "light" : "dark";
-      localStorage.setItem("marketsharelive-theme", nextTheme);
-      applyTheme(nextTheme);
-    });
-
-    function loadColumnPreference(key, fallback) {
-      try {
-        const saved = JSON.parse(localStorage.getItem(key) || "null");
-        if (Array.isArray(saved) && saved.length) return saved;
-      } catch {}
-      return [...fallback];
-    }
-
-    function saveColumnPreference(key, values) {
-      localStorage.setItem(key, JSON.stringify([...values]));
-    }
-
-    function renderColumnPicker(container, columns, visibleSet, storageKey, scope) {
-      container.innerHTML = "";
-      columns.forEach(col => {
-        const label = document.createElement("label");
-        label.className = "column-check";
-        label.innerHTML = `
-          <input type="checkbox" value="${col.key}" ${visibleSet.has(col.key) ? "checked" : ""}>
-          <span>${col.label}</span>
-        `;
-
-        const input = label.querySelector("input");
-        input.addEventListener("change", () => {
-          if (input.checked) {
-            visibleSet.add(col.key);
-          } else if (visibleSet.size > 1) {
-            visibleSet.delete(col.key);
-          } else {
-            input.checked = true;
-            setStatus("At least one column must stay visible.");
-            return;
-          }
-
-          saveColumnPreference(storageKey, visibleSet);
-          applyColumnVisibility(scope);
-        });
-
-        container.appendChild(label);
+    function initTheme() {
+      applyTheme(localStorage.getItem("portfolio-theme") || "dark");
+      el("themeToggleBtn").addEventListener("click", () => {
+        applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
       });
     }
 
-    function renderColumnPickers() {
-      visibleSummaryColumns = new Set(summaryColumnDefaults);
-      visibleRecordColumns = new Set(recordColumnDefaults);
-      localStorage.removeItem("marketsharelive-summary-columns");
-      localStorage.removeItem("marketsharelive-record-columns");
+    function setStatus(message) { statusText.textContent = message; }
+
+    function fmtMoney(v) {
+      if (v === null || v === undefined || Number.isNaN(Number(v))) return "-";
+      return money.format(Number(v));
     }
 
-    function applyColumnVisibility(scope = "all") {
-      if (scope === "summary" || scope === "all") {
-        document.querySelectorAll("[data-summary-col]").forEach(el => {
-          el.classList.toggle("col-hidden", !visibleSummaryColumns.has(el.dataset.summaryCol));
-        });
-      }
-
-      if (scope === "record" || scope === "all") {
-        document.querySelectorAll("[data-record-col]").forEach(el => {
-          el.classList.toggle("col-hidden", !visibleRecordColumns.has(el.dataset.recordCol));
-        });
-      }
+    function fmtCurrency(v) {
+      return `${fmtMoney(v)} ${PORTFOLIO_CURRENCY}`;
     }
 
-    function syncSortControls() {
-      summarySortBy.value = summarySort.key;
-      summarySortDir.value = summarySort.direction;
-      recordSortBy.value = recordSort.key;
-      recordSortDir.value = recordSort.direction;
+    function fmtNum(v) {
+      if (v === null || v === undefined || Number.isNaN(Number(v))) return "-";
+      return units.format(Number(v));
     }
 
-    function setStatus(message) {
-      statusText.textContent = message;
+    function fmtPct(v) {
+      if (v === null || v === undefined || Number.isNaN(Number(v))) return "-";
+      return `${Number(v).toFixed(2)}%`;
     }
 
-    function cls(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "";
-      return Number(value) >= 0 ? "value-positive" : "value-negative";
+    function cls(v) {
+      if (v === null || v === undefined || Number.isNaN(Number(v))) return "";
+      return Number(v) >= 0 ? "positive" : "negative";
     }
 
-    function fmtMoney(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
-      return money.format(Number(value));
-    }
-
-    function fmtCurrency(value, currency = PORTFOLIO_CURRENCY) {
-      const formatted = fmtMoney(value);
-      if (formatted === "-") return "-";
-      return `${formatted} ${currency || ""}`.trim();
-    }
-
-    function fmtFxRate(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
-      return Number(value).toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
-    }
-
-    function conversionNote(q) {
-      if (!q || !q.converted) return "";
-      const nativeCurrency = q.native_currency || "";
-      const nativeText = fmtCurrency(q.native_price, nativeCurrency);
-      const fxText = q.fx_rate ? ` • FX ${nativeCurrency}/${PORTFOLIO_CURRENCY}: ${fmtFxRate(q.fx_rate)}` : "";
-      return `<div class="conversion-note">${nativeText} converted to ${PORTFOLIO_CURRENCY}${fxText}</div>`;
-    }
-
-    function summaryPriceCell(row) {
-      const main = fmtMoney(row.current_price);
-      if (!row.converted) return main;
-      return `
-        <div>${main}</div>
-        <div class="cell-note">Native: ${fmtCurrency(row.native_price, row.native_currency)}</div>
-        <div class="cell-note">FX: ${fmtFxRate(row.fx_rate)}</div>
-      `;
-    }
-
-    function fmtNum(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
-      return numberFmt.format(Number(value));
-    }
-
-    function fmtPct(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
-      return `${Number(value).toFixed(2)}%`;
-    }
-
-    function typeBadge(type) {
-      const txType = (type || "BUY").toUpperCase();
-      const clsName = txType === "SELL" ? "type-sell" : "type-buy";
-      return `<span class="type-badge ${clsName}">${txType}</span>`;
-    }
-
-    function updateTransactionLabels() {
-      const isSell = transactionType.value === "SELL";
-      amountLabel.textContent = isSell ? "Sell Amount" : "Buy Amount";
-      unitLabel.textContent = isSell ? "Share Unit Sold" : "Share Unit Bought";
-      priceLabel.textContent = isSell ? "Sell Price" : "Average Buy Price";
-      priceNote.textContent = isSell
-        ? "Sell price is calculated as sell amount ÷ share unit and shown in 2 decimals."
-        : "Average buy price is calculated as buy amount ÷ share unit and shown in 2 decimals.";
-      formTitle.textContent = recordId.value ? "Edit Transaction" : (isSell ? "Add Sell Transaction" : "Add Buy Transaction");
+    function todayIso() {
+      return new Date().toISOString().slice(0, 10);
     }
 
     function recalcAverage() {
       const amount = Number(investmentAmount.value || 0);
-      const units = Number(purchaseUnits.value || 0);
-      averagePrice.value = units > 0 ? (amount / units).toFixed(2) : "";
+      const unit = Number(purchaseUnits.value || 0);
+      averagePrice.value = unit > 0 ? (amount / unit).toFixed(2) : "";
     }
 
-    transactionType.addEventListener("change", updateTransactionLabels);
-    investmentAmount.addEventListener("input", recalcAverage);
-    purchaseUnits.addEventListener("input", recalcAverage);
-
-    function todayIso() {
-      return new Date().toISOString().slice(0, 10);
+    function updateLabels() {
+      const type = transactionType.value === "SELL" ? "Sell" : "Buy";
+      el("amountLabel").textContent = `${type} Amount`;
+      el("unitLabel").textContent = `${type} Share Unit`;
+      el("priceLabel").textContent = `${type} Price / Share`;
     }
 
     function resetForm() {
@@ -2859,836 +949,322 @@
       investmentAmount.value = "";
       purchaseUnits.value = "";
       averagePrice.value = "";
+      formTitle.textContent = "Add Buy / Sell Record";
       saveBtn.textContent = "Save";
       saveBtn.disabled = false;
-      updateTransactionLabels();
+      updateLabels();
     }
 
     async function requestJson(url, options = {}) {
       const response = await fetch(url, {
-        headers: {
-          "Content-Type": "application/json",
-          ...(options.headers || {})
-        },
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) },
         ...options
       });
-
       if (!response.ok) {
         let detail = `${response.status} ${response.statusText}`;
         try {
-          const errorBody = await response.json();
-          detail = errorBody.detail || errorBody.error || detail;
+          const body = await response.json();
+          detail = body.detail || body.error || detail;
         } catch {}
         throw new Error(detail);
       }
       return response.json();
     }
 
-    function quoteCardHtml(q) {
-      const isError = Boolean(q.error);
-      const mainCurrency = q.converted ? PORTFOLIO_CURRENCY : (q.currency || PORTFOLIO_CURRENCY);
-      const priceLabel = fmtCurrency(q.price, mainCurrency);
-      const nativeText = q.converted
-        ? fmtCurrency(q.native_price, q.native_currency)
-        : "";
-      const fxText = q.converted ? `${q.native_currency}/${PORTFOLIO_CURRENCY} ${fmtFxRate(q.fx_rate)}` : "";
-      const statusText = isError ? "Issue" : "Live";
-      const detailText = q.error || (q.converted ? `Native ${nativeText}` : "");
-
-      return `
-        <div class="market-row ${isError ? "quote-error" : "quote-live"}">
-          <div class="market-identity">
-            <span class="market-code">${q.share_code}</span>
-          </div>
-          <div class="market-status-badge ${isError ? "issue" : "live"}">${statusText}</div>
-
-          <div class="market-detail market-price-block">
-            <span class="market-label">Market Price</span>
-            <strong>${priceLabel}</strong>
-          </div>
-
-          ${detailText ? `<div class="market-native-line">${detailText}</div>` : ""}
-          ${fxText ? `<div class="market-fx-line">FX ${fxText}</div>` : ""}
-        </div>
-      `;
+    function shareCodes() {
+      const fromSummary = (state.summary?.holdings || []).map(x => x.share_code);
+      const fromRecords = state.records.map(x => x.share_code);
+      const fromMarket = state.market.map(x => x.share_code);
+      return Array.from(new Set([...fromSummary, ...fromRecords, ...fromMarket].map(x => String(x || "").toUpperCase()).filter(Boolean))).sort();
     }
 
-    async function loadMarket() {
-      marketRefreshText.textContent = "Refreshing...";
-      marketLoadedText.textContent = "Loading quotes";
-      const data = await requestJson("/api/market");
-      const grid = document.getElementById("marketGrid");
-      grid.innerHTML = "";
-
-      if (!data.quotes.length) {
-        grid.innerHTML = `<div class="empty-state panel">No market codes configured.</div>`;
-        marketLoadedText.textContent = "0 quotes";
-        marketTotalSymbols.textContent = "0";
-        marketUsdSymbols.textContent = "0";
-        marketFxSymbols.textContent = "0";
-        return;
-      }
-
-      data.quotes
-        .slice()
-        .sort((a, b) => String(a.share_code || "").localeCompare(String(b.share_code || "")))
-        .forEach(q => {
-          const wrapper = document.createElement("div");
-          wrapper.innerHTML = quoteCardHtml(q);
-          grid.appendChild(wrapper.firstElementChild);
-        });
-
-      const errors = data.quotes.filter(q => q.error).length;
-      const converted = data.quotes.filter(q => q.converted).length;
-      marketLoadedText.textContent = `${data.quotes.length - errors}/${data.quotes.length} live`;
-      marketTotalSymbols.textContent = data.quotes.length;
-      marketUsdSymbols.textContent = data.quotes.length - errors;
-      marketFxSymbols.textContent = converted;
-      const now = new Date();
-      marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
-    }
-
-    function currentFilters() {
-      return {
-        search: filterSearch.value.trim().toUpperCase(),
-        share: filterShare.value.trim().toUpperCase(),
-        type: filterType.value.trim().toUpperCase(),
-        from: filterDateFrom.value,
-        to: filterDateTo.value,
-        status: filterStatus.value.trim().toUpperCase()
-      };
-    }
-
-    function hasActiveFilter(filters = currentFilters()) {
-      return Boolean(filters.search || filters.share || filters.type || filters.from || filters.to || filters.status);
-    }
-
-    function recordMatchesFilters(row, filters = currentFilters()) {
-      const rowShare = String(row.share_code || "").toUpperCase();
-      const rowType = String(row.transaction_type || "BUY").toUpperCase();
-      const rowDate = String(row.purchase_date || "");
-
-      if (filters.search && !rowShare.includes(filters.search)) return false;
-      if (filters.share && rowShare !== filters.share) return false;
-      if (filters.type && rowType !== filters.type) return false;
-      if (filters.from && rowDate < filters.from) return false;
-      if (filters.to && rowDate > filters.to) return false;
-      return true;
-    }
-
-    function filteredRecordsByForm() {
-      const filters = currentFilters();
-      return allRecords.filter(row => recordMatchesFilters(row, filters));
-    }
-
-
-    function getNumberFilterValue(input) {
-      if (!input || input.value === "") return null;
-      const value = Number(input.value);
-      return Number.isNaN(value) ? null : value;
-    }
-
-
-    function getMultiSelectValues(select) {
-      if (!select) return [];
-      return Array.from(select.selectedOptions || [])
-        .map(option => String(option.value || "").trim().toUpperCase())
-        .filter(Boolean);
-    }
-
-    function setMultiSelectValues(select, values) {
-      if (!select) return;
-      const selected = new Set((values || []).map(value => String(value || "").trim().toUpperCase()).filter(Boolean));
-      Array.from(select.options || []).forEach(option => {
-        const optionValue = String(option.value || "").trim().toUpperCase();
-        option.selected = optionValue ? selected.has(optionValue) : false;
-      });
-      syncCheckboxDropdown(select);
-    }
-
-    function checkboxDropdownElements(select) {
-      if (!select) return {};
-      if (select.id === "summaryColumnShareFilter") {
-        return { button: summaryShareDropdownBtn, menu: summaryShareDropdownMenu };
-      }
-      if (select.id === "recordColumnShareFilter") {
-        return { button: recordShareDropdownBtn, menu: recordShareDropdownMenu };
-      }
-      return {};
-    }
-
-    function dropdownLabelFromValues(values) {
+    function dropdownLabel(selectedSet) {
+      const values = Array.from(selectedSet).sort();
       if (!values.length) return "All Shares";
       if (values.length <= 2) return values.join(", ");
       return `${values.length} selected`;
     }
 
-    function positionCheckboxDropdown(menu, button) {
-      if (!menu || !button) return;
+    function renderShareDropdown(kind) {
+      const selected = kind === "summary" ? state.selectedSummaryShares : state.selectedRecordShares;
+      const button = el(kind === "summary" ? "summaryShareButton" : "recordShareButton");
+      const menu = el(kind === "summary" ? "summaryShareMenu" : "recordShareMenu");
 
-      const rect = button.getBoundingClientRect();
-      const minWidth = 280;
-      const width = Math.max(rect.width, minWidth);
-      const viewportPadding = 12;
+      button.textContent = dropdownLabel(selected);
+      const codes = shareCodes();
 
-      menu.style.width = `${Math.min(width, window.innerWidth - viewportPadding * 2)}px`;
-      menu.style.maxHeight = `${Math.min(360, window.innerHeight - rect.bottom - 24)}px`;
-
-      const safeLeft = Math.min(
-        Math.max(viewportPadding, rect.left),
-        Math.max(viewportPadding, window.innerWidth - width - viewportPadding)
-      );
-
-      menu.style.left = `${safeLeft}px`;
-      menu.style.top = `${rect.bottom + 8}px`;
-    }
-
-    function repositionOpenCheckboxDropdowns() {
-      document.querySelectorAll(".checkbox-dropdown.open").forEach(wrapper => {
-        const button = wrapper.querySelector(".checkbox-dropdown-button");
-        const menu = wrapper.querySelector(".checkbox-dropdown-menu");
-        positionCheckboxDropdown(menu, button);
-      });
-    }
-
-    function syncCheckboxDropdown(select) {
-      const { button, menu } = checkboxDropdownElements(select);
-      if (!select || !button) return;
-      const values = getMultiSelectValues(select);
-      button.textContent = dropdownLabelFromValues(values);
-
-      if (!menu) return;
-      const selected = new Set(values);
-      menu.querySelectorAll("input[type='checkbox'][data-share]").forEach(checkbox => {
-        checkbox.checked = selected.has(String(checkbox.value || "").toUpperCase());
-      });
-    }
-
-    function renderCheckboxDropdown(select) {
-      const { button, menu } = checkboxDropdownElements(select);
-      if (!select || !button || !menu) return;
-
-      const values = Array.from(select.options || [])
-        .map(option => String(option.value || "").trim().toUpperCase())
-        .filter(Boolean);
-
-      menu.innerHTML = "";
-
-      const actions = document.createElement("div");
-      actions.className = "checkbox-dropdown-actions";
-      actions.innerHTML = `
-        <button type="button" data-action="clear">Clear</button>
-        <button type="button" data-action="all">Select All</button>
+      menu.innerHTML = `
+        <div class="dropdown-actions">
+          <button class="btn small soft" type="button" data-act="clear">Clear</button>
+          <button class="btn small soft" type="button" data-act="all">Select All</button>
+        </div>
       `;
-      menu.appendChild(actions);
 
-      if (!values.length) {
+      if (!codes.length) {
         const empty = document.createElement("div");
-        empty.className = "checkbox-empty";
+        empty.className = "empty";
         empty.textContent = "No share codes";
         menu.appendChild(empty);
+        return;
       }
 
-      values.forEach(value => {
+      codes.forEach(code => {
         const label = document.createElement("label");
-        label.className = "checkbox-option";
-        label.innerHTML = `<input type="checkbox" data-share value="${value}"><span>${value}</span>`;
+        label.className = "check-row";
+        label.innerHTML = `<input type="checkbox" value="${code}" ${selected.has(code) ? "checked" : ""}><span>${code}</span>`;
         menu.appendChild(label);
       });
 
-      actions.querySelector("[data-action='clear']").addEventListener("click", event => {
+      menu.querySelector("[data-act='clear']").addEventListener("click", event => {
         event.stopPropagation();
-        Array.from(select.options || []).forEach(option => option.selected = false);
-        syncCheckboxDropdown(select);
-        renderDashboardData();
+        selected.clear();
+        renderShareDropdown(kind);
+        renderDashboard();
       });
 
-      actions.querySelector("[data-action='all']").addEventListener("click", event => {
+      menu.querySelector("[data-act='all']").addEventListener("click", event => {
         event.stopPropagation();
-        Array.from(select.options || []).forEach(option => {
-          option.selected = Boolean(option.value);
-        });
-        syncCheckboxDropdown(select);
-        renderDashboardData();
+        selected.clear();
+        codes.forEach(code => selected.add(code));
+        renderShareDropdown(kind);
+        renderDashboard();
       });
 
-      menu.querySelectorAll("input[type='checkbox'][data-share]").forEach(checkbox => {
-        checkbox.addEventListener("change", event => {
+      menu.querySelectorAll("input[type='checkbox']").forEach(input => {
+        input.addEventListener("change", event => {
           event.stopPropagation();
-          const selected = new Set(
-            Array.from(menu.querySelectorAll("input[type='checkbox'][data-share]:checked"))
-              .map(input => String(input.value || "").toUpperCase())
-          );
-          Array.from(select.options || []).forEach(option => {
-            const value = String(option.value || "").trim().toUpperCase();
-            option.selected = value ? selected.has(value) : false;
-          });
-          syncCheckboxDropdown(select);
-          renderDashboardData();
-          requestAnimationFrame(repositionOpenCheckboxDropdowns);
+          const code = String(input.value || "").toUpperCase();
+          if (input.checked) selected.add(code);
+          else selected.delete(code);
+          button.textContent = dropdownLabel(selected);
+          renderDashboard();
         });
       });
-
-      button.onclick = event => {
-        event.stopPropagation();
-        const wrapper = button.closest(".checkbox-dropdown");
-        const isOpen = wrapper.classList.contains("open");
-        closeCheckboxDropdowns();
-        if (!isOpen) {
-          wrapper.classList.add("open");
-          const tableWrap = wrapper.closest(".table-wrap");
-          if (tableWrap) tableWrap.classList.add("dropdown-open");
-          positionCheckboxDropdown(menu, button);
-        }
-      };
-
-      menu.addEventListener("click", event => event.stopPropagation());
-      syncCheckboxDropdown(select);
     }
 
-    function closeCheckboxDropdowns() {
-      document.querySelectorAll(".checkbox-dropdown.open").forEach(dropdown => dropdown.classList.remove("open"));
-      document.querySelectorAll(".table-wrap.dropdown-open").forEach(wrap => wrap.classList.remove("dropdown-open"));
-    }
-
-    function isProfitLossMatch(value, mode) {
-      if (!mode) return true;
-      const numeric = Number(value || 0);
-      if (mode === "PROFIT") return numeric >= 0;
-      if (mode === "LOSS") return numeric < 0;
-      return true;
-    }
-
-    function summaryColumnMatches(row) {
-      const selectedShares = getMultiSelectValues(summaryColumnShareFilter);
-      const holding = summaryHoldingFilter?.value.trim().toUpperCase() || "";
-      const realizedMode = summaryRealizedFilter?.value.trim().toUpperCase() || "";
-      const unrealizedMode = summaryUnrealizedFilter?.value.trim().toUpperCase() || "";
-      const profitMode = summaryProfitFilter?.value.trim().toUpperCase() || "";
-
-      if (selectedShares.length && !selectedShares.includes(String(row.share_code || "").toUpperCase())) return false;
-      if (holding === "OPEN" && Number(row.remaining_units || 0) <= 0) return false;
-      if (holding === "CLOSED" && Number(row.remaining_units || 0) > 0) return false;
-      if (!isProfitLossMatch(row.realized_return, realizedMode)) return false;
-      if (!isProfitLossMatch(row.unrealized_return, unrealizedMode)) return false;
-      if (!isProfitLossMatch(row.total_return, profitMode)) return false;
-
-      const numberChecks = [
-        [summaryMinBuyFilter, row.total_buy_amount],
-        [summaryMinSellFilter, row.total_sell_amount],
-        [summaryMinAvgFilter, row.average_price],
-        [summaryMinPriceFilter, row.current_price],
-        [summaryMinValueFilter, row.market_value],
-        [summaryMinReturnPctFilter, row.return_percent],
-        [summaryMinTxFilter, row.transaction_count]
-      ];
-
-      return numberChecks.every(([input, value]) => {
-        const min = getNumberFilterValue(input);
-        return min === null || Number(value || 0) >= min;
-      });
-    }
-
-    function recordColumnMatches(row) {
-      const date = recordColumnDateFilter?.value || "";
-      const type = recordColumnTypeFilter?.value.trim().toUpperCase() || "";
-      const selectedShares = getMultiSelectValues(recordColumnShareFilter);
-
-      if (date && String(row.purchase_date || "") !== date) return false;
-      if (type && String(row.transaction_type || "BUY").toUpperCase() !== type) return false;
-      if (selectedShares.length && !selectedShares.includes(String(row.share_code || "").toUpperCase())) return false;
-
-      const numberChecks = [
-        [recordMinAmountFilter, row.investment_amount],
-        [recordMinUnitFilter, row.purchase_units],
-        [recordMinPriceFilter, row.average_price]
-      ];
-
-      return numberChecks.every(([input, value]) => {
-        const min = getNumberFilterValue(input);
-        return min === null || Number(value || 0) >= min;
-      });
-    }
-
-    function resetColumnFilters() {
-      columnFilterInputs.forEach(input => {
-        if (!input) return;
-        if (input.multiple) {
-          Array.from(input.options || []).forEach(option => option.selected = false);
-          syncCheckboxDropdown(input);
-        } else {
-          input.value = "";
-        }
-      });
-      closeCheckboxDropdowns();
-      renderDashboardData();
-    }
-
-    function quoteByShareCode() {
-      const map = new Map();
-      if (!allSummary || !Array.isArray(allSummary.holdings)) return map;
-      allSummary.holdings.forEach(row => {
-        map.set(String(row.share_code || "").toUpperCase(), row);
-      });
-      return map;
-    }
-
-    function calculateSummaryRowsFromRecords(records) {
-      const quotes = quoteByShareCode();
-      const grouped = new Map();
-
-      const sortedRecords = [...records].sort((a, b) => {
-        const dateCompare = String(a.purchase_date || "").localeCompare(String(b.purchase_date || ""));
-        if (dateCompare !== 0) return dateCompare;
-        return Number(a.id || 0) - Number(b.id || 0);
-      });
-
-      sortedRecords.forEach(record => {
-        const code = String(record.share_code || "").toUpperCase();
-        if (!code) return;
-
-        if (!grouped.has(code)) {
-          grouped.set(code, {
-            share_code: code,
-            total_buy_amount: 0,
-            total_sell_amount: 0,
-            remaining_units: 0,
-            cost_basis: 0,
-            realized_return: 0,
-            transaction_count: 0
-          });
-        }
-
-        const row = grouped.get(code);
-        const txType = String(record.transaction_type || "BUY").toUpperCase();
-        const amount = Number(record.investment_amount || 0);
-        const units = Number(record.purchase_units || 0);
-
-        row.transaction_count += 1;
-
-        if (txType === "SELL") {
-          const avgCost = row.remaining_units > 0 ? row.cost_basis / row.remaining_units : 0;
-          const costOfSoldUnits = avgCost * units;
-          row.total_sell_amount += amount;
-          row.realized_return += amount - costOfSoldUnits;
-          row.remaining_units = Math.max(0, row.remaining_units - units);
-          row.cost_basis = Math.max(0, row.cost_basis - costOfSoldUnits);
-        } else {
-          row.total_buy_amount += amount;
-          row.remaining_units += units;
-          row.cost_basis += amount;
-        }
-      });
-
-      return Array.from(grouped.values()).map(row => {
-        const quote = quotes.get(row.share_code) || {};
-        const currentPrice = Number(quote.current_price ?? quote.price ?? 0);
-        const hasPrice = quote.current_price !== null && quote.current_price !== undefined && !Number.isNaN(currentPrice);
-        const marketValue = hasPrice ? row.remaining_units * currentPrice : null;
-        const unrealizedReturn = hasPrice ? marketValue - row.cost_basis : null;
-        const totalReturn = row.realized_return + (unrealizedReturn || 0);
-
-        return {
-          ...quote,
-          ...row,
-          average_price: row.remaining_units > 0 ? row.cost_basis / row.remaining_units : 0,
-          current_price: hasPrice ? currentPrice : null,
-          market_value: marketValue,
-          unrealized_return: unrealizedReturn,
-          total_return: totalReturn,
-          return_percent: row.total_buy_amount ? (totalReturn / row.total_buy_amount * 100) : 0,
-          total_invested: row.cost_basis,
-          total_units: row.remaining_units
-        };
-      });
-    }
-
-    function rowMatchesStatus(row, status) {
-      if (!status) return true;
-      const units = Number(row.remaining_units || 0);
-      const totalReturn = Number(row.total_return || 0);
-
-      if (status === "OPEN") return units > 0;
-      if (status === "CLOSED") return units <= 0;
-      if (status === "PROFIT") return totalReturn > 0;
-      if (status === "LOSS") return totalReturn < 0;
-      return true;
-    }
-
-    function compareValues(a, b, key) {
-      const av = a[key];
-      const bv = b[key];
-
-      if (typeof av === "string" || typeof bv === "string") {
-        return String(av || "").localeCompare(String(bv || ""));
-      }
-
-      return Number(av || 0) - Number(bv || 0);
-    }
-
-    function sortRows(rows, sortState) {
-      return [...rows].sort((a, b) => {
-        const result = compareValues(a, b, sortState.key);
-        return sortState.direction === "asc" ? result : -result;
-      });
-    }
-
-    function applySortIndicators() {
-      document.querySelectorAll("[data-summary-sort]").forEach(th => {
-        th.classList.remove("sorted-asc", "sorted-desc");
-        if (th.dataset.summarySort === summarySort.key) {
-          th.classList.add(summarySort.direction === "asc" ? "sorted-asc" : "sorted-desc");
-        }
-      });
-
-      document.querySelectorAll("[data-record-sort]").forEach(th => {
-        th.classList.remove("sorted-asc", "sorted-desc");
-        if (th.dataset.recordSort === recordSort.key) {
-          th.classList.add(recordSort.direction === "asc" ? "sorted-asc" : "sorted-desc");
-        }
-      });
-
-      syncSortControls();
-    }
-
-    function calculateVisiblePortfolio(rows) {
-      const portfolio = {
-        total_buy_amount: 0,
-        total_sell_amount: 0,
-        market_value: 0,
-        realized_return: 0,
-        unrealized_return: 0,
-        total_return: 0,
-        return_percent: 0
-      };
-
-      rows.forEach(row => {
-        portfolio.total_buy_amount += Number(row.total_buy_amount || 0);
-        portfolio.total_sell_amount += Number(row.total_sell_amount || 0);
-        portfolio.market_value += Number(row.market_value || 0);
-        portfolio.realized_return += Number(row.realized_return || 0);
-        portfolio.unrealized_return += Number(row.unrealized_return || 0);
-        portfolio.total_return += Number(row.total_return || 0);
-      });
-
-      portfolio.return_percent = portfolio.total_buy_amount ? (portfolio.total_return / portfolio.total_buy_amount * 100) : 0;
-      return portfolio;
-    }
-
-    function updateShareFilterOptions() {
-      const current = filterShare.value;
-      const currentSummaryColumns = getMultiSelectValues(summaryColumnShareFilter);
-      const currentRecordColumns = getMultiSelectValues(recordColumnShareFilter);
-      const codes = new Set();
-
-      document.querySelectorAll("#shareCode option").forEach(option => {
-        if (option.value) codes.add(option.value.toUpperCase());
-      });
-
-      allRecords.forEach(row => {
-        if (row.share_code) codes.add(String(row.share_code).toUpperCase());
-      });
-
-      if (allSummary) {
-        allSummary.holdings.forEach(row => {
-          if (row.share_code) codes.add(String(row.share_code).toUpperCase());
+    function initDropdowns() {
+      ["summary", "record"].forEach(kind => {
+        const dropdown = el(kind === "summary" ? "summaryShareDropdown" : "recordShareDropdown");
+        const button = el(kind === "summary" ? "summaryShareButton" : "recordShareButton");
+        button.addEventListener("click", event => {
+          event.stopPropagation();
+          const wasOpen = dropdown.classList.contains("open");
+          document.querySelectorAll(".dropdown.open").forEach(x => x.classList.remove("open"));
+          if (!wasOpen) dropdown.classList.add("open");
         });
-      }
+        dropdown.addEventListener("click", event => event.stopPropagation());
+      });
 
-      const sorted = Array.from(codes).sort();
-      const options = `<option value="">All Shares</option>` + sorted.map(code => `<option value="${code}">${code}</option>`).join("");
-
-      filterShare.innerHTML = options;
-      filterShare.value = sorted.includes(current) ? current : "";
-
-      if (summaryColumnShareFilter) {
-        summaryColumnShareFilter.innerHTML = options;
-        setMultiSelectValues(summaryColumnShareFilter, currentSummaryColumns.filter(code => sorted.includes(code)));
-        renderCheckboxDropdown(summaryColumnShareFilter);
-      }
-
-      if (recordColumnShareFilter) {
-        recordColumnShareFilter.innerHTML = options;
-        setMultiSelectValues(recordColumnShareFilter, currentRecordColumns.filter(code => sorted.includes(code)));
-        renderCheckboxDropdown(recordColumnShareFilter);
-      }
+      document.addEventListener("click", () => {
+        document.querySelectorAll(".dropdown.open").forEach(x => x.classList.remove("open"));
+      });
     }
 
-    function updateFilterResult(records, rows) {
-      const filters = currentFilters();
-      const parts = [];
+    function renderMarket() {
+      const board = el("marketBoard");
+      board.innerHTML = "";
+      const quotes = [...state.market].sort((a,b) => String(a.share_code).localeCompare(String(b.share_code)));
 
-      if (filters.search) parts.push(`Search: ${filters.search}`);
-      if (filters.share) parts.push(filters.share);
-      if (filters.type) parts.push(filters.type);
-      if (filters.from) parts.push(`From ${filters.from}`);
-      if (filters.to) parts.push(`To ${filters.to}`);
-      if (filters.status) parts.push(filters.status);
+      el("marketLoadedText").textContent = `${quotes.filter(q => !q.error).length} loaded`;
+      el("marketRefreshText").textContent = `Last updated ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
 
-      filterResultText.textContent = parts.length
-        ? `${parts.join(" • ")} — ${rows.length} shares, ${records.length} records`
-        : `All data — ${rows.length} shares, ${records.length} records`;
+      if (!quotes.length) {
+        board.innerHTML = `<div class="empty">No market data loaded.</div>`;
+        return;
+      }
+
+      quotes.forEach(q => {
+        const card = document.createElement("div");
+        card.className = "quote";
+        const native = q.converted && q.native_price !== null && q.native_price !== undefined
+          ? `${fmtMoney(q.native_price)} ${q.native_currency || ""}`
+          : `${fmtMoney(q.price)} ${q.currency || PORTFOLIO_CURRENCY}`;
+        const fx = q.converted && q.fx_rate ? `${q.fx_symbol || ""} ${Number(q.fx_rate).toFixed(4)}` : "No FX";
+        card.innerHTML = `
+          <div class="quote-top">
+            <div>
+              <div class="quote-code">${q.share_code}</div>
+              <div class="quote-note">${q.market_symbol || q.share_code}</div>
+            </div>
+            <span class="badge ${q.error ? "issue" : "live"}"><span class="dot"></span>${q.error ? "Issue" : "Live"}</span>
+          </div>
+          <div class="quote-price">
+            <div class="quote-stat">
+              <div class="quote-label">Market Price</div>
+              <div class="quote-value">${fmtCurrency(q.price)}</div>
+            </div>
+            <div class="quote-stat">
+              <div class="quote-label">Native</div>
+              <div class="quote-value">${native}</div>
+            </div>
+          </div>
+          <div class="quote-note">${q.error || fx}</div>
+        `;
+        board.appendChild(card);
+      });
     }
 
-    function renderMetrics(portfolio) {
-      document.getElementById("metricBuyAmount").textContent = fmtMoney(portfolio.total_buy_amount);
-      document.getElementById("metricMarketValue").textContent = fmtMoney(portfolio.market_value);
+    function getFilteredSummaryRows() {
+      let rows = [...(state.summary?.holdings || [])];
+      const selected = state.selectedSummaryShares;
+      const status = el("summaryStatusFilter").value;
+      const pl = el("summaryProfitFilter").value;
 
-      const metricRealized = document.getElementById("metricRealized");
-      metricRealized.textContent = fmtMoney(portfolio.realized_return);
-      metricRealized.className = `metric-value ${cls(portfolio.realized_return)}`;
+      if (selected.size) rows = rows.filter(r => selected.has(String(r.share_code || "").toUpperCase()));
+      if (status === "OPEN") rows = rows.filter(r => Number(r.remaining_units || 0) > 0);
+      if (status === "CLOSED") rows = rows.filter(r => Number(r.remaining_units || 0) <= 0);
+      if (status === "BELOW") rows = rows.filter(r => r.current_price !== null && r.current_price !== undefined && Number(r.average_price || 0) > Number(r.current_price || 0));
+      if (pl === "PROFIT") rows = rows.filter(r => Number(r.total_return || 0) >= 0);
+      if (pl === "LOSS") rows = rows.filter(r => Number(r.total_return || 0) < 0);
 
-      const metricReturn = document.getElementById("metricReturn");
-      metricReturn.textContent = fmtMoney(portfolio.total_return);
-      metricReturn.className = `metric-value ${cls(portfolio.total_return)}`;
-
-      const metricReturnPct = document.getElementById("metricReturnPct");
-      metricReturnPct.textContent = fmtPct(portfolio.return_percent);
-      metricReturnPct.className = `metric-value ${cls(portfolio.return_percent)}`;
+      return sortRows(rows, el("summarySortBy").value, el("summarySortDir").value);
     }
 
-    function renderSummaryRows(rows) {
-      const body = document.getElementById("summaryBody");
-      body.innerHTML = "";
+    function sortRows(rows, key, direction) {
+      const dir = direction === "desc" ? -1 : 1;
+      return [...rows].sort((a,b) => {
+        const av = a[key];
+        const bv = b[key];
+        if (typeof av === "string" || typeof bv === "string") return String(av || "").localeCompare(String(bv || "")) * dir;
+        return (Number(av || 0) - Number(bv || 0)) * dir;
+      });
+    }
 
-      summaryCountText.textContent = `${rows.length} ${rows.length === 1 ? "share" : "shares"}`;
+    function renderSummary() {
+      const list = el("summaryList");
+      const rows = getFilteredSummaryRows();
+      list.innerHTML = "";
+      el("summaryCountText").textContent = `${rows.length} ${rows.length === 1 ? "share" : "shares"}`;
 
       if (!rows.length) {
-        body.innerHTML = `<tr><td colspan="12" class="empty-state">No matching summary rows.</td></tr>`;
+        list.innerHTML = `<div class="empty">No matching shares. Change the filters above.</div>`;
         return;
       }
 
       rows.forEach(row => {
-        const tr = document.createElement("tr");
-
-        if (
-          row.current_price !== null &&
-          row.current_price !== undefined &&
-          Number(row.average_price || 0) > Number(row.current_price || 0)
-        ) {
-          tr.classList.add("avg-above-market-row");
-          tr.title = "Avg Cost is higher than Market Price";
-        }
-        tr.innerHTML = `
-          <td data-summary-col="share_code">${row.share_code}</td>
-          <td data-summary-col="total_buy_amount">${fmtMoney(row.total_buy_amount)}</td>
-          <td data-summary-col="total_sell_amount">${fmtMoney(row.total_sell_amount)}</td>
-          <td data-summary-col="remaining_units">${fmtNum(row.remaining_units)}</td>
-          <td data-summary-col="average_price">${fmtMoney(row.average_price)}</td>
-          <td data-summary-col="current_price">${summaryPriceCell(row)}</td>
-          <td data-summary-col="market_value">${fmtMoney(row.market_value)}</td>
-          <td data-summary-col="realized_return" class="${cls(row.realized_return)}">${fmtMoney(row.realized_return)}</td>
-          <td data-summary-col="unrealized_return" class="${cls(row.unrealized_return)}">${fmtMoney(row.unrealized_return)}</td>
-          <td data-summary-col="total_return" class="${cls(row.total_return)}">${fmtMoney(row.total_return)}</td>
-          <td data-summary-col="return_percent" class="${cls(row.return_percent)}">${fmtPct(row.return_percent)}</td>
-          <td data-summary-col="transaction_count"><span class="chip">${row.transaction_count}</span></td>
+        const belowMarket = row.current_price !== null && row.current_price !== undefined && Number(row.average_price || 0) > Number(row.current_price || 0);
+        const card = document.createElement("div");
+        card.className = `holding-card ${belowMarket ? "below-market" : ""}`;
+        card.innerHTML = `
+          <div>
+            <div class="ticker">${row.share_code}</div>
+            <div class="ticker-sub">${row.market_symbol || row.share_code} • ${row.transaction_count || 0} txns</div>
+          </div>
+          <div class="holding-metrics">
+            <div class="mini-metric"><div class="mini-label">Buy Amount</div><div class="mini-value">${fmtMoney(row.total_buy_amount)}</div></div>
+            <div class="mini-metric"><div class="mini-label">Sell Amount</div><div class="mini-value">${fmtMoney(row.total_sell_amount)}</div></div>
+            <div class="mini-metric"><div class="mini-label">Remaining Units</div><div class="mini-value">${fmtNum(row.remaining_units)}</div></div>
+            <div class="mini-metric"><div class="mini-label">Avg Cost</div><div class="mini-value">${fmtMoney(row.average_price)}</div></div>
+            <div class="mini-metric"><div class="mini-label">Market Price</div><div class="mini-value">${fmtMoney(row.current_price)}</div></div>
+            <div class="mini-metric"><div class="mini-label">Current Value</div><div class="mini-value">${fmtMoney(row.market_value)}</div></div>
+            <div class="mini-metric"><div class="mini-label">Realized P/L</div><div class="mini-value ${cls(row.realized_return)}">${fmtMoney(row.realized_return)}</div></div>
+            <div class="mini-metric"><div class="mini-label">Unrealized P/L</div><div class="mini-value ${cls(row.unrealized_return)}">${fmtMoney(row.unrealized_return)}</div></div>
+          </div>
+          <div class="result-box">
+            <div class="result-main ${cls(row.total_return)}">${fmtMoney(row.total_return)}</div>
+            <div class="result-sub">Total P/L</div>
+            <div class="${cls(row.return_percent)}" style="font-weight:950;">${fmtPct(row.return_percent)}</div>
+          </div>
         `;
-        body.appendChild(tr);
+        list.appendChild(card);
       });
     }
 
-    function renderRecords(records) {
-      const body = document.getElementById("recordsBody");
+    function getFilteredRecords() {
+      let rows = [...state.records];
+      const selected = state.selectedRecordShares;
+      const type = el("recordTypeFilter").value;
+      const from = el("recordDateFromFilter").value;
+      const to = el("recordDateToFilter").value;
+
+      if (selected.size) rows = rows.filter(r => selected.has(String(r.share_code || "").toUpperCase()));
+      if (type) rows = rows.filter(r => String(r.transaction_type || "BUY").toUpperCase() === type);
+      if (from) rows = rows.filter(r => String(r.purchase_date || "") >= from);
+      if (to) rows = rows.filter(r => String(r.purchase_date || "") <= to);
+
+      const sortKey = el("recordSortBy").value;
+      const dir = sortKey === "purchase_date" ? "desc" : "asc";
+      return sortRows(rows, sortKey, dir);
+    }
+
+    function renderRecords() {
+      const body = el("recordsBody");
+      const rows = getFilteredRecords();
       body.innerHTML = "";
 
-      const buyCount = records.filter(row => String(row.transaction_type || "BUY").toUpperCase() === "BUY").length;
-      const sellCount = records.filter(row => String(row.transaction_type || "BUY").toUpperCase() === "SELL").length;
-      recordCountText.textContent = `BUY: ${buyCount} • SELL: ${sellCount} • TOTAL: ${records.length}`;
+      const buyCount = rows.filter(r => String(r.transaction_type || "BUY").toUpperCase() === "BUY").length;
+      const sellCount = rows.filter(r => String(r.transaction_type || "BUY").toUpperCase() === "SELL").length;
+      el("recordCountText").textContent = `BUY: ${buyCount} • SELL: ${sellCount} • TOTAL: ${rows.length}`;
 
-      if (!records.length) {
-        body.innerHTML = `<tr><td colspan="7" class="empty-state">No matching transaction records.</td></tr>`;
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="7" class="muted" style="text-align:center;padding:26px;">No matching records.</td></tr>`;
         return;
       }
 
-      records.forEach(row => {
+      rows.forEach(row => {
+        const type = String(row.transaction_type || "BUY").toUpperCase();
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td data-record-col="purchase_date">${row.purchase_date}</td>
-          <td data-record-col="transaction_type">${typeBadge(row.transaction_type)}</td>
-          <td data-record-col="share_code">${row.share_code}</td>
-          <td data-record-col="investment_amount">${fmtMoney(row.investment_amount)}</td>
-          <td data-record-col="purchase_units">${fmtNum(row.purchase_units)}</td>
-          <td data-record-col="average_price">${fmtMoney(row.average_price)}</td>
-          <td data-record-col="action">
-            <div class="small-actions">
-              <button type="button" class="btn-secondary" data-edit="${row.id}">Edit</button>
-              <button type="button" class="btn-danger" data-delete="${row.id}">Delete</button>
+          <td>${row.purchase_date}</td>
+          <td><span class="type ${type.toLowerCase()}">${type}</span></td>
+          <td><strong>${row.share_code}</strong></td>
+          <td>${fmtMoney(row.investment_amount)}</td>
+          <td>${fmtNum(row.purchase_units)}</td>
+          <td>${fmtMoney(row.average_price)}</td>
+          <td>
+            <div class="row-actions">
+              <button class="btn small secondary" type="button" data-edit="${row.id}">Edit</button>
+              <button class="btn small danger" type="button" data-delete="${row.id}">Delete</button>
             </div>
           </td>
         `;
         body.appendChild(tr);
-
         tr.querySelector("[data-edit]").addEventListener("click", () => editRecord(row));
         tr.querySelector("[data-delete]").addEventListener("click", () => deleteRecord(row.id));
       });
     }
 
-    function renderAllocationChart(rows) {
-      const el = document.getElementById("allocationChart");
-      const items = rows
-        .map(row => ({ code: row.share_code, value: Math.max(0, Number(row.market_value || 0)) }))
-        .filter(item => item.value > 0)
-        .sort((a, b) => b.value - a.value);
-
-      const total = items.reduce((sum, item) => sum + item.value, 0);
-      if (!items.length || total <= 0) {
-        el.innerHTML = `<div class="chart-empty">No current holding value to chart.</div>`;
-        return;
-      }
-
-      let cursor = 0;
-      const stops = items.map((item, index) => {
-        const start = cursor;
-        const end = cursor + (item.value / total * 360);
-        cursor = end;
-        const color = chartColors[index % chartColors.length];
-        return `${color} ${start.toFixed(2)}deg ${end.toFixed(2)}deg`;
-      }).join(", ");
-
-      const legend = items.map((item, index) => {
-        const color = chartColors[index % chartColors.length];
-        const pct = (item.value / total * 100).toFixed(1);
-        return `
-          <div class="legend-item">
-            <span class="legend-dot" style="background:${color}"></span>
-            <span>${item.code}</span>
-            <span>${pct}%</span>
-          </div>
-        `;
-      }).join("");
-
-      el.innerHTML = `
-        <div class="donut-wrap">
-          <div class="donut" style="background: conic-gradient(${stops})"></div>
-          <div class="legend">${legend}</div>
-        </div>
-      `;
+    function renderMetrics() {
+      const p = state.summary?.portfolio || {};
+      el("metricCost").textContent = fmtMoney(p.cost_basis ?? p.total_invested);
+      el("metricMarketValue").textContent = fmtMoney(p.market_value);
+      el("metricReturn").textContent = fmtMoney(p.total_return);
+      el("metricReturn").className = `metric-value ${cls(p.total_return)}`;
+      el("metricReturnPct").textContent = fmtPct(p.return_percent);
+      el("metricReturnPct").className = `metric-value ${cls(p.return_percent)}`;
     }
 
-    function renderProfitChart(rows) {
-      const el = document.getElementById("profitChart");
-      const items = rows
-        .map(row => ({ code: row.share_code, value: Number(row.total_return || 0) }))
-        .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
-        .slice(0, 10);
-
-      const maxAbs = Math.max(...items.map(item => Math.abs(item.value)), 0);
-      if (!items.length || maxAbs <= 0) {
-        el.innerHTML = `<div class="chart-empty">No profit/loss data to chart.</div>`;
-        return;
-      }
-
-      el.innerHTML = `
-        <div class="bar-list">
-          ${items.map(item => {
-            const width = Math.max(3, Math.abs(item.value) / maxAbs * 100);
-            const negative = item.value < 0;
-            return `
-              <div class="bar-row">
-                <strong>${item.code}</strong>
-                <div class="bar-track"><div class="bar-fill ${negative ? "negative" : ""}" style="width:${width}%"></div></div>
-                <span class="${cls(item.value)}">${fmtMoney(item.value)}</span>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      `;
+    function renderDashboard() {
+      renderShareDropdown("summary");
+      renderShareDropdown("record");
+      renderMetrics();
+      renderMarket();
+      renderSummary();
+      renderRecords();
     }
 
-    function renderBuySellChart(records) {
-      const el = document.getElementById("buySellChart");
-      const buyAmount = records
-        .filter(row => String(row.transaction_type || "BUY").toUpperCase() === "BUY")
-        .reduce((sum, row) => sum + Number(row.investment_amount || 0), 0);
-      const sellAmount = records
-        .filter(row => String(row.transaction_type || "BUY").toUpperCase() === "SELL")
-        .reduce((sum, row) => sum + Number(row.investment_amount || 0), 0);
-      const maxAmount = Math.max(buyAmount, sellAmount);
-
-      if (maxAmount <= 0) {
-        el.innerHTML = `<div class="chart-empty">No buy/sell amount to chart.</div>`;
-        return;
-      }
-
-      const buyWidth = Math.max(3, buyAmount / maxAmount * 100);
-      const sellWidth = Math.max(sellAmount > 0 ? 3 : 0, sellAmount / maxAmount * 100);
-
-      el.innerHTML = `
-        <div class="mini-bars">
-          <div>
-            <div class="mini-bar-label"><strong>BUY Amount</strong><span>${fmtMoney(buyAmount)}</span></div>
-            <div class="mini-bar"><span class="mini-buy" style="width:${buyWidth}%"></span></div>
-          </div>
-          <div>
-            <div class="mini-bar-label"><strong>SELL Amount</strong><span>${fmtMoney(sellAmount)}</span></div>
-            <div class="mini-bar"><span class="mini-sell" style="width:${sellWidth}%"></span></div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderCharts(rows, records) {
-      renderAllocationChart(rows);
-      renderProfitChart(rows);
-      renderBuySellChart(records);
-    }
-
-    function renderDashboardData() {
-      const filters = currentFilters();
-      const smartFilteredRecords = filteredRecordsByForm();
-
-      let rows = calculateSummaryRowsFromRecords(smartFilteredRecords)
-        .filter(row => rowMatchesStatus(row, filters.status))
-        .filter(summaryColumnMatches);
-
-      const statusShareCodes = new Set(
-        calculateSummaryRowsFromRecords(smartFilteredRecords)
-          .filter(row => rowMatchesStatus(row, filters.status))
-          .map(row => String(row.share_code || "").toUpperCase())
-      );
-
-      let records = filters.status
-        ? smartFilteredRecords.filter(row => statusShareCodes.has(String(row.share_code || "").toUpperCase()))
-        : smartFilteredRecords;
-
-      records = records.filter(recordColumnMatches);
-
-      rows = sortRows(rows, summarySort);
-      const sortedRecords = sortRows(records, recordSort);
-      const portfolio = calculateVisiblePortfolio(rows);
-
-      renderMetrics(portfolio);
-      renderSummaryRows(rows);
-      renderRecords(sortedRecords);
-      applyColumnVisibility();
-      if (document.getElementById("allocationChart")) renderCharts(rows, sortedRecords);
-      updateFilterResult(sortedRecords, rows);
-      applySortIndicators();
-    }
-
-    async function loadDashboardData() {
-      const [summaryData, recordsData] = await Promise.all([
+    async function loadAll() {
+      const [summary, records, market] = await Promise.all([
         requestJson("/api/summary"),
-        requestJson("/api/records")
+        requestJson("/api/records"),
+        requestJson("/api/market")
       ]);
-
-      allSummary = summaryData;
-      allRecords = recordsData.records || [];
-
-      updateShareFilterOptions();
-      renderDashboardData();
+      state.summary = summary;
+      state.records = records.records || [];
+      state.market = market.quotes || [];
+      renderDashboard();
     }
 
     function editRecord(row) {
       recordId.value = row.id;
       purchaseDate.value = row.purchase_date;
-      transactionType.value = row.transaction_type || "BUY";
+      transactionType.value = String(row.transaction_type || "BUY").toUpperCase();
       shareCode.value = row.share_code;
       investmentAmount.value = row.investment_amount;
       purchaseUnits.value = row.purchase_units;
       recalcAverage();
-      updateTransactionLabels();
-      formTitle.textContent = "Edit Transaction";
+      updateLabels();
+      formTitle.textContent = "Edit Buy / Sell Record";
       saveBtn.textContent = "Update";
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -3697,13 +1273,12 @@
       if (!confirm("Delete this record?")) return;
       await requestJson(`/api/records/${id}`, { method: "DELETE" });
       setStatus("Record deleted.");
-      await refreshAll();
+      await loadAll();
     }
 
-    form.addEventListener("submit", async (event) => {
+    recordForm.addEventListener("submit", async event => {
       event.preventDefault();
       saveBtn.disabled = true;
-
       const payload = {
         purchase_date: purchaseDate.value,
         transaction_type: transactionType.value,
@@ -3711,131 +1286,70 @@
         investment_amount: Number(investmentAmount.value),
         purchase_units: Number(purchaseUnits.value)
       };
-
       try {
         if (recordId.value) {
-          await requestJson(`/api/records/${recordId.value}`, {
-            method: "PUT",
-            body: JSON.stringify(payload)
-          });
-          setStatus("Transaction updated.");
+          await requestJson(`/api/records/${recordId.value}`, { method: "PUT", body: JSON.stringify(payload) });
+          setStatus("Record updated.");
         } else {
-          const result = await requestJson("/api/records", {
-            method: "POST",
-            body: JSON.stringify(payload)
-          });
-          setStatus(result.record.duplicate_blocked ? "Duplicate save blocked." : "Transaction saved.");
+          await requestJson("/api/records", { method: "POST", body: JSON.stringify(payload) });
+          setStatus("Record saved.");
         }
-
         resetForm();
-        await refreshAll();
+        await loadAll();
       } catch (err) {
         setStatus(`Error: ${err.message}`);
         saveBtn.disabled = false;
       }
     });
 
+    async function exportPdf() {
+      const response = await fetch("/api/report.pdf");
+      if (!response.ok) throw new Error("PDF export failed.");
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "marketsharelive-portfolio-report.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function resetSummaryFilters() {
+      state.selectedSummaryShares.clear();
+      el("summaryStatusFilter").value = "";
+      el("summaryProfitFilter").value = "";
+      el("summarySortBy").value = "share_code";
+      el("summarySortDir").value = "asc";
+      renderDashboard();
+    }
+
+    function resetRecordFilters() {
+      state.selectedRecordShares.clear();
+      el("recordTypeFilter").value = "";
+      el("recordDateFromFilter").value = "";
+      el("recordDateToFilter").value = "";
+      el("recordSortBy").value = "purchase_date";
+      renderDashboard();
+    }
+
+    [investmentAmount, purchaseUnits].forEach(input => input.addEventListener("input", recalcAverage));
+    transactionType.addEventListener("change", updateLabels);
     cancelBtn.addEventListener("click", resetForm);
+    el("exportPdfBtn").addEventListener("click", () => exportPdf().catch(err => setStatus(`Error: ${err.message}`)));
+    el("resetSummaryFiltersBtn").addEventListener("click", resetSummaryFilters);
+    el("resetRecordFiltersBtn").addEventListener("click", resetRecordFilters);
 
-    applyFilterBtn.addEventListener("click", renderDashboardData);
-    [filterSearch, filterShare, filterType, filterDateFrom, filterDateTo, filterStatus].forEach(el => {
-      el.addEventListener("input", renderDashboardData);
-      el.addEventListener("change", renderDashboardData);
+    ["summaryStatusFilter", "summaryProfitFilter", "summarySortBy", "summarySortDir", "recordTypeFilter", "recordDateFromFilter", "recordDateToFilter", "recordSortBy"].forEach(id => {
+      el(id).addEventListener("change", renderDashboard);
     });
 
-    document.querySelectorAll("[data-summary-sort]").forEach(th => {
-      th.addEventListener("click", () => {
-        const key = th.dataset.summarySort;
-        summarySort = {
-          key,
-          direction: summarySort.key === key && summarySort.direction === "asc" ? "desc" : "asc"
-        };
-        renderDashboardData();
-      });
-    });
-
-    document.querySelectorAll("[data-record-sort]").forEach(th => {
-      th.addEventListener("click", () => {
-        const key = th.dataset.recordSort;
-        recordSort = {
-          key,
-          direction: recordSort.key === key && recordSort.direction === "asc" ? "desc" : "asc"
-        };
-        renderDashboardData();
-      });
-    });
-
-    [summarySortBy, summarySortDir].forEach(el => {
-      el.addEventListener("change", () => {
-        summarySort = {
-          key: summarySortBy.value,
-          direction: summarySortDir.value
-        };
-        renderDashboardData();
-      });
-    });
-
-    [recordSortBy, recordSortDir].forEach(el => {
-      el.addEventListener("change", () => {
-        recordSort = {
-          key: recordSortBy.value,
-          direction: recordSortDir.value
-        };
-        renderDashboardData();
-      });
-    });
-
-    columnFilterInputs.forEach(el => {
-      el.addEventListener("input", renderDashboardData);
-      el.addEventListener("change", renderDashboardData);
-      el.addEventListener("click", event => event.stopPropagation());
-    });
-
-    if (resetColumnFiltersBtn) {
-      resetColumnFiltersBtn.addEventListener("click", event => {
-        event.stopPropagation();
-        resetColumnFilters();
-      });
-    }
-
-    document.addEventListener("click", closeCheckboxDropdowns);
-    window.addEventListener("resize", closeCheckboxDropdowns);
-    document.addEventListener("scroll", event => {
-      const target = event.target;
-      if (target && target.closest && target.closest(".checkbox-dropdown-menu")) return;
-      repositionOpenCheckboxDropdowns();
-    }, true);
-
-    resetFilterBtn.addEventListener("click", () => {
-      filterSearch.value = "";
-      filterShare.value = "";
-      filterType.value = "";
-      filterDateFrom.value = "";
-      filterDateTo.value = "";
-      filterStatus.value = "";
-      renderDashboardData();
-    });
-
-    async function refreshAll() {
-      await Promise.all([
-        loadMarket(),
-        loadDashboardData()
-      ]);
-      saveBtn.disabled = false;
-    }
-
-    exportPdfBtn.addEventListener("click", () => {
-      window.location.href = "/api/report.pdf";
-    });
-
-    renderColumnPickers();
-    syncSortControls();
+    initTheme();
+    initDropdowns();
     resetForm();
-    refreshAll().catch(err => setStatus(`Error loading dashboard: ${err.message}`));
-    setInterval(() => {
-      loadMarket().catch(() => {});
-      loadDashboardData().catch(() => {});
-    }, REFRESH_INTERVAL_MS);
+    loadAll().catch(err => setStatus(`Error loading dashboard: ${err.message}`));
+    setInterval(() => loadAll().catch(() => {}), 120000);
   </script>
 </body>
 </html>
