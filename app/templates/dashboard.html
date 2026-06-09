@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Market Share Live Portfolio</title>
   <style>
+
     :root {
       --bg: #07111f;
       --bg2: #0b1729;
-      --panel: rgba(13, 26, 45, .82);
-      --panel2: rgba(18, 34, 58, .96);
+      --panel: rgba(13, 26, 45, .86);
+      --panel2: rgba(18, 34, 58, .98);
       --card: rgba(255,255,255,.055);
+      --card2: rgba(255,255,255,.08);
       --text: #f8fbff;
       --muted: #91a3bb;
       --line: rgba(148, 163, 184, .18);
@@ -18,34 +20,34 @@
       --blue: #60a5fa;
       --purple: #8b5cf6;
       --green: #34d399;
-      --green-soft: rgba(16, 185, 129, .17);
       --red: #fb7185;
-      --red-soft: rgba(251, 113, 133, .14);
-      --yellow: #fbbf24;
-      --shadow: 0 24px 60px rgba(0,0,0,.35);
-      --radius: 24px;
+      --shadow: 0 18px 42px rgba(0,0,0,.32);
+      --radius: 22px;
       --input: rgba(255,255,255,.07);
       --input-border: rgba(148,163,184,.22);
+      --good-row: rgba(16, 185, 129, .16);
     }
 
     [data-theme="light"] {
       --bg: #f3f7ff;
       --bg2: #eaf1fb;
-      --panel: rgba(255,255,255,.88);
-      --panel2: rgba(255,255,255,.96);
-      --card: rgba(248,251,255,.94);
+      --panel: rgba(255,255,255,.92);
+      --panel2: rgba(255,255,255,.98);
+      --card: rgba(248,251,255,.95);
+      --card2: #fff;
       --text: #0f172a;
       --muted: #64748b;
       --line: rgba(15, 23, 42, .12);
       --soft-line: rgba(15, 23, 42, .08);
-      --green-soft: rgba(16, 185, 129, .14);
-      --red-soft: rgba(251, 113, 133, .10);
-      --shadow: 0 22px 50px rgba(15,23,42,.10);
+      --shadow: 0 16px 36px rgba(15,23,42,.10);
       --input: #fff;
       --input-border: rgba(15,23,42,.14);
+      --good-row: rgba(187, 247, 208, .70);
     }
 
     * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -53,58 +55,177 @@
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       background:
-        radial-gradient(circle at 0% 0%, rgba(96,165,250,.20), transparent 30%),
-        radial-gradient(circle at 100% 0%, rgba(139,92,246,.19), transparent 24%),
-        radial-gradient(circle at 20% 100%, rgba(52,211,153,.15), transparent 22%),
+        radial-gradient(circle at 0% 0%, rgba(96,165,250,.18), transparent 30%),
+        radial-gradient(circle at 100% 0%, rgba(139,92,246,.16), transparent 24%),
+        radial-gradient(circle at 20% 100%, rgba(52,211,153,.12), transparent 22%),
         linear-gradient(180deg, var(--bg), var(--bg2));
     }
 
     a { color: inherit; text-decoration: none; }
 
     .page {
-      max-width: 1440px;
+      max-width: 1460px;
       margin: 0 auto;
-      padding: 22px;
+      padding: 16px;
     }
 
-    .hero {
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 16px;
-      align-items: start;
-      padding: 26px;
+      grid-template-columns: minmax(220px, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+      padding: 12px;
       border: 1px solid var(--line);
-      border-radius: 32px;
-      background:
-        linear-gradient(135deg, rgba(96,165,250,.15), rgba(52,211,153,.06)),
-        var(--panel);
+      border-radius: 22px;
+      background: var(--panel2);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
-      margin-bottom: 18px;
     }
 
-    .hero h1 {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      flex: 0 0 auto;
+    }
+
+    .brand h1 {
       margin: 0;
-      font-size: clamp(28px, 4vw, 44px);
-      letter-spacing: -.04em;
-      line-height: 1.05;
+      font-size: 22px;
+      letter-spacing: -.03em;
+      line-height: 1.1;
     }
 
-    .hero p {
-      margin: 10px 0 0;
+    .brand p {
+      margin: 3px 0 0;
       color: var(--muted);
-      font-size: 15px;
-      line-height: 1.6;
-      max-width: 800px;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .hero-actions {
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      border: 0;
+      border-radius: 14px;
+      padding: 0 14px;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 850;
+      font-size: 14px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(37,99,235,.20); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn.secondary { background: linear-gradient(135deg, #334155, #475569); }
+    .btn.soft {
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--line);
+    }
+    .btn.danger { background: linear-gradient(135deg, #dc2626, #fb7185); }
+    .btn.small { min-height: 34px; border-radius: 12px; padding: 0 12px; font-size: 13px; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .metric {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+      font-weight: 750;
+    }
+
+    .metric-value {
+      font-size: clamp(22px, 2.5vw, 30px);
+      font-weight: 950;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+
+    .tabbar {
+      position: sticky;
+      top: 76px;
+      z-index: 70;
       display: flex;
       gap: 10px;
       align-items: center;
-      justify-content: flex-end;
-      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel2);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+      overflow-x: auto;
     }
+
+    .tab-btn {
+      border: 1px solid transparent;
+      border-radius: 14px;
+      padding: 10px 16px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      color: #fff;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      box-shadow: 0 12px 24px rgba(37,99,235,.18);
+    }
+
+    [data-theme="light"] .tab-btn.active { color: #fff; }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn .18s ease; }
+    @keyframes fadeIn { from { opacity: .45; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
     .panel {
       border: 1px solid var(--line);
@@ -113,16 +234,17 @@
       backdrop-filter: blur(18px);
       border-radius: var(--radius);
       overflow: visible;
+      margin-bottom: 14px;
     }
 
-    .section-body { padding: 20px; }
+    .section-body { padding: 18px; }
 
     .section-head {
       display: flex;
       justify-content: space-between;
       gap: 16px;
       align-items: flex-start;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .title-row {
@@ -149,20 +271,15 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      min-height: 30px;
-      padding: 5px 12px;
+      min-height: 28px;
+      padding: 5px 11px;
       border-radius: 999px;
-      background: rgba(255,255,255,.06);
+      background: var(--card);
       border: 1px solid var(--line);
       color: var(--text);
       font-weight: 850;
       font-size: 13px;
       white-space: nowrap;
-    }
-
-    [data-theme="light"] .badge,
-    [data-theme="light"] .count-pill {
-      background: #fff;
     }
 
     .badge.live {
@@ -185,88 +302,61 @@
       box-shadow: 0 0 0 4px rgba(52,211,153,.12);
     }
 
-    .btn {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      min-height: 44px;
-      border: 0;
-      border-radius: 16px;
-      padding: 0 16px;
-      color: #fff;
-      cursor: pointer;
-      font-weight: 850;
-      font-size: 14px;
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
-      transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease;
-    }
-
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(37,99,235,.22); }
-    .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
-    .btn.secondary { background: linear-gradient(135deg, #334155, #475569); }
-    .btn.soft {
-      color: var(--text);
-      background: var(--card);
-      border: 1px solid var(--line);
-    }
-    .btn.danger { background: linear-gradient(135deg, #dc2626, #fb7185); }
-    .btn.small { min-height: 36px; border-radius: 12px; padding: 0 12px; font-size: 13px; }
-
-    .metrics {
+    .overview-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: 400px minmax(0, 1fr);
       gap: 14px;
-      margin-bottom: 18px;
+      align-items: start;
     }
 
-    .metric {
-      padding: 18px;
+    details.editor {
       border: 1px solid var(--line);
-      border-radius: 22px;
       background: var(--panel);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
-    .metric-label {
+    details.editor summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      font-weight: 950;
+      font-size: 18px;
+    }
+
+    details.editor summary::-webkit-details-marker { display: none; }
+    details.editor summary::after {
+      content: "Open";
       color: var(--muted);
       font-size: 13px;
-      margin-bottom: 8px;
+      font-weight: 850;
     }
-
-    .metric-value {
-      font-size: clamp(24px, 3vw, 34px);
-      font-weight: 900;
-      letter-spacing: -.03em;
-      line-height: 1.1;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 420px minmax(0,1fr);
-      gap: 18px;
-      margin-bottom: 18px;
-    }
+    details.editor[open] summary::after { content: "Close"; }
 
     label {
       display: block;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 7px;
     }
 
     input, select, .dropdown-button {
       width: 100%;
-      min-height: 46px;
+      min-height: 44px;
       border: 1px solid var(--input-border);
-      border-radius: 16px;
+      border-radius: 15px;
       padding: 0 14px;
       background: var(--input);
       color: var(--text);
       outline: none;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 750;
     }
 
     input:focus, select:focus, .dropdown.open .dropdown-button {
@@ -282,8 +372,6 @@
     }
 
     .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .filter-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: end; }
-
     .field.full { grid-column: 1 / -1; }
 
     .status {
@@ -298,67 +386,46 @@
 
     .market-board {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 9px;
     }
 
     .quote {
       display: grid;
-      gap: 10px;
-      padding: 14px;
+      grid-template-columns: 84px minmax(105px, .9fr) minmax(100px, .8fr) minmax(80px, .7fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 11px 12px;
       border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--card);
+      border-radius: 16px;
+      background: var(--card2);
+      min-height: 68px;
     }
 
-    .quote-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-    }
+    .quote:hover { border-color: rgba(96,165,250,.36); box-shadow: 0 8px 18px rgba(0,0,0,.08); }
 
     .quote-code {
       font-weight: 950;
-      font-size: 20px;
+      font-size: 18px;
       letter-spacing: -.02em;
     }
 
-    .quote-price {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .quote-stat {
-      padding: 10px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid var(--soft-line);
-    }
-
-    [data-theme="light"] .quote-stat { background: #f8fafc; }
-
-    .quote-label {
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 850;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .quote-value {
-      margin-top: 4px;
-      font-size: 15px;
-      font-weight: 900;
-      word-break: break-word;
-    }
-
-    .quote-note {
+    .quote-symbol, .quote-native, .quote-fx {
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.35;
+      font-weight: 750;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
+
+    .quote-price-main {
+      font-size: 16px;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .quote-issue { border-color: rgba(251,113,133,.35); }
 
     .toolbar {
       display: grid;
@@ -397,8 +464,8 @@
       position: absolute;
       left: 0;
       top: calc(100% + 8px);
-      z-index: 60;
-      width: min(320px, calc(100vw - 44px));
+      z-index: 90;
+      width: min(340px, calc(100vw - 44px));
       max-height: 360px;
       overflow: auto;
       padding: 10px;
@@ -448,28 +515,23 @@
 
     .holding-card {
       display: grid;
-      grid-template-columns: 140px minmax(0, 1fr) 210px;
+      grid-template-columns: 140px minmax(0, 1fr) 190px;
       gap: 14px;
       align-items: center;
-      padding: 16px;
-      border-radius: 22px;
-      background: var(--card);
+      padding: 15px;
+      border-radius: 20px;
+      background: var(--card2);
       border: 1px solid var(--line);
-      box-shadow: 0 10px 24px rgba(0,0,0,.08);
+      box-shadow: 0 8px 20px rgba(0,0,0,.06);
     }
 
     .holding-card.below-market {
-      background: linear-gradient(90deg, rgba(16,185,129,.20), rgba(16,185,129,.09));
-      border-color: rgba(16,185,129,.38);
-    }
-
-    [data-theme="light"] .holding-card.below-market {
-      background: linear-gradient(90deg, rgba(187,247,208,.75), rgba(236,253,245,.96));
+      background: linear-gradient(90deg, var(--good-row), rgba(16,185,129,.06));
       border-color: rgba(16,185,129,.34);
     }
 
     .ticker {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 950;
       letter-spacing: -.03em;
     }
@@ -482,18 +544,18 @@
 
     .holding-metrics {
       display: grid;
-      grid-template-columns: repeat(4, minmax(110px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(4, minmax(105px, 1fr));
+      gap: 9px;
     }
 
     .mini-metric {
-      padding: 10px;
+      padding: 9px;
       border-radius: 14px;
       background: rgba(255,255,255,.04);
       border: 1px solid var(--soft-line);
     }
 
-    [data-theme="light"] .mini-metric { background: rgba(255,255,255,.65); }
+    [data-theme="light"] .mini-metric { background: rgba(255,255,255,.70); }
 
     .mini-label {
       color: var(--muted);
@@ -505,19 +567,19 @@
 
     .mini-value {
       margin-top: 4px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 900;
     }
 
     .result-box {
       display: grid;
-      gap: 8px;
+      gap: 7px;
       justify-items: end;
       text-align: right;
     }
 
     .result-main {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 950;
       letter-spacing: -.03em;
     }
@@ -542,7 +604,7 @@
     }
 
     th, td {
-      padding: 14px;
+      padding: 13px 14px;
       border-bottom: 1px solid var(--soft-line);
       white-space: nowrap;
       text-align: right;
@@ -580,7 +642,7 @@
     .negative { color: var(--red); font-weight: 950; }
     .muted { color: var(--muted); }
     .empty {
-      padding: 26px;
+      padding: 22px;
       color: var(--muted);
       text-align: center;
       border: 1px dashed var(--line);
@@ -596,38 +658,50 @@
 
     @media (max-width: 1180px) {
       .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .layout { grid-template-columns: 1fr; }
-      .filter-grid, .toolbar { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .overview-grid { grid-template-columns: 1fr; }
+      .toolbar { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .holding-card { grid-template-columns: 1fr; }
       .holding-metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .result-box { justify-items: start; text-align: left; }
+      .quote { grid-template-columns: 80px 1fr 1fr; }
+      .quote .badge { grid-column: 3; justify-self: end; }
+      .quote-fx { grid-column: 2 / -1; }
     }
 
     @media (max-width: 720px) {
-      .page { padding: 12px; }
-      .hero { grid-template-columns: 1fr; padding: 20px; border-radius: 24px; }
-      .hero-actions { justify-content: flex-start; }
+      .page { padding: 10px; }
+      .topbar { grid-template-columns: 1fr; border-radius: 18px; }
+      .top-actions { justify-content: flex-start; }
+      .tabbar { top: 0; }
       .metrics { grid-template-columns: 1fr; }
-      .form-grid, .filter-grid, .toolbar { grid-template-columns: 1fr; }
+      .form-grid, .toolbar { grid-template-columns: 1fr; }
       .holding-metrics { grid-template-columns: 1fr; }
       .section-head { display: block; }
       .section-head > * + * { margin-top: 12px; }
+      .quote { grid-template-columns: 1fr 1fr; }
+      .quote .badge { grid-column: auto; justify-self: start; }
+      .quote-fx { grid-column: auto; }
     }
+
   </style>
 </head>
+
 <body>
   <div class="page">
-    <section class="hero">
-      <div>
-        <div class="badge live"><span class="dot"></span> Market Share Live</div>
-        <h1>Portfolio Dashboard</h1>
-        <p>Simple share tracking with buy/sell records, live market prices, {{ portfolio_currency }} conversion, charts, and PDF export.</p>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">MS</div>
+        <div>
+          <h1>Market Share Live</h1>
+          <p>Boss-friendly portfolio dashboard with live market prices and {{ portfolio_currency }} conversion.</p>
+        </div>
       </div>
-      <div class="hero-actions">
+      <div class="top-actions">
         <a class="btn soft" href="/charts">Charts</a>
+        <button id="exportPdfBtn" class="btn soft" type="button">Export PDF</button>
         <button id="themeToggleBtn" class="btn soft" type="button">Light Mode</button>
       </div>
-    </section>
+    </header>
 
     <section class="metrics">
       <div class="metric">
@@ -648,211 +722,215 @@
       </div>
     </section>
 
-    <section class="layout">
-      <div class="panel">
-        <div class="section-body">
-          <div class="section-head">
-            <div>
-              <h2 id="formTitle">Add Buy / Sell Record</h2>
-              <p>Amount ÷ units = price per share.</p>
-            </div>
-          </div>
+    <nav class="tabbar" aria-label="Dashboard sections">
+      <button class="tab-btn" type="button" data-tab-button="overview">Overview</button>
+      <button class="tab-btn" type="button" data-tab-button="holdings">Holdings Summary</button>
+      <button class="tab-btn" type="button" data-tab-button="transactions">Transactions</button>
+    </nav>
 
-          <form id="recordForm">
-            <input type="hidden" id="recordId" />
-            <div class="form-grid">
-              <div>
-                <label for="purchaseDate">Date</label>
-                <input id="purchaseDate" type="date" required />
-              </div>
-              <div>
-                <label for="transactionType">Type</label>
-                <select id="transactionType" required>
-                  <option value="BUY">BUY</option>
-                  <option value="SELL">SELL</option>
-                </select>
-              </div>
-              <div>
-                <label for="shareCode">Share Code</label>
-                <select id="shareCode" required>
-                  {% for code in share_codes %}
-                  <option value="{{ code }}">{{ code }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div>
-                <label id="unitLabel" for="purchaseUnits">Share Unit</label>
-                <input id="purchaseUnits" type="number" step="0.00000001" min="0.00000001" required />
-              </div>
-              <div>
-                <label id="amountLabel" for="investmentAmount">Amount</label>
-                <input id="investmentAmount" type="number" step="0.0001" min="0" required />
-              </div>
-              <div>
-                <label id="priceLabel" for="averagePrice">Price / Share</label>
-                <input id="averagePrice" type="text" readonly />
-              </div>
-              <div class="field full">
-                <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                  <button id="saveBtn" class="btn" type="submit">Save</button>
-                  <button id="cancelBtn" class="btn secondary" type="button">Cancel</button>
+    <section class="tab-pane" data-tab-pane="overview">
+      <div class="overview-grid">
+        <details id="recordEditor" class="editor">
+          <summary><span id="formTitle">Add Buy / Sell Record</span></summary>
+          <div class="section-body" style="padding-top:0;">
+            <form id="recordForm">
+              <input type="hidden" id="recordId" />
+              <div class="form-grid">
+                <div>
+                  <label for="purchaseDate">Date</label>
+                  <input id="purchaseDate" type="date" required />
+                </div>
+                <div>
+                  <label for="transactionType">Type</label>
+                  <select id="transactionType" required>
+                    <option value="BUY">BUY</option>
+                    <option value="SELL">SELL</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="shareCode">Share Code</label>
+                  <select id="shareCode" required>
+                    {% for code in share_codes %}
+                    <option value="{{ code }}">{{ code }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div>
+                  <label id="unitLabel" for="purchaseUnits">Share Unit</label>
+                  <input id="purchaseUnits" type="number" step="0.00000001" min="0.00000001" required />
+                </div>
+                <div>
+                  <label id="amountLabel" for="investmentAmount">Amount</label>
+                  <input id="investmentAmount" type="number" step="0.0001" min="0" required />
+                </div>
+                <div>
+                  <label id="priceLabel" for="averagePrice">Price / Share</label>
+                  <input id="averagePrice" type="text" readonly />
+                </div>
+                <div class="field full">
+                  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button id="saveBtn" class="btn" type="submit">Save</button>
+                    <button id="cancelBtn" class="btn secondary" type="button">Cancel</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </form>
-          <div id="statusText" class="status">Ready.</div>
-        </div>
-      </div>
+            </form>
+            <div id="statusText" class="status">Ready.</div>
+          </div>
+        </details>
 
-      <div class="panel">
+        <section class="panel">
+          <div class="section-body">
+            <div class="section-head">
+              <div>
+                <div class="title-row"><h2>Live Market Dashboard</h2><span id="marketLoadedText" class="count-pill">0 loaded</span></div>
+                <p id="marketRefreshText">Loading live prices...</p>
+              </div>
+              <span class="badge live"><span class="dot"></span>Live</span>
+            </div>
+            <div id="marketBoard" class="market-board"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-tab-pane="holdings">
+      <section class="panel">
         <div class="section-body">
           <div class="section-head">
             <div>
-              <div class="title-row"><h2>Live Market Dashboard</h2><span id="marketLoadedText" class="count-pill">0 loaded</span></div>
-              <p id="marketRefreshText">Loading live prices...</p>
+              <div class="title-row">
+                <h2>Summary Dashboard of Shares You Bought and Sold</h2>
+                <span id="summaryCountText" class="count-pill">0 shares</span>
+              </div>
+              <p>Green card means average cost is higher than market price. Other cards have no fill color.</p>
+            </div>
+            <span class="badge">Grouped by share code</span>
+          </div>
+
+          <div class="toolbar">
+            <div class="dropdown" id="summaryShareDropdown">
+              <label>Share Code</label>
+              <button class="dropdown-button" id="summaryShareButton" type="button">All Shares</button>
+              <div class="dropdown-menu" id="summaryShareMenu"></div>
+            </div>
+            <div>
+              <label>Status</label>
+              <select id="summaryStatusFilter">
+                <option value="">All Status</option>
+                <option value="OPEN">Open Holding</option>
+                <option value="CLOSED">Closed / Sold Out</option>
+                <option value="BELOW">Avg Cost > Market Price</option>
+              </select>
+            </div>
+            <div>
+              <label>P/L</label>
+              <select id="summaryProfitFilter">
+                <option value="">All P/L</option>
+                <option value="PROFIT">Profit Only</option>
+                <option value="LOSS">Loss Only</option>
+              </select>
+            </div>
+            <div>
+              <label>Sort By</label>
+              <select id="summarySortBy">
+                <option value="share_code">Share Code</option>
+                <option value="market_value">Current Value</option>
+                <option value="total_return">Total P/L</option>
+                <option value="return_percent">Return %</option>
+                <option value="current_price">Market Price</option>
+                <option value="average_price">Avg Cost</option>
+                <option value="remaining_units">Remaining Units</option>
+              </select>
+            </div>
+            <div>
+              <label>Direction</label>
+              <select id="summarySortDir">
+                <option value="asc">Small → Big / A → Z</option>
+                <option value="desc">Big → Small / Z → A</option>
+              </select>
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button id="resetSummaryFiltersBtn" class="btn secondary" type="button">Reset</button>
             </div>
           </div>
-          <div id="marketBoard" class="market-board"></div>
+
+          <div id="summaryList" class="summary-list"></div>
         </div>
-      </div>
+      </section>
     </section>
 
-    <section class="panel" style="margin-bottom:18px;">
-      <div class="section-body">
-        <div class="section-head">
-          <div>
-            <div class="title-row">
-              <h2>Summary Dashboard of Shares You Bought and Sold</h2>
-              <span id="summaryCountText" class="count-pill">0 shares</span>
+    <section class="tab-pane" data-tab-pane="transactions">
+      <section class="panel">
+        <div class="section-body">
+          <div class="section-head">
+            <div>
+              <div class="title-row">
+                <h2>Buy / Sell Transaction Records</h2>
+                <span id="recordCountText" class="count-pill">BUY: 0 • SELL: 0</span>
+              </div>
+              <p>Clean table with filters above it, so the screen stays simple.</p>
             </div>
-            <p>Green card means average cost is higher than market price. Other cards have no fill color.</p>
           </div>
-          <span class="badge">Grouped by share code</span>
-        </div>
 
-        <div class="toolbar">
-          <div class="dropdown" id="summaryShareDropdown">
-            <label>Share Code</label>
-            <button class="dropdown-button" id="summaryShareButton" type="button">All Shares</button>
-            <div class="dropdown-menu" id="summaryShareMenu"></div>
-          </div>
-          <div>
-            <label>Status</label>
-            <select id="summaryStatusFilter">
-              <option value="">All Status</option>
-              <option value="OPEN">Open Holding</option>
-              <option value="CLOSED">Closed / Sold Out</option>
-              <option value="BELOW">Avg Cost > Market Price</option>
-            </select>
-          </div>
-          <div>
-            <label>P/L</label>
-            <select id="summaryProfitFilter">
-              <option value="">All P/L</option>
-              <option value="PROFIT">Profit Only</option>
-              <option value="LOSS">Loss Only</option>
-            </select>
-          </div>
-          <div>
-            <label>Sort By</label>
-            <select id="summarySortBy">
-              <option value="share_code">Share Code</option>
-              <option value="market_value">Current Value</option>
-              <option value="total_return">Total P/L</option>
-              <option value="return_percent">Return %</option>
-              <option value="current_price">Market Price</option>
-              <option value="average_price">Avg Cost</option>
-              <option value="remaining_units">Remaining Units</option>
-            </select>
-          </div>
-          <div>
-            <label>Direction</label>
-            <select id="summarySortDir">
-              <option value="asc">Small → Big / A → Z</option>
-              <option value="desc">Big → Small / Z → A</option>
-            </select>
-          </div>
-          <div>
-            <label>&nbsp;</label>
-            <button id="resetSummaryFiltersBtn" class="btn secondary" type="button">Reset</button>
-          </div>
-        </div>
-
-        <div id="summaryList" class="summary-list"></div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section-body">
-        <div class="section-head">
-          <div>
-            <div class="title-row">
-              <h2>Buy / Sell Transaction Records</h2>
-              <span id="recordCountText" class="count-pill">BUY: 0 • SELL: 0</span>
+          <div class="toolbar">
+            <div class="dropdown" id="recordShareDropdown">
+              <label>Share Code</label>
+              <button class="dropdown-button" id="recordShareButton" type="button">All Shares</button>
+              <div class="dropdown-menu" id="recordShareMenu"></div>
             </div>
-            <p>Your detailed transaction list. Filters are above the table to keep the table clean.</p>
+            <div>
+              <label>Type</label>
+              <select id="recordTypeFilter">
+                <option value="">All Types</option>
+                <option value="BUY">BUY</option>
+                <option value="SELL">SELL</option>
+              </select>
+            </div>
+            <div>
+              <label>Date From</label>
+              <input id="recordDateFromFilter" type="date" />
+            </div>
+            <div>
+              <label>Date To</label>
+              <input id="recordDateToFilter" type="date" />
+            </div>
+            <div>
+              <label>Sort By</label>
+              <select id="recordSortBy">
+                <option value="purchase_date">Date</option>
+                <option value="share_code">Share Code</option>
+                <option value="transaction_type">Type</option>
+                <option value="investment_amount">Amount</option>
+                <option value="purchase_units">Share Unit</option>
+                <option value="average_price">Price / Share</option>
+              </select>
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button id="resetRecordFiltersBtn" class="btn secondary" type="button">Reset</button>
+            </div>
           </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button id="exportPdfBtn" class="btn" type="button">Export PDF</button>
-          </div>
-        </div>
 
-        <div class="toolbar">
-          <div class="dropdown" id="recordShareDropdown">
-            <label>Share Code</label>
-            <button class="dropdown-button" id="recordShareButton" type="button">All Shares</button>
-            <div class="dropdown-menu" id="recordShareMenu"></div>
-          </div>
-          <div>
-            <label>Type</label>
-            <select id="recordTypeFilter">
-              <option value="">All Types</option>
-              <option value="BUY">BUY</option>
-              <option value="SELL">SELL</option>
-            </select>
-          </div>
-          <div>
-            <label>Date From</label>
-            <input id="recordDateFromFilter" type="date" />
-          </div>
-          <div>
-            <label>Date To</label>
-            <input id="recordDateToFilter" type="date" />
-          </div>
-          <div>
-            <label>Sort By</label>
-            <select id="recordSortBy">
-              <option value="purchase_date">Date</option>
-              <option value="share_code">Share Code</option>
-              <option value="transaction_type">Type</option>
-              <option value="investment_amount">Amount</option>
-              <option value="purchase_units">Share Unit</option>
-              <option value="average_price">Price / Share</option>
-            </select>
-          </div>
-          <div>
-            <label>&nbsp;</label>
-            <button id="resetRecordFiltersBtn" class="btn secondary" type="button">Reset</button>
+          <div class="records-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Share Code</th>
+                  <th>Amount</th>
+                  <th>Share Unit</th>
+                  <th>Price / Share</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="recordsBody"></tbody>
+            </table>
           </div>
         </div>
-
-        <div class="records-table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Share Code</th>
-                <th>Amount</th>
-                <th>Share Unit</th>
-                <th>Price / Share</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="recordsBody"></tbody>
-          </table>
-        </div>
-      </div>
+      </section>
     </section>
   </div>
 
@@ -884,6 +962,24 @@
 
     const money = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const units = new Intl.NumberFormat("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 8 });
+
+
+    function openTab(tabName) {
+      document.querySelectorAll("[data-tab-pane]").forEach(panel => {
+        panel.classList.toggle("active", panel.dataset.tabPane === tabName);
+      });
+      document.querySelectorAll("[data-tab-button]").forEach(button => {
+        button.classList.toggle("active", button.dataset.tabButton === tabName);
+      });
+      localStorage.setItem("portfolio-active-tab", tabName);
+    }
+
+    function initTabs() {
+      document.querySelectorAll("[data-tab-button]").forEach(button => {
+        button.addEventListener("click", () => openTab(button.dataset.tabButton));
+      });
+      openTab(localStorage.getItem("portfolio-active-tab") || "overview");
+    }
 
     function applyTheme(theme) {
       document.documentElement.setAttribute("data-theme", theme);
@@ -1060,13 +1156,14 @@
       });
     }
 
+
     function renderMarket() {
       const board = el("marketBoard");
       board.innerHTML = "";
       const quotes = [...state.market].sort((a,b) => String(a.share_code).localeCompare(String(b.share_code)));
 
-      el("marketLoadedText").textContent = `${quotes.filter(q => !q.error).length} loaded`;
-      el("marketRefreshText").textContent = `Last updated ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+      el("marketLoadedText").textContent = `${quotes.filter(q => !q.error).length}/${quotes.length} live`;
+      el("marketRefreshText").textContent = `Updated ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
 
       if (!quotes.length) {
         board.innerHTML = `<div class="empty">No market data loaded.</div>`;
@@ -1074,35 +1171,26 @@
       }
 
       quotes.forEach(q => {
-        const card = document.createElement("div");
-        card.className = "quote";
+        const row = document.createElement("div");
+        row.className = `quote ${q.error ? "quote-issue" : ""}`;
         const native = q.converted && q.native_price !== null && q.native_price !== undefined
           ? `${fmtMoney(q.native_price)} ${q.native_currency || ""}`
           : `${fmtMoney(q.price)} ${q.currency || PORTFOLIO_CURRENCY}`;
         const fx = q.converted && q.fx_rate ? `${q.fx_symbol || ""} ${Number(q.fx_rate).toFixed(4)}` : "No FX";
-        card.innerHTML = `
-          <div class="quote-top">
-            <div>
-              <div class="quote-code">${q.share_code}</div>
-              <div class="quote-note">${q.market_symbol || q.share_code}</div>
-            </div>
-            <span class="badge ${q.error ? "issue" : "live"}"><span class="dot"></span>${q.error ? "Issue" : "Live"}</span>
+        row.innerHTML = `
+          <div class="quote-code-wrap">
+            <div class="quote-code">${q.share_code}</div>
+            <div class="quote-symbol">${q.market_symbol || q.share_code}</div>
           </div>
-          <div class="quote-price">
-            <div class="quote-stat">
-              <div class="quote-label">Market Price</div>
-              <div class="quote-value">${fmtCurrency(q.price)}</div>
-            </div>
-            <div class="quote-stat">
-              <div class="quote-label">Native</div>
-              <div class="quote-value">${native}</div>
-            </div>
-          </div>
-          <div class="quote-note">${q.error || fx}</div>
+          <div class="quote-price-main">${fmtCurrency(q.price)}</div>
+          <div class="quote-native">${native}</div>
+          <div class="quote-fx">${q.error || fx}</div>
+          <span class="badge ${q.error ? "issue" : "live"}"><span class="dot"></span>${q.error ? "Issue" : "Live"}</span>
         `;
-        board.appendChild(card);
+        board.appendChild(row);
       });
     }
+
 
     function getFilteredSummaryRows() {
       let rows = [...(state.summary?.holdings || [])];
@@ -1255,6 +1343,7 @@
       renderDashboard();
     }
 
+
     function editRecord(row) {
       recordId.value = row.id;
       purchaseDate.value = row.purchase_date;
@@ -1266,8 +1355,12 @@
       updateLabels();
       formTitle.textContent = "Edit Buy / Sell Record";
       saveBtn.textContent = "Update";
+      openTab("overview");
+      const editor = el("recordEditor");
+      if (editor) editor.open = true;
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+
 
     async function deleteRecord(id) {
       if (!confirm("Delete this record?")) return;
@@ -1346,10 +1439,12 @@
     });
 
     initTheme();
+    initTabs();
     initDropdowns();
     resetForm();
     loadAll().catch(err => setStatus(`Error loading dashboard: ${err.message}`));
     setInterval(() => loadAll().catch(() => {}), 120000);
   </script>
 </body>
+
 </html>
