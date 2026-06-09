@@ -875,10 +875,118 @@
       color: #1d4ed8;
     }
 
+
+    .ratio-charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .ratio-card {
+      min-height: 620px;
+      padding: 22px;
+    }
+
+    .ratio-chart {
+      width: 100%;
+      min-height: 520px;
+      overflow: hidden;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(96, 165, 250, 0.08), transparent 34%),
+        rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .ratio-chart svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      min-height: 520px;
+    }
+
+    .pie-slice {
+      stroke: rgba(255,255,255,0.82);
+      stroke-width: 1.2;
+      transition: opacity .18s ease, transform .18s ease;
+      transform-origin: 450px 260px;
+    }
+
+    .pie-slice:hover {
+      opacity: .86;
+      transform: scale(1.012);
+    }
+
+    .pie-leader {
+      stroke: color-mix(in srgb, var(--muted) 72%, transparent);
+      stroke-width: 1.2;
+      fill: none;
+    }
+
+    .pie-dot {
+      fill: color-mix(in srgb, var(--muted) 80%, transparent);
+    }
+
+    .pie-label-code {
+      fill: var(--text);
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: .04em;
+    }
+
+    .pie-label-value {
+      fill: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .pie-label-percent {
+      fill: var(--muted);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .pie-inside-label {
+      fill: #06111f;
+      font-size: 20px;
+      font-weight: 950;
+      paint-order: stroke;
+      stroke: rgba(255,255,255,.50);
+      stroke-width: 3px;
+      stroke-linejoin: round;
+    }
+
+    .pie-center-label {
+      fill: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .pie-center-value {
+      fill: var(--text);
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -.02em;
+    }
+
+    [data-theme="light"] .ratio-chart {
+      background:
+        radial-gradient(circle at 50% 48%, rgba(37, 99, 235, 0.08), transparent 34%),
+        rgba(255,255,255,0.78);
+      border-color: rgba(15,23,42,.08);
+    }
+
+    [data-theme="light"] .pie-slice {
+      stroke: rgba(255,255,255,0.92);
+    }
+
     @media (max-width: 1180px) {
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .layout-2 { grid-template-columns: 1fr; }
       .charts-grid { grid-template-columns: 1fr; }
+      .ratio-charts-grid { grid-template-columns: 1fr; }
       .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
@@ -891,6 +999,9 @@
       .donut-wrap { grid-template-columns: 1fr; justify-items: center; }
       .bar-row { grid-template-columns: 54px 1fr 72px; }
       .section-body { padding: 16px; }
+      .ratio-card { min-height: 520px; padding: 16px; }
+      .ratio-chart { min-height: 430px; overflow-x: auto; }
+      .ratio-chart svg { min-width: 760px; min-height: 430px; }
       .table-toolbar { flex-direction: column; align-items: flex-start; }
       .hero-top { align-items: flex-start; }
       .theme-toggle { width: 100%; }
@@ -1932,8 +2043,34 @@
       <div class="section-body">
         <div class="section-header">
           <div>
+            <h2>Portfolio Ratio Charts</h2>
+            <p>Two main allocation views: current market value and net invested amount by share.</p>
+          </div>
+          <span class="chip">USD ratio</span>
+        </div>
+
+        <div class="ratio-charts-grid">
+          <div class="chart-card ratio-card">
+            <h3 class="chart-title">Market Total Current Value (USD)</h3>
+            <p class="chart-subtitle">Each share's current value based on remaining units × market price.</p>
+            <div id="marketValueRatioChart" class="ratio-chart"></div>
+          </div>
+
+          <div class="chart-card ratio-card">
+            <h3 class="chart-title">Net Buy Amount by Share (USD)</h3>
+            <p class="chart-subtitle">Total BUY amount minus total SELL amount for each share.</p>
+            <div id="netBuyRatioChart" class="ratio-chart"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="section-body">
+        <div class="section-header">
+          <div>
             <h2>Portfolio Chart Gallery</h2>
-            <p>More charts for allocation, profit/loss, buy/sell activity, units, and transaction counts.</p>
+            <p>Additional charts for allocation, profit/loss, buy/sell activity, units, and transaction counts.</p>
           </div>
           <span class="chip">Charts page</span>
         </div>
@@ -2165,9 +2302,12 @@
         const unrealizedReturn = hasPrice ? marketValue - row.cost_basis : null;
         const totalReturn = row.realized_return + (unrealizedReturn || 0);
 
+        const netBuyAmount = Math.max(0, row.total_buy_amount - row.total_sell_amount);
+
         return {
           ...quote,
           ...row,
+          net_buy_amount: netBuyAmount,
           average_price: row.remaining_units > 0 ? row.cost_basis / row.remaining_units : 0,
           current_price: hasPrice ? currentPrice : null,
           market_value: marketValue,
@@ -2271,6 +2411,138 @@
           return abs ? Math.abs(bv) - Math.abs(av) : bv - av;
         })
         .slice(0, limit);
+    }
+
+
+    function polarToCartesian(cx, cy, radius, angleDeg) {
+      const angleRad = (angleDeg - 90) * Math.PI / 180.0;
+      return {
+        x: cx + (radius * Math.cos(angleRad)),
+        y: cy + (radius * Math.sin(angleRad))
+      };
+    }
+
+    function describeArc(cx, cy, radius, startAngle, endAngle) {
+      const start = polarToCartesian(cx, cy, radius, endAngle);
+      const end = polarToCartesian(cx, cy, radius, startAngle);
+      const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+      return [
+        "M", cx, cy,
+        "L", start.x, start.y,
+        "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y,
+        "Z"
+      ].join(" ");
+    }
+
+    function distributeLabels(labels, minY, maxY, gap) {
+      const sorted = labels.sort((a, b) => a.y - b.y);
+      for (let i = 0; i < sorted.length; i++) {
+        if (i === 0) sorted[i].y = Math.max(minY, sorted[i].y);
+        else sorted[i].y = Math.max(sorted[i].y, sorted[i - 1].y + gap);
+      }
+      for (let i = sorted.length - 1; i >= 0; i--) {
+        if (i === sorted.length - 1) sorted[i].y = Math.min(maxY, sorted[i].y);
+        else sorted[i].y = Math.min(sorted[i].y, sorted[i + 1].y - gap);
+      }
+      return sorted;
+    }
+
+    function renderRatioPieChart(elId, rows, valueKey, options = {}) {
+      const el = document.getElementById(elId);
+      const items = rows
+        .map(row => ({
+          code: row.share_code,
+          value: Math.max(0, Number(row[valueKey] || 0))
+        }))
+        .filter(item => item.value > 0)
+        .sort((a, b) => b.value - a.value);
+
+      const total = items.reduce((sum, item) => sum + item.value, 0);
+      if (!items.length || total <= 0) {
+        el.innerHTML = `<div class="chart-empty">${options.empty || "No data to chart."}</div>`;
+        return;
+      }
+
+      const cx = 450;
+      const cy = 260;
+      const r = 150;
+      const innerLabelR = 92;
+      const outerR = 168;
+      const leftLabels = [];
+      const rightLabels = [];
+      let cursor = 0;
+
+      const slices = items.map((item, index) => {
+        const angle = item.value / total * 360;
+        const start = cursor;
+        const end = cursor + angle;
+        cursor = end;
+        const mid = start + angle / 2;
+        const color = chartColors[index % chartColors.length];
+        const pct = item.value / total * 100;
+        const anchor = polarToCartesian(cx, cy, outerR, mid);
+        const inner = polarToCartesian(cx, cy, innerLabelR, mid);
+        const side = Math.cos((mid - 90) * Math.PI / 180) >= 0 ? "right" : "left";
+        const label = {
+          ...item,
+          index,
+          color,
+          pct,
+          start,
+          end,
+          mid,
+          anchor,
+          inner,
+          side,
+          x: side === "right" ? 790 : 110,
+          elbowX: side === "right" ? 720 : 180,
+          y: anchor.y
+        };
+        if (side === "right") rightLabels.push(label);
+        else leftLabels.push(label);
+        return label;
+      });
+
+      distributeLabels(leftLabels, 72, 448, 36);
+      distributeLabels(rightLabels, 72, 448, 36);
+      const labelByIndex = new Map([...leftLabels, ...rightLabels].map(label => [label.index, label]));
+
+      const paths = slices.map(slice => `
+        <path class="pie-slice" d="${describeArc(cx, cy, r, slice.start, slice.end)}" fill="${slice.color}">
+          <title>${slice.code}: ${fmtMoney(slice.value)} (${slice.pct.toFixed(1)}%)</title>
+        </path>
+      `).join("");
+
+      const insideLabels = slices
+        .filter(slice => slice.pct >= 6)
+        .map(slice => `
+          <text class="pie-inside-label" x="${slice.inner.x.toFixed(1)}" y="${slice.inner.y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle">${slice.pct.toFixed(1)}%</text>
+        `).join("");
+
+      const leaders = slices.map(slice => {
+        const label = labelByIndex.get(slice.index);
+        const textAnchor = label.side === "right" ? "start" : "end";
+        const lineEndX = label.side === "right" ? label.x - 10 : label.x + 10;
+        const y = label.y;
+        return `
+          <path class="pie-leader" d="M ${slice.anchor.x.toFixed(1)} ${slice.anchor.y.toFixed(1)} L ${label.elbowX} ${y.toFixed(1)} L ${lineEndX} ${y.toFixed(1)}" />
+          <circle class="pie-dot" cx="${slice.anchor.x.toFixed(1)}" cy="${slice.anchor.y.toFixed(1)}" r="3.2" />
+          <text class="pie-label-code" x="${label.x}" y="${(y - 8).toFixed(1)}" text-anchor="${textAnchor}">${slice.code}</text>
+          <text class="pie-label-percent" x="${label.x}" y="${(y + 12).toFixed(1)}" text-anchor="${textAnchor}">${slice.pct.toFixed(1)}%</text>
+          <text class="pie-label-value" x="${label.x}" y="${(y + 30).toFixed(1)}" text-anchor="${textAnchor}">${fmtMoney(slice.value)}</text>
+        `;
+      }).join("");
+
+      el.innerHTML = `
+        <svg viewBox="0 0 900 520" role="img" aria-label="${options.label || "Portfolio ratio chart"}">
+          <g>${paths}</g>
+          <circle cx="${cx}" cy="${cy}" r="58" fill="var(--bg-soft)" stroke="var(--border)" />
+          <text class="pie-center-label" x="${cx}" y="${cy - 8}" text-anchor="middle">TOTAL</text>
+          <text class="pie-center-value" x="${cx}" y="${cy + 18}" text-anchor="middle">${fmtMoney(total)}</text>
+          <g>${insideLabels}</g>
+          <g>${leaders}</g>
+        </svg>
+      `;
     }
 
     function renderAllocationChart(rows) {
@@ -2434,6 +2706,14 @@
     }
 
     function renderCharts(rows, records) {
+      renderRatioPieChart("marketValueRatioChart", rows, "market_value", {
+        label: "Market total current value by share",
+        empty: "No current market value to chart."
+      });
+      renderRatioPieChart("netBuyRatioChart", rows, "net_buy_amount", {
+        label: "Net buy amount by share",
+        empty: "No net buy amount to chart."
+      });
       renderAllocationChart(rows);
       renderCurrentValueChart(rows);
       renderProfitChart(rows);
