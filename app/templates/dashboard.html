@@ -1433,6 +1433,8 @@
       display: none !important;
     }
 
+    .hidden-controls { display: none !important; }
+
     [data-theme="light"] .market-command-card,
     [data-theme="light"] .market-row,
     [data-theme="light"] .column-options details,
@@ -1506,8 +1508,8 @@
 
     .market-board {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 7px;
       max-height: none;
       overflow: visible;
       padding-right: 0;
@@ -1516,13 +1518,13 @@
     .market-row {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 8px 10px;
+      gap: 6px 8px;
       align-items: center;
-      padding: 12px;
-      border-radius: 15px;
+      padding: 10px 11px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.09);
       background: rgba(255,255,255,.035);
-      min-height: 108px;
+      min-height: 86px;
       transition: border-color .16s ease, background .16s ease, transform .16s ease;
     }
 
@@ -1539,7 +1541,7 @@
     }
 
     .market-code {
-      font-size: 16px;
+      font-size: 17px;
       line-height: 1.1;
       font-weight: 900;
       letter-spacing: .08em;
@@ -1566,6 +1568,11 @@
       gap: 3px;
     }
 
+
+    .market-price-block {
+      grid-column: 1 / -1;
+    }
+
     .market-label {
       color: var(--muted);
       font-size: 11px;
@@ -1575,7 +1582,7 @@
 
     .market-price,
     .market-detail strong {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 900;
       letter-spacing: 0;
       line-height: 1.2;
@@ -1797,7 +1804,7 @@
           <div class="section-header market-section-header">
             <div>
               <h2>Live Market Dashboard</h2>
-              <p>Compact market board view. Prices use the same size and style for easier scanning.</p>
+              <p>Compact one-page market board with cleaner price display.</p>
             </div>
             <div class="market-header-actions">
               <span class="chip" id="marketLoadedText">Loading quotes</span>
@@ -1878,68 +1885,39 @@
             </div>
           </div>
         </div>
-        <div class="design-note">Tip: use the controls below to choose columns and sorting, or click table headers to sort the visible rows.</div>
-
-        <div class="view-options">
-          <div class="view-sort-grid">
-            <div class="field">
-              <label for="summarySortBy">Summary Sort By</label>
-              <select id="summarySortBy">
-                <option value="share_code">Share Code</option>
-                <option value="total_buy_amount">Buy Amount</option>
-                <option value="total_sell_amount">Sell Amount</option>
-                <option value="remaining_units">Remaining Units</option>
-                <option value="average_price">Avg Cost</option>
-                <option value="current_price">Market Price</option>
-                <option value="market_value">Current Value</option>
-                <option value="realized_return">Realized P/L</option>
-                <option value="unrealized_return">Unrealized P/L</option>
-                <option value="total_return">Total P/L</option>
-                <option value="return_percent">Return %</option>
-                <option value="transaction_count">Transactions</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="summarySortDir">Summary Direction</label>
-              <select id="summarySortDir">
-                <option value="asc">Small → Big / A → Z</option>
-                <option value="desc">Big → Small / Z → A</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="recordSortBy">Record Sort By</label>
-              <select id="recordSortBy">
-                <option value="purchase_date">Date</option>
-                <option value="transaction_type">Type</option>
-                <option value="share_code">Share Code</option>
-                <option value="investment_amount">Amount</option>
-                <option value="purchase_units">Share Unit</option>
-                <option value="average_price">Price / Share</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="recordSortDir">Record Direction</label>
-              <select id="recordSortDir">
-                <option value="desc">Newest / Big First</option>
-                <option value="asc">Oldest / Small First</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="column-options">
-            <details open>
-              <summary>Choose Summary Columns</summary>
-              <div class="column-checks" id="summaryColumnPicker"></div>
-            </details>
-
-            <details>
-              <summary>Choose Transaction Columns</summary>
-              <div class="column-checks" id="recordColumnPicker"></div>
-            </details>
-          </div>
+        <div class="hidden-controls" hidden aria-hidden="true">
+          <select id="summarySortBy">
+            <option value="share_code">Share Code</option>
+            <option value="total_buy_amount">Buy Amount</option>
+            <option value="total_sell_amount">Sell Amount</option>
+            <option value="remaining_units">Remaining Units</option>
+            <option value="average_price">Avg Cost</option>
+            <option value="current_price">Market Price</option>
+            <option value="market_value">Current Value</option>
+            <option value="realized_return">Realized P/L</option>
+            <option value="unrealized_return">Unrealized P/L</option>
+            <option value="total_return">Total P/L</option>
+            <option value="return_percent">Return %</option>
+            <option value="transaction_count">Transactions</option>
+          </select>
+          <select id="summarySortDir">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+          <select id="recordSortBy">
+            <option value="purchase_date">Date</option>
+            <option value="transaction_type">Type</option>
+            <option value="share_code">Share Code</option>
+            <option value="investment_amount">Amount</option>
+            <option value="purchase_units">Share Unit</option>
+            <option value="average_price">Price / Share</option>
+          </select>
+          <select id="recordSortDir">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+          <div id="summaryColumnPicker"></div>
+          <div id="recordColumnPicker"></div>
         </div>
       </div>
     </section>
@@ -2172,8 +2150,8 @@
 
     const summaryColumnDefaults = summaryColumns.map(col => col.key);
     const recordColumnDefaults = recordColumns.map(col => col.key);
-    let visibleSummaryColumns = new Set(loadColumnPreference("marketsharelive-summary-columns", summaryColumnDefaults));
-    let visibleRecordColumns = new Set(loadColumnPreference("marketsharelive-record-columns", recordColumnDefaults));
+    let visibleSummaryColumns = new Set(summaryColumnDefaults);
+    let visibleRecordColumns = new Set(recordColumnDefaults);
 
     let allSummary = null;
     let allRecords = [];
@@ -2249,8 +2227,10 @@
     }
 
     function renderColumnPickers() {
-      renderColumnPicker(summaryColumnPicker, summaryColumns, visibleSummaryColumns, "marketsharelive-summary-columns", "summary");
-      renderColumnPicker(recordColumnPicker, recordColumns, visibleRecordColumns, "marketsharelive-record-columns", "record");
+      visibleSummaryColumns = new Set(summaryColumnDefaults);
+      visibleRecordColumns = new Set(recordColumnDefaults);
+      localStorage.removeItem("marketsharelive-summary-columns");
+      localStorage.removeItem("marketsharelive-record-columns");
     }
 
     function applyColumnVisibility(scope = "all") {
@@ -2397,31 +2377,25 @@
       const priceLabel = fmtCurrency(q.price, mainCurrency);
       const nativeText = q.converted
         ? fmtCurrency(q.native_price, q.native_currency)
-        : fmtCurrency(q.price, q.currency || PORTFOLIO_CURRENCY);
-      const fxText = q.converted ? `${q.native_currency}/${PORTFOLIO_CURRENCY} ${fmtFxRate(q.fx_rate)}` : "No FX";
+        : "";
+      const fxText = q.converted ? `${q.native_currency}/${PORTFOLIO_CURRENCY} ${fmtFxRate(q.fx_rate)}` : "";
       const statusText = isError ? "Issue" : (q.cached ? "Cached" : "Live");
-      const detailText = q.error || (q.converted ? `Native ${nativeText}` : `Native ${q.currency || PORTFOLIO_CURRENCY}`);
+      const detailText = q.error || (q.converted ? `Native ${nativeText}` : "");
 
       return `
         <div class="market-row ${isError ? "quote-error" : "quote-live"}">
           <div class="market-identity">
             <span class="market-code">${q.share_code}</span>
-            <span class="market-symbol">${q.market_symbol || "-"}</span>
           </div>
           <div class="market-status-badge ${isError ? "issue" : "live"}">${statusText}</div>
 
-          <div class="market-detail">
+          <div class="market-detail market-price-block">
             <span class="market-label">Market Price</span>
             <strong>${priceLabel}</strong>
           </div>
 
-          <div class="market-detail">
-            <span class="market-label">Currency</span>
-            <strong>${mainCurrency}</strong>
-          </div>
-
-          <div class="market-native-line">${detailText}</div>
-          <div class="market-fx-line">${fxText}</div>
+          ${detailText ? `<div class="market-native-line">${detailText}</div>` : ""}
+          ${fxText ? `<div class="market-fx-line">FX ${fxText}</div>` : ""}
         </div>
       `;
     }
