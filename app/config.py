@@ -22,10 +22,7 @@ PORTFOLIO_CURRENCY = os.getenv("PORTFOLIO_CURRENCY", "USD").strip().upper() or "
 BASIC_AUTH_USERNAME = os.getenv("BASIC_AUTH_USERNAME", "").strip()
 BASIC_AUTH_PASSWORD = os.getenv("BASIC_AUTH_PASSWORD", "").strip()
 
-try:
-    PRICE_CACHE_SECONDS = int(os.getenv("PRICE_CACHE_SECONDS", "120"))
-except ValueError:
-    PRICE_CACHE_SECONDS = 120
+# Market prices are always fetched live. No backend quote cache is used.
 
 
 def auth_is_enabled() -> bool:

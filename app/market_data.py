@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import time
 from urllib.parse import quote
 
 import requests
 
-from .config import PORTFOLIO_CURRENCY, PRICE_CACHE_SECONDS
+from .config import PORTFOLIO_CURRENCY
 
 
 # GoogleFinance-style exchange prefix -> Yahoo Finance suffix conversion.
@@ -31,8 +30,6 @@ SYMBOL_OVERRIDES = {
     "TLX": "TLX.AX",
 }
 
-_quote_cache: dict[str, dict] = {}
-_fx_cache: dict[str, dict] = {}
 
 
 def normalize_share_code(raw_code: str) -> str:
@@ -53,6 +50,7 @@ def to_yahoo_symbol(raw_code: str) -> str:
 def fetch_market_price(raw_code: str) -> dict:
     """Fetch latest market price and convert it into the portfolio currency.
 
+    No backend cache is used. Every dashboard/API refresh calls the market-data provider again.
     The UI and portfolio calculations use ``price`` in PORTFOLIO_CURRENCY.
     The original market quote is still returned as ``native_price`` and ``native_currency``.
     """
@@ -60,18 +58,7 @@ def fetch_market_price(raw_code: str) -> dict:
     yahoo_symbol = to_yahoo_symbol(code)
     portfolio_currency = PORTFOLIO_CURRENCY
 
-    now = time.time()
-    cache_key = f"{yahoo_symbol}:{portfolio_currency}"
-    cached = _quote_cache.get(cache_key)
-    if cached and (now - cached["cached_at"] < PRICE_CACHE_SECONDS):
-        return {**cached["data"], "cached": True}
-
-    data = _fetch_from_yahoo_chart(code, yahoo_symbol, portfolio_currency)
-    _quote_cache[cache_key] = {
-        "cached_at": now,
-        "data": data,
-    }
-    return {**data, "cached": False}
+    return _fetch_from_yahoo_chart(code, yahoo_symbol, portfolio_currency)
 
 
 def _fetch_from_yahoo_chart(code: str, yahoo_symbol: str, portfolio_currency: str) -> dict:
@@ -182,33 +169,21 @@ def _fetch_fx_rate(from_currency: str, to_currency: str) -> dict:
     if not from_currency or not to_currency or from_currency == to_currency:
         return {"rate": 1.0, "symbol": None, "error": None}
 
-    cache_key = f"{from_currency}:{to_currency}"
-    now = time.time()
-    cached = _fx_cache.get(cache_key)
-    if cached and (now - cached["cached_at"] < PRICE_CACHE_SECONDS):
-        return {**cached["data"], "cached": True}
-
     direct_symbol = f"{from_currency}{to_currency}=X"
     direct = _fetch_fx_symbol(direct_symbol)
     if direct.get("rate") is not None:
-        data = {"rate": direct["rate"], "symbol": direct_symbol, "error": None}
-        _fx_cache[cache_key] = {"cached_at": now, "data": data}
-        return data
+        return {"rate": direct["rate"], "symbol": direct_symbol, "error": None}
 
     inverse_symbol = f"{to_currency}{from_currency}=X"
     inverse = _fetch_fx_symbol(inverse_symbol)
     if inverse.get("rate") not in (None, 0):
-        data = {"rate": 1.0 / float(inverse["rate"]), "symbol": inverse_symbol, "error": None}
-        _fx_cache[cache_key] = {"cached_at": now, "data": data}
-        return data
+        return {"rate": 1.0 / float(inverse["rate"]), "symbol": inverse_symbol, "error": None}
 
-    data = {
+    return {
         "rate": None,
         "symbol": direct_symbol,
         "error": direct.get("error") or inverse.get("error") or "FX rate not available.",
     }
-    _fx_cache[cache_key] = {"cached_at": now, "data": data}
-    return data
 
 
 def _fetch_fx_symbol(symbol: str) -> dict:

@@ -2821,7 +2821,7 @@
         ? fmtCurrency(q.native_price, q.native_currency)
         : "";
       const fxText = q.converted ? `${q.native_currency}/${PORTFOLIO_CURRENCY} ${fmtFxRate(q.fx_rate)}` : "";
-      const statusText = isError ? "Issue" : (q.cached ? "Cached" : "Live");
+      const statusText = isError ? "Issue" : "Live";
       const detailText = q.error || (q.converted ? `Native ${nativeText}` : "");
 
       return `

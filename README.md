@@ -28,13 +28,12 @@ Add these in Vercel Project Settings → Environment Variables:
 DATABASE_URL=your_neon_connection_string
 BASIC_AUTH_USERNAME=admin
 BASIC_AUTH_PASSWORD=your_private_password
-PRICE_CACHE_SECONDS=120
 PORTFOLIO_CURRENCY=USD
 ```
 
 Select Production, Preview, and Development, then redeploy.
 
-`PRICE_CACHE_SECONDS=120` keeps the backend quote cache aligned with the dashboard auto-refresh interval of 2 minutes.
+Market prices are fetched live on every dashboard/API refresh. No backend quote cache is used.
 
 `PORTFOLIO_CURRENCY=USD` means all portfolio summary, profit/loss, and charts are calculated in USD. Non-USD market quotes such as `TLX.AX` in AUD are converted to USD using the same market-data provider FX quote.
 
