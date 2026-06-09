@@ -385,7 +385,7 @@
 
     .market-board {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
     }
 
@@ -394,11 +394,11 @@
       grid-template-columns: auto minmax(0, 1fr) auto;
       gap: 14px;
       align-items: center;
-      padding: 18px 18px;
+      padding: 16px 16px;
       border: 1px solid var(--line);
       border-radius: 22px;
       background: var(--card2);
-      min-height: 116px;
+      min-height: 108px;
       box-shadow: 0 10px 24px rgba(0,0,0,.05);
     }
 
@@ -802,7 +802,6 @@
                 <p id="marketRefreshText">Loading live prices...</p>
               </div>
               <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                <span class="badge">Easy market view</span>
                 <span class="badge live"><span class="dot"></span>Live</span>
               </div>
             </div>
@@ -810,9 +809,14 @@
           </div>
         </section>
 
-        <details id="recordEditor" class="editor">
-          <summary><span id="formTitle">Add Buy / Sell Record</span></summary>
-          <div class="section-body" style="padding-top:0;">
+        <section id="recordEditor" class="panel">
+          <div class="section-body">
+            <div class="section-head">
+              <div>
+                <div class="title-row"><h2 id="formTitle">Add Buy / Sell Record</h2></div>
+                <p>Key in a new transaction or update an existing one.</p>
+              </div>
+            </div>
             <form id="recordForm">
               <input type="hidden" id="recordId" />
               <div class="form-grid">
@@ -857,7 +861,7 @@
             </form>
             <div id="statusText" class="status">Ready.</div>
           </div>
-        </details>
+        </section>
       </div>
     </section>
 
@@ -1265,14 +1269,14 @@
         row.innerHTML = `
           <div class="market-logo">${logoLabel(q.share_code)}</div>
           <div class="market-main">
-            <div class="market-name">${companyName(q)}</div>
             <div class="market-subrow">
               <span class="ticker-pill">${q.share_code}</span>
-              <span class="market-note">${q.market_symbol || q.share_code}</span>
               <span class="badge ${q.error ? "issue" : "live"}"><span class="dot"></span>${q.error ? "Issue" : "Live"}</span>
             </div>
             <div class="market-subrow" style="margin-top:10px;">
               <span class="market-note">${native}</span>
+            </div>
+            <div class="market-subrow" style="margin-top:4px;">
               <span class="market-note">${q.error ? q.error : fx}</span>
             </div>
           </div>
