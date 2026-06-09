@@ -1691,6 +1691,61 @@
     }
 
 
+    /* v22 table-scroll fix:
+       Keep the full header/filter block aligned during vertical/horizontal scroll.
+       Previous version mixed sticky first column + sticky individual header cells, which caused the first column/filter row to visually drift. */
+    .table-wrap {
+      position: relative;
+      overflow: auto;
+    }
+
+    .table-wrap table {
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: auto;
+    }
+
+    .table-wrap thead {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .table-wrap thead th {
+      position: static !important;
+      top: auto !important;
+      left: auto !important;
+      z-index: auto !important;
+    }
+
+    .table-wrap thead tr:first-child th {
+      background: rgba(15, 29, 49, 0.98);
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,.08);
+    }
+
+    .table-wrap .column-filter-row th {
+      background: rgba(15, 29, 49, 0.98);
+      padding: 8px;
+    }
+
+    .table-wrap tbody td:first-child,
+    .table-wrap thead th:first-child {
+      position: static !important;
+      left: auto !important;
+      z-index: auto !important;
+    }
+
+    .table-wrap tbody td:first-child {
+      background: transparent;
+      font-weight: 800;
+    }
+
+    [data-theme="light"] .table-wrap thead tr:first-child th,
+    [data-theme="light"] .table-wrap .column-filter-row th {
+      background: rgba(232, 240, 252, 0.98);
+    }
+
+
     @media (min-width: 1181px) {
       .layout-2 {
         grid-template-columns: minmax(320px, .8fr) minmax(720px, 2.2fr);
