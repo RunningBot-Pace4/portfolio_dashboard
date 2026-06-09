@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Market Share Live Portfolio</title>
+  <title>Market Share Live Charts</title>
   <style>
     :root {
       color-scheme: dark;
@@ -1723,314 +1723,278 @@
     }
 
 
-  </style>
+  
+    .chart-page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .charts-grid.expanded {
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    }
+
+    .chart-card.large {
+      min-height: 340px;
+    }
+
+    .chart-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .chart-kpi {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.045);
+    }
+
+    .chart-kpi-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-weight: 800;
+    }
+
+    .chart-kpi-value {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.02em;
+    }
+
+    .wide-bar-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 98px;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .stack-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 110px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+
+    .stack-track {
+      display: flex;
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .stack-realized { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+    .stack-unrealized { background: linear-gradient(90deg, #6ee7b7, #14b8a6); }
+    .stack-negative { background: linear-gradient(90deg, #fb7185, #f97316); }
+
+    .chart-empty {
+      min-height: 140px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+      border-radius: 16px;
+      border: 1px dashed var(--border);
+    }
+
+    .page-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 780px) {
+      .charts-grid.expanded {
+        grid-template-columns: 1fr;
+      }
+      .wide-bar-row, .stack-row {
+        grid-template-columns: 56px 1fr 84px;
+      }
+    }
+</style>
 </head>
 <body>
   <div class="container">
     <section class="hero">
       <div class="hero-top">
-        <div class="pill"><span class="pill-dot"></span> Live Portfolio Tracking</div>
+        <div class="pill"><span class="pill-dot"></span> Portfolio Analytics</div>
         <div class="hero-actions">
-          <a class="nav-link" href="/charts">📊 Charts</a>
+          <a class="nav-link" href="/">← Dashboard</a>
           <button id="themeToggleBtn" class="theme-toggle" type="button">☀️ Light Mode</button>
         </div>
       </div>
-      <h1>Market Share Live Portfolio</h1>
-      <p>Track buy and sell transactions, watch live market prices, and monitor realized plus unrealized profit or loss. Switch between dark and light mode anytime.</p>
+      <h1>Portfolio Charts</h1>
+      <p>This page is only for charts and analytics. Smart Filters on this page do not change the dashboard table grids.</p>
     </section>
 
-    <section class="summary-grid">
-      <div class="panel metric-card">
-        <div class="metric-label">Total Buy Amount</div>
-        <div class="metric-value" id="metricBuyAmount">-</div>
-        <div class="metric-sub">Total amount used to buy shares.</div>
-      </div>
-      <div class="panel metric-card">
-        <div class="metric-label">Current Holding Value</div>
-        <div class="metric-value" id="metricMarketValue">-</div>
-        <div class="metric-sub">Live value of shares still held.</div>
-      </div>
-      <div class="panel metric-card">
-        <div class="metric-label">Realized Earn / Loss</div>
-        <div class="metric-value" id="metricRealized">-</div>
-        <div class="metric-sub">Profit or loss from shares already sold.</div>
-      </div>
-      <div class="panel metric-card">
-        <div class="metric-label">Total Earn / Loss</div>
-        <div class="metric-value" id="metricReturn">-</div>
-        <div class="metric-sub">Realized plus unrealized profit or loss.</div>
-      </div>
-      <div class="panel metric-card">
-        <div class="metric-label">Portfolio Return</div>
-        <div class="metric-value" id="metricReturnPct">-</div>
-        <div class="metric-sub">Total return based on total buy amount.</div>
-      </div>
-    </section>
-
-    <section class="layout-2">
-      <div class="panel">
-        <div class="section-body">
-          <div class="section-header">
-            <div>
-              <h2 id="formTitle">Add Transaction</h2>
-              <p>Record a BUY or SELL using amount divided by share unit.</p>
-            </div>
-            <span class="chip">Manual Entry</span>
-          </div>
-
-          <form id="recordForm">
-            <input type="hidden" id="recordId" />
-
-            <div class="form-grid">
-              <div class="field">
-                <label for="purchaseDate">Date</label>
-                <input id="purchaseDate" type="date" required />
-              </div>
-
-              <div class="field">
-                <label for="transactionType">Transaction Type</label>
-                <select id="transactionType" required>
-                  <option value="BUY">BUY</option>
-                  <option value="SELL">SELL</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="shareCode">Share Code</label>
-                <select id="shareCode" required>
-                  {% for code in share_codes %}
-                  <option value="{{ code }}">{{ code }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="investmentAmount" id="amountLabel">Buy Amount</label>
-                <input id="investmentAmount" type="number" step="0.0001" min="0" required />
-              </div>
-
-              <div class="field">
-                <label for="purchaseUnits" id="unitLabel">Share Unit Bought</label>
-                <input id="purchaseUnits" type="number" step="0.00000001" min="0.00000001" required />
-              </div>
-
-              <div class="field">
-                <label for="averagePrice" id="priceLabel">Average Buy Price</label>
-                <input id="averagePrice" type="text" readonly />
-                <div class="input-note" id="priceNote">Price is calculated as amount ÷ share unit and shown in 2 decimals.</div>
-              </div>
-
-              <div class="field">
-                <label>&nbsp;</label>
-                <div class="actions">
-                  <button id="saveBtn" class="btn-primary" type="submit">Save</button>
-                  <button id="cancelBtn" class="btn-secondary" type="button">Cancel</button>
-                </div>
-              </div>
-            </div>
-          </form>
-
-          <div class="status-bar" id="statusText">Ready.</div>
-        </div>
-      </div>
-
-      <div class="panel market-panel">
-        <div class="section-body">
-          <div class="section-header market-section-header">
-            <div>
-              <h2>Live Market Dashboard</h2>
-              <p>Compact one-page market board with cleaner price display.</p>
-            </div>
-            <div class="market-header-actions">
-              <span class="chip" id="marketLoadedText">Loading quotes</span>
-              <span class="chip" id="marketRefreshText">Refreshing...</span>
-            </div>
-          </div>
-
-          <div class="market-mini-stats">
-            <span>Total: <strong id="marketTotalSymbols">-</strong></span>
-            <span>Loaded: <strong id="marketUsdSymbols">-</strong></span>
-            <span>FX: <strong id="marketFxSymbols">-</strong></span>
-          </div>
-
-          <div class="market-board" id="marketGrid"></div>
-        </div>
-      </div>
-    </section>
-
-
-
-    <div class="hidden-controls" hidden aria-hidden="true">
-      <input id="filterSearch" type="search" value="" />
-      <select id="filterShare"><option value="">All Shares</option></select>
-      <select id="filterType">
-        <option value="">All Types</option>
-        <option value="BUY">BUY</option>
-        <option value="SELL">SELL</option>
-      </select>
-      <input id="filterDateFrom" type="date" value="" />
-      <input id="filterDateTo" type="date" value="" />
-      <select id="filterStatus">
-        <option value="">All Status</option>
-        <option value="OPEN">Open Holdings</option>
-        <option value="CLOSED">Closed / Sold Out</option>
-        <option value="PROFIT">Profit Only</option>
-        <option value="LOSS">Loss Only</option>
-      </select>
-      <button id="applyFilterBtn" type="button">Apply</button>
-      <button id="resetFilterBtn" type="button">Reset</button>
-      <span id="filterResultText">All data</span>
-
-      <select id="summarySortBy">
-        <option value="share_code">Share Code</option>
-        <option value="total_buy_amount">Buy Amount</option>
-        <option value="total_sell_amount">Sell Amount</option>
-        <option value="remaining_units">Remaining Units</option>
-        <option value="average_price">Avg Cost</option>
-        <option value="current_price">Market Price</option>
-        <option value="market_value">Current Value</option>
-        <option value="realized_return">Realized P/L</option>
-        <option value="unrealized_return">Unrealized P/L</option>
-        <option value="total_return">Total P/L</option>
-        <option value="return_percent">Return %</option>
-        <option value="transaction_count">Transactions</option>
-      </select>
-      <select id="summarySortDir">
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-      </select>
-      <select id="recordSortBy">
-        <option value="purchase_date">Date</option>
-        <option value="transaction_type">Type</option>
-        <option value="share_code">Share Code</option>
-        <option value="investment_amount">Amount</option>
-        <option value="purchase_units">Share Unit</option>
-        <option value="average_price">Price / Share</option>
-      </select>
-      <select id="recordSortDir">
-        <option value="desc">Descending</option>
-        <option value="asc">Ascending</option>
-      </select>
-      <div id="summaryColumnPicker"></div>
-      <div id="recordColumnPicker"></div>
-    </div>
-
-    <section class="panel table-panel">
+    <section class="panel table-panel filter-panel">
       <div class="section-body">
-        <div class="table-toolbar">
+        <div class="section-header">
           <div>
-            <div class="section-header" style="margin-bottom:0; display:block;">
-              <div class="title-row"><h2>Summary Dashboard of Shares You Bought and Sold</h2><span class="count-pill" id="summaryCountText">0 shares</span></div>
-              <p>Average cost method is used for sell profit. Market prices are converted to {{ portfolio_currency }} when needed.</p>
-            </div>
+            <h2>Smart Filters</h2>
+            <p>Filter charts by share code, transaction type, date range, and holding status.</p>
           </div>
-          <span class="eyebrow">Grouped by share code</span>
+          <span class="chip" id="filterResultText">All data</span>
         </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th class="sortable" data-summary-sort="share_code" data-summary-col="share_code">Share Code</th>
-                <th class="sortable" data-summary-sort="total_buy_amount" data-summary-col="total_buy_amount">Buy Amount</th>
-                <th class="sortable" data-summary-sort="total_sell_amount" data-summary-col="total_sell_amount">Sell Amount</th>
-                <th class="sortable" data-summary-sort="remaining_units" data-summary-col="remaining_units">Remaining Units</th>
-                <th class="sortable" data-summary-sort="average_price" data-summary-col="average_price">Avg Cost</th>
-                <th class="sortable" data-summary-sort="current_price" data-summary-col="current_price">Market Price ({{ portfolio_currency }})</th>
-                <th class="sortable" data-summary-sort="market_value" data-summary-col="market_value">Current Value ({{ portfolio_currency }})</th>
-                <th class="sortable" data-summary-sort="realized_return" data-summary-col="realized_return">Realized P/L</th>
-                <th class="sortable" data-summary-sort="unrealized_return" data-summary-col="unrealized_return">Unrealized P/L</th>
-                <th class="sortable" data-summary-sort="total_return" data-summary-col="total_return">Total P/L</th>
-                <th class="sortable" data-summary-sort="return_percent" data-summary-col="return_percent">Return %</th>
-                <th class="sortable" data-summary-sort="transaction_count" data-summary-col="transaction_count">Txns</th>
-              </tr>
-              <tr class="column-filter-row">
-                <th data-summary-col="share_code"><select id="summaryColumnShareFilter" class="column-filter"><option value="">All</option></select></th>
-                <th data-summary-col="total_buy_amount"><input id="summaryMinBuyFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="total_sell_amount"><input id="summaryMinSellFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="remaining_units"><select id="summaryHoldingFilter" class="column-filter"><option value="">All</option><option value="OPEN">Open</option><option value="CLOSED">Closed</option></select></th>
-                <th data-summary-col="average_price"><input id="summaryMinAvgFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="current_price"><input id="summaryMinPriceFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="market_value"><input id="summaryMinValueFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-summary-col="realized_return"><select id="summaryRealizedFilter" class="column-filter"><option value="">All</option><option value="PROFIT">Profit</option><option value="LOSS">Loss</option></select></th>
-                <th data-summary-col="unrealized_return"><select id="summaryUnrealizedFilter" class="column-filter"><option value="">All</option><option value="PROFIT">Profit</option><option value="LOSS">Loss</option></select></th>
-                <th data-summary-col="total_return"><select id="summaryProfitFilter" class="column-filter"><option value="">All</option><option value="PROFIT">Profit</option><option value="LOSS">Loss</option></select></th>
-                <th data-summary-col="return_percent"><input id="summaryMinReturnPctFilter" class="column-filter" type="number" step="0.01" placeholder="Min %" /></th>
-                <th data-summary-col="transaction_count"><input id="summaryMinTxFilter" class="column-filter" type="number" step="1" placeholder="Min" /></th>
-              </tr>
-            </thead>
-            <tbody id="summaryBody"></tbody>
-          </table>
+        <div class="filter-grid">
+          <div class="field">
+            <label for="filterSearch">Search</label>
+            <input id="filterSearch" type="search" placeholder="Search share code..." />
+          </div>
+
+          <div class="field">
+            <label for="filterShare">Share Code</label>
+            <select id="filterShare">
+              <option value="">All Shares</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="filterType">Transaction Type</label>
+            <select id="filterType">
+              <option value="">All Types</option>
+              <option value="BUY">BUY</option>
+              <option value="SELL">SELL</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="filterDateFrom">Date From</label>
+            <input id="filterDateFrom" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="filterDateTo">Date To</label>
+            <input id="filterDateTo" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="filterStatus">Holding Status</label>
+            <select id="filterStatus">
+              <option value="">All Status</option>
+              <option value="OPEN">Open Holdings</option>
+              <option value="CLOSED">Closed / Sold Out</option>
+              <option value="PROFIT">Profit Only</option>
+              <option value="LOSS">Loss Only</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>&nbsp;</label>
+            <div class="filter-actions">
+              <button id="applyFilterBtn" class="btn-primary" type="button">Apply</button>
+              <button id="resetFilterBtn" class="btn-secondary" type="button">Reset</button>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <section class="chart-metric-grid">
+      <div class="chart-kpi">
+        <div class="chart-kpi-label">Buy Amount</div>
+        <div class="chart-kpi-value" id="chartBuyAmount">-</div>
+      </div>
+      <div class="chart-kpi">
+        <div class="chart-kpi-label">Current Value</div>
+        <div class="chart-kpi-value" id="chartMarketValue">-</div>
+      </div>
+      <div class="chart-kpi">
+        <div class="chart-kpi-label">Realized P/L</div>
+        <div class="chart-kpi-value" id="chartRealized">-</div>
+      </div>
+      <div class="chart-kpi">
+        <div class="chart-kpi-label">Total P/L</div>
+        <div class="chart-kpi-value" id="chartTotalReturn">-</div>
+      </div>
+      <div class="chart-kpi">
+        <div class="chart-kpi-label">Return %</div>
+        <div class="chart-kpi-value" id="chartReturnPct">-</div>
       </div>
     </section>
 
     <section class="panel table-panel">
       <div class="section-body">
-        <div class="table-toolbar">
+        <div class="section-header">
           <div>
-            <div class="section-header" style="margin-bottom:0; display:block;">
-              <div class="title-row"><h2>Buy / Sell Transaction Records</h2><span class="count-pill" id="recordCountText">BUY: 0 • SELL: 0</span></div>
-              <p>Your detailed transaction list. Edit or delete any record anytime.</p>
-            </div>
+            <h2>Portfolio Chart Gallery</h2>
+            <p>More charts for allocation, profit/loss, buy/sell activity, units, and transaction counts.</p>
           </div>
-          <div class="actions">
-            <button id="exportPdfBtn" class="btn-primary" type="button">Export PDF</button>
-            <span class="eyebrow">Price = Amount / Share Unit</span>
+          <span class="chip">Charts page</span>
+        </div>
+
+        <div class="charts-grid expanded">
+          <div class="chart-card large">
+            <h3 class="chart-title">Holding Allocation</h3>
+            <p class="chart-subtitle">By current market value in {{ portfolio_currency }}.</p>
+            <div id="allocationChart"></div>
+          </div>
+
+          <div class="chart-card large">
+            <h3 class="chart-title">Current Value by Share</h3>
+            <p class="chart-subtitle">Remaining units × converted market price.</p>
+            <div id="currentValueChart"></div>
+          </div>
+
+          <div class="chart-card large">
+            <h3 class="chart-title">Profit / Loss by Share</h3>
+            <p class="chart-subtitle">Realized plus unrealized P/L.</p>
+            <div id="profitChart"></div>
+          </div>
+
+          <div class="chart-card large">
+            <h3 class="chart-title">Return % by Share</h3>
+            <p class="chart-subtitle">Total P/L divided by buy amount.</p>
+            <div id="returnPercentChart"></div>
+          </div>
+
+          <div class="chart-card large">
+            <h3 class="chart-title">Realized vs Unrealized P/L</h3>
+            <p class="chart-subtitle">Separate view of sold and still-held performance.</p>
+            <div id="realizedUnrealizedChart"></div>
+          </div>
+
+          <div class="chart-card large">
+            <h3 class="chart-title">Buy vs Sell Amount</h3>
+            <p class="chart-subtitle">Based on filtered chart transactions.</p>
+            <div id="buySellChart"></div>
+          </div>
+
+          <div class="chart-card large">
+            <h3 class="chart-title">Units by Share</h3>
+            <p class="chart-subtitle">Remaining share units by symbol.</p>
+            <div id="unitsChart"></div>
+          </div>
+
+          <div class="chart-card large">
+            <h3 class="chart-title">Transaction Count by Share</h3>
+            <p class="chart-subtitle">Number of buy/sell records per share.</p>
+            <div id="transactionCountChart"></div>
           </div>
         </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th class="sortable" data-record-sort="purchase_date" data-record-col="purchase_date">Date</th>
-                <th class="sortable" data-record-sort="transaction_type" data-record-col="transaction_type">Type</th>
-                <th class="sortable" data-record-sort="share_code" data-record-col="share_code">Share Code</th>
-                <th class="sortable" data-record-sort="investment_amount" data-record-col="investment_amount">Amount</th>
-                <th class="sortable" data-record-sort="purchase_units" data-record-col="purchase_units">Share Unit</th>
-                <th class="sortable" data-record-sort="average_price" data-record-col="average_price">Price / Share</th>
-                <th data-record-col="action">Action</th>
-              </tr>
-              <tr class="column-filter-row">
-                <th data-record-col="purchase_date"><input id="recordColumnDateFilter" class="column-filter" type="date" /></th>
-                <th data-record-col="transaction_type"><select id="recordColumnTypeFilter" class="column-filter"><option value="">All</option><option value="BUY">BUY</option><option value="SELL">SELL</option></select></th>
-                <th data-record-col="share_code"><select id="recordColumnShareFilter" class="column-filter"><option value="">All</option></select></th>
-                <th data-record-col="investment_amount"><input id="recordMinAmountFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-record-col="purchase_units"><input id="recordMinUnitFilter" class="column-filter" type="number" step="0.0001" placeholder="Min" /></th>
-                <th data-record-col="average_price"><input id="recordMinPriceFilter" class="column-filter" type="number" step="0.01" placeholder="Min" /></th>
-                <th data-record-col="action"><button id="resetColumnFiltersBtn" class="mini-filter-button" type="button">Clear</button></th>
-              </tr>
-            </thead>
-            <tbody id="recordsBody"></tbody>
-          </table>
-        </div>
+        <div class="page-note">Dashboard table grids use their own column filters. This chart page uses Smart Filters only for chart analytics.</div>
       </div>
     </section>
   </div>
 
   <script>
-    const form = document.getElementById("recordForm");
-    const recordId = document.getElementById("recordId");
-    const purchaseDate = document.getElementById("purchaseDate");
-    const transactionType = document.getElementById("transactionType");
-    const shareCode = document.getElementById("shareCode");
-    const investmentAmount = document.getElementById("investmentAmount");
-    const purchaseUnits = document.getElementById("purchaseUnits");
-    const averagePrice = document.getElementById("averagePrice");
-    const amountLabel = document.getElementById("amountLabel");
-    const unitLabel = document.getElementById("unitLabel");
-    const priceLabel = document.getElementById("priceLabel");
-    const priceNote = document.getElementById("priceNote");
-    const saveBtn = document.getElementById("saveBtn");
-    const cancelBtn = document.getElementById("cancelBtn");
-    const statusText = document.getElementById("statusText");
-    const formTitle = document.getElementById("formTitle");
-    const marketRefreshText = document.getElementById("marketRefreshText");
-    const marketLoadedText = document.getElementById("marketLoadedText");
-    const exportPdfBtn = document.getElementById("exportPdfBtn");
     const themeToggleBtn = document.getElementById("themeToggleBtn");
-
     const filterSearch = document.getElementById("filterSearch");
     const filterShare = document.getElementById("filterShare");
     const filterType = document.getElementById("filterType");
@@ -2040,94 +2004,16 @@
     const applyFilterBtn = document.getElementById("applyFilterBtn");
     const resetFilterBtn = document.getElementById("resetFilterBtn");
     const filterResultText = document.getElementById("filterResultText");
-    const summaryCountText = document.getElementById("summaryCountText");
-    const recordCountText = document.getElementById("recordCountText");
-    const summarySortBy = document.getElementById("summarySortBy");
-    const summarySortDir = document.getElementById("summarySortDir");
-    const recordSortBy = document.getElementById("recordSortBy");
-    const recordSortDir = document.getElementById("recordSortDir");
-    const summaryColumnPicker = document.getElementById("summaryColumnPicker");
-    const recordColumnPicker = document.getElementById("recordColumnPicker");
-    const marketTotalSymbols = document.getElementById("marketTotalSymbols");
-    const marketUsdSymbols = document.getElementById("marketUsdSymbols");
-    const marketFxSymbols = document.getElementById("marketFxSymbols");
-
-    const summaryColumnShareFilter = document.getElementById("summaryColumnShareFilter");
-    const summaryMinBuyFilter = document.getElementById("summaryMinBuyFilter");
-    const summaryMinSellFilter = document.getElementById("summaryMinSellFilter");
-    const summaryHoldingFilter = document.getElementById("summaryHoldingFilter");
-    const summaryMinAvgFilter = document.getElementById("summaryMinAvgFilter");
-    const summaryMinPriceFilter = document.getElementById("summaryMinPriceFilter");
-    const summaryMinValueFilter = document.getElementById("summaryMinValueFilter");
-    const summaryRealizedFilter = document.getElementById("summaryRealizedFilter");
-    const summaryUnrealizedFilter = document.getElementById("summaryUnrealizedFilter");
-    const summaryProfitFilter = document.getElementById("summaryProfitFilter");
-    const summaryMinReturnPctFilter = document.getElementById("summaryMinReturnPctFilter");
-    const summaryMinTxFilter = document.getElementById("summaryMinTxFilter");
-    const recordColumnDateFilter = document.getElementById("recordColumnDateFilter");
-    const recordColumnTypeFilter = document.getElementById("recordColumnTypeFilter");
-    const recordColumnShareFilter = document.getElementById("recordColumnShareFilter");
-    const recordMinAmountFilter = document.getElementById("recordMinAmountFilter");
-    const recordMinUnitFilter = document.getElementById("recordMinUnitFilter");
-    const recordMinPriceFilter = document.getElementById("recordMinPriceFilter");
-    const resetColumnFiltersBtn = document.getElementById("resetColumnFiltersBtn");
-
-    const columnFilterInputs = [
-      summaryColumnShareFilter, summaryMinBuyFilter, summaryMinSellFilter, summaryHoldingFilter,
-      summaryMinAvgFilter, summaryMinPriceFilter, summaryMinValueFilter, summaryRealizedFilter,
-      summaryUnrealizedFilter, summaryProfitFilter, summaryMinReturnPctFilter, summaryMinTxFilter,
-      recordColumnDateFilter, recordColumnTypeFilter, recordColumnShareFilter, recordMinAmountFilter,
-      recordMinUnitFilter, recordMinPriceFilter
-    ].filter(Boolean);
 
     const REFRESH_INTERVAL_MS = 120000;
     const PORTFOLIO_CURRENCY = "{{ portfolio_currency }}";
     const chartColors = ["#60a5fa", "#6ee7b7", "#c084fc", "#fbbf24", "#fb7185", "#38bdf8", "#a3e635", "#f97316", "#818cf8", "#14b8a6", "#f472b6", "#93c5fd"];
 
-    const summaryColumns = [
-      { key: "share_code", label: "Share Code" },
-      { key: "total_buy_amount", label: "Buy Amount" },
-      { key: "total_sell_amount", label: "Sell Amount" },
-      { key: "remaining_units", label: "Remaining Units" },
-      { key: "average_price", label: "Avg Cost" },
-      { key: "current_price", label: "Market Price" },
-      { key: "market_value", label: "Current Value" },
-      { key: "realized_return", label: "Realized P/L" },
-      { key: "unrealized_return", label: "Unrealized P/L" },
-      { key: "total_return", label: "Total P/L" },
-      { key: "return_percent", label: "Return %" },
-      { key: "transaction_count", label: "Transactions" }
-    ];
-
-    const recordColumns = [
-      { key: "purchase_date", label: "Date" },
-      { key: "transaction_type", label: "Type" },
-      { key: "share_code", label: "Share Code" },
-      { key: "investment_amount", label: "Amount" },
-      { key: "purchase_units", label: "Share Unit" },
-      { key: "average_price", label: "Price / Share" },
-      { key: "action", label: "Action" }
-    ];
-
-    const summaryColumnDefaults = summaryColumns.map(col => col.key);
-    const recordColumnDefaults = recordColumns.map(col => col.key);
-    let visibleSummaryColumns = new Set(summaryColumnDefaults);
-    let visibleRecordColumns = new Set(recordColumnDefaults);
-
     let allSummary = null;
     let allRecords = [];
-    let summarySort = { key: "share_code", direction: "asc" };
-    let recordSort = { key: "purchase_date", direction: "desc" };
 
-    const money = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-
-    const numberFmt = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 8
-    });
+    const money = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const numberFmt = new Intl.NumberFormat("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 8 });
 
     function applyTheme(theme) {
       document.documentElement.setAttribute("data-theme", theme);
@@ -2145,179 +2031,9 @@
       applyTheme(nextTheme);
     });
 
-    function loadColumnPreference(key, fallback) {
-      try {
-        const saved = JSON.parse(localStorage.getItem(key) || "null");
-        if (Array.isArray(saved) && saved.length) return saved;
-      } catch {}
-      return [...fallback];
-    }
-
-    function saveColumnPreference(key, values) {
-      localStorage.setItem(key, JSON.stringify([...values]));
-    }
-
-    function renderColumnPicker(container, columns, visibleSet, storageKey, scope) {
-      container.innerHTML = "";
-      columns.forEach(col => {
-        const label = document.createElement("label");
-        label.className = "column-check";
-        label.innerHTML = `
-          <input type="checkbox" value="${col.key}" ${visibleSet.has(col.key) ? "checked" : ""}>
-          <span>${col.label}</span>
-        `;
-
-        const input = label.querySelector("input");
-        input.addEventListener("change", () => {
-          if (input.checked) {
-            visibleSet.add(col.key);
-          } else if (visibleSet.size > 1) {
-            visibleSet.delete(col.key);
-          } else {
-            input.checked = true;
-            setStatus("At least one column must stay visible.");
-            return;
-          }
-
-          saveColumnPreference(storageKey, visibleSet);
-          applyColumnVisibility(scope);
-        });
-
-        container.appendChild(label);
-      });
-    }
-
-    function renderColumnPickers() {
-      visibleSummaryColumns = new Set(summaryColumnDefaults);
-      visibleRecordColumns = new Set(recordColumnDefaults);
-      localStorage.removeItem("marketsharelive-summary-columns");
-      localStorage.removeItem("marketsharelive-record-columns");
-    }
-
-    function applyColumnVisibility(scope = "all") {
-      if (scope === "summary" || scope === "all") {
-        document.querySelectorAll("[data-summary-col]").forEach(el => {
-          el.classList.toggle("col-hidden", !visibleSummaryColumns.has(el.dataset.summaryCol));
-        });
-      }
-
-      if (scope === "record" || scope === "all") {
-        document.querySelectorAll("[data-record-col]").forEach(el => {
-          el.classList.toggle("col-hidden", !visibleRecordColumns.has(el.dataset.recordCol));
-        });
-      }
-    }
-
-    function syncSortControls() {
-      summarySortBy.value = summarySort.key;
-      summarySortDir.value = summarySort.direction;
-      recordSortBy.value = recordSort.key;
-      recordSortDir.value = recordSort.direction;
-    }
-
-    function setStatus(message) {
-      statusText.textContent = message;
-    }
-
-    function cls(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "";
-      return Number(value) >= 0 ? "value-positive" : "value-negative";
-    }
-
-    function fmtMoney(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
-      return money.format(Number(value));
-    }
-
-    function fmtCurrency(value, currency = PORTFOLIO_CURRENCY) {
-      const formatted = fmtMoney(value);
-      if (formatted === "-") return "-";
-      return `${formatted} ${currency || ""}`.trim();
-    }
-
-    function fmtFxRate(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
-      return Number(value).toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
-    }
-
-    function conversionNote(q) {
-      if (!q || !q.converted) return "";
-      const nativeCurrency = q.native_currency || "";
-      const nativeText = fmtCurrency(q.native_price, nativeCurrency);
-      const fxText = q.fx_rate ? ` • FX ${nativeCurrency}/${PORTFOLIO_CURRENCY}: ${fmtFxRate(q.fx_rate)}` : "";
-      return `<div class="conversion-note">${nativeText} converted to ${PORTFOLIO_CURRENCY}${fxText}</div>`;
-    }
-
-    function summaryPriceCell(row) {
-      const main = fmtMoney(row.current_price);
-      if (!row.converted) return main;
-      return `
-        <div>${main}</div>
-        <div class="cell-note">Native: ${fmtCurrency(row.native_price, row.native_currency)}</div>
-        <div class="cell-note">FX: ${fmtFxRate(row.fx_rate)}</div>
-      `;
-    }
-
-    function fmtNum(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
-      return numberFmt.format(Number(value));
-    }
-
-    function fmtPct(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
-      return `${Number(value).toFixed(2)}%`;
-    }
-
-    function typeBadge(type) {
-      const txType = (type || "BUY").toUpperCase();
-      const clsName = txType === "SELL" ? "type-sell" : "type-buy";
-      return `<span class="type-badge ${clsName}">${txType}</span>`;
-    }
-
-    function updateTransactionLabels() {
-      const isSell = transactionType.value === "SELL";
-      amountLabel.textContent = isSell ? "Sell Amount" : "Buy Amount";
-      unitLabel.textContent = isSell ? "Share Unit Sold" : "Share Unit Bought";
-      priceLabel.textContent = isSell ? "Sell Price" : "Average Buy Price";
-      priceNote.textContent = isSell
-        ? "Sell price is calculated as sell amount ÷ share unit and shown in 2 decimals."
-        : "Average buy price is calculated as buy amount ÷ share unit and shown in 2 decimals.";
-      formTitle.textContent = recordId.value ? "Edit Transaction" : (isSell ? "Add Sell Transaction" : "Add Buy Transaction");
-    }
-
-    function recalcAverage() {
-      const amount = Number(investmentAmount.value || 0);
-      const units = Number(purchaseUnits.value || 0);
-      averagePrice.value = units > 0 ? (amount / units).toFixed(2) : "";
-    }
-
-    transactionType.addEventListener("change", updateTransactionLabels);
-    investmentAmount.addEventListener("input", recalcAverage);
-    purchaseUnits.addEventListener("input", recalcAverage);
-
-    function todayIso() {
-      return new Date().toISOString().slice(0, 10);
-    }
-
-    function resetForm() {
-      recordId.value = "";
-      purchaseDate.value = todayIso();
-      transactionType.value = "BUY";
-      shareCode.value = "NVDA";
-      investmentAmount.value = "";
-      purchaseUnits.value = "";
-      averagePrice.value = "";
-      saveBtn.textContent = "Save";
-      saveBtn.disabled = false;
-      updateTransactionLabels();
-    }
-
     async function requestJson(url, options = {}) {
       const response = await fetch(url, {
-        headers: {
-          "Content-Type": "application/json",
-          ...(options.headers || {})
-        },
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) },
         ...options
       });
 
@@ -2332,68 +2048,24 @@
       return response.json();
     }
 
-    function quoteCardHtml(q) {
-      const isError = Boolean(q.error);
-      const mainCurrency = q.converted ? PORTFOLIO_CURRENCY : (q.currency || PORTFOLIO_CURRENCY);
-      const priceLabel = fmtCurrency(q.price, mainCurrency);
-      const nativeText = q.converted
-        ? fmtCurrency(q.native_price, q.native_currency)
-        : "";
-      const fxText = q.converted ? `${q.native_currency}/${PORTFOLIO_CURRENCY} ${fmtFxRate(q.fx_rate)}` : "";
-      const statusText = isError ? "Issue" : (q.cached ? "Cached" : "Live");
-      const detailText = q.error || (q.converted ? `Native ${nativeText}` : "");
-
-      return `
-        <div class="market-row ${isError ? "quote-error" : "quote-live"}">
-          <div class="market-identity">
-            <span class="market-code">${q.share_code}</span>
-          </div>
-          <div class="market-status-badge ${isError ? "issue" : "live"}">${statusText}</div>
-
-          <div class="market-detail market-price-block">
-            <span class="market-label">Market Price</span>
-            <strong>${priceLabel}</strong>
-          </div>
-
-          ${detailText ? `<div class="market-native-line">${detailText}</div>` : ""}
-          ${fxText ? `<div class="market-fx-line">FX ${fxText}</div>` : ""}
-        </div>
-      `;
+    function cls(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "";
+      return Number(value) >= 0 ? "value-positive" : "value-negative";
     }
 
-    async function loadMarket() {
-      marketRefreshText.textContent = "Refreshing...";
-      marketLoadedText.textContent = "Loading quotes";
-      const data = await requestJson("/api/market");
-      const grid = document.getElementById("marketGrid");
-      grid.innerHTML = "";
+    function fmtMoney(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
+      return money.format(Number(value));
+    }
 
-      if (!data.quotes.length) {
-        grid.innerHTML = `<div class="empty-state panel">No market codes configured.</div>`;
-        marketLoadedText.textContent = "0 quotes";
-        marketTotalSymbols.textContent = "0";
-        marketUsdSymbols.textContent = "0";
-        marketFxSymbols.textContent = "0";
-        return;
-      }
+    function fmtNum(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
+      return numberFmt.format(Number(value));
+    }
 
-      data.quotes
-        .slice()
-        .sort((a, b) => String(a.share_code || "").localeCompare(String(b.share_code || "")))
-        .forEach(q => {
-          const wrapper = document.createElement("div");
-          wrapper.innerHTML = quoteCardHtml(q);
-          grid.appendChild(wrapper.firstElementChild);
-        });
-
-      const errors = data.quotes.filter(q => q.error).length;
-      const converted = data.quotes.filter(q => q.converted).length;
-      marketLoadedText.textContent = `${data.quotes.length - errors}/${data.quotes.length} live`;
-      marketTotalSymbols.textContent = data.quotes.length;
-      marketUsdSymbols.textContent = data.quotes.length - errors;
-      marketFxSymbols.textContent = converted;
-      const now = new Date();
-      marketRefreshText.textContent = `Last updated ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    function fmtPct(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
+      return `${Number(value).toFixed(2)}%`;
     }
 
     function currentFilters() {
@@ -2405,10 +2077,6 @@
         to: filterDateTo.value,
         status: filterStatus.value.trim().toUpperCase()
       };
-    }
-
-    function hasActiveFilter(filters = currentFilters()) {
-      return Boolean(filters.search || filters.share || filters.type || filters.from || filters.to || filters.status);
     }
 
     function recordMatchesFilters(row, filters = currentFilters()) {
@@ -2427,79 +2095,6 @@
     function filteredRecordsByForm() {
       const filters = currentFilters();
       return allRecords.filter(row => recordMatchesFilters(row, filters));
-    }
-
-
-    function getNumberFilterValue(input) {
-      if (!input || input.value === "") return null;
-      const value = Number(input.value);
-      return Number.isNaN(value) ? null : value;
-    }
-
-    function isProfitLossMatch(value, mode) {
-      if (!mode) return true;
-      const numeric = Number(value || 0);
-      if (mode === "PROFIT") return numeric >= 0;
-      if (mode === "LOSS") return numeric < 0;
-      return true;
-    }
-
-    function summaryColumnMatches(row) {
-      const share = summaryColumnShareFilter?.value.trim().toUpperCase() || "";
-      const holding = summaryHoldingFilter?.value.trim().toUpperCase() || "";
-      const realizedMode = summaryRealizedFilter?.value.trim().toUpperCase() || "";
-      const unrealizedMode = summaryUnrealizedFilter?.value.trim().toUpperCase() || "";
-      const profitMode = summaryProfitFilter?.value.trim().toUpperCase() || "";
-
-      if (share && String(row.share_code || "").toUpperCase() !== share) return false;
-      if (holding === "OPEN" && Number(row.remaining_units || 0) <= 0) return false;
-      if (holding === "CLOSED" && Number(row.remaining_units || 0) > 0) return false;
-      if (!isProfitLossMatch(row.realized_return, realizedMode)) return false;
-      if (!isProfitLossMatch(row.unrealized_return, unrealizedMode)) return false;
-      if (!isProfitLossMatch(row.total_return, profitMode)) return false;
-
-      const numberChecks = [
-        [summaryMinBuyFilter, row.total_buy_amount],
-        [summaryMinSellFilter, row.total_sell_amount],
-        [summaryMinAvgFilter, row.average_price],
-        [summaryMinPriceFilter, row.current_price],
-        [summaryMinValueFilter, row.market_value],
-        [summaryMinReturnPctFilter, row.return_percent],
-        [summaryMinTxFilter, row.transaction_count]
-      ];
-
-      return numberChecks.every(([input, value]) => {
-        const min = getNumberFilterValue(input);
-        return min === null || Number(value || 0) >= min;
-      });
-    }
-
-    function recordColumnMatches(row) {
-      const date = recordColumnDateFilter?.value || "";
-      const type = recordColumnTypeFilter?.value.trim().toUpperCase() || "";
-      const share = recordColumnShareFilter?.value.trim().toUpperCase() || "";
-
-      if (date && String(row.purchase_date || "") !== date) return false;
-      if (type && String(row.transaction_type || "BUY").toUpperCase() !== type) return false;
-      if (share && String(row.share_code || "").toUpperCase() !== share) return false;
-
-      const numberChecks = [
-        [recordMinAmountFilter, row.investment_amount],
-        [recordMinUnitFilter, row.purchase_units],
-        [recordMinPriceFilter, row.average_price]
-      ];
-
-      return numberChecks.every(([input, value]) => {
-        const min = getNumberFilterValue(input);
-        return min === null || Number(value || 0) >= min;
-      });
-    }
-
-    function resetColumnFilters() {
-      columnFilterInputs.forEach(input => {
-        if (input) input.value = "";
-      });
-      renderDashboardData();
     }
 
     function quoteByShareCode() {
@@ -2533,6 +2128,8 @@
             remaining_units: 0,
             cost_basis: 0,
             realized_return: 0,
+            buy_units: 0,
+            sell_units: 0,
             transaction_count: 0
           });
         }
@@ -2548,11 +2145,13 @@
           const avgCost = row.remaining_units > 0 ? row.cost_basis / row.remaining_units : 0;
           const costOfSoldUnits = avgCost * units;
           row.total_sell_amount += amount;
+          row.sell_units += units;
           row.realized_return += amount - costOfSoldUnits;
           row.remaining_units = Math.max(0, row.remaining_units - units);
           row.cost_basis = Math.max(0, row.cost_basis - costOfSoldUnits);
         } else {
           row.total_buy_amount += amount;
+          row.buy_units += units;
           row.remaining_units += units;
           row.cost_basis += amount;
         }
@@ -2574,65 +2173,26 @@
           market_value: marketValue,
           unrealized_return: unrealizedReturn,
           total_return: totalReturn,
-          return_percent: row.total_buy_amount ? (totalReturn / row.total_buy_amount * 100) : 0,
-          total_invested: row.cost_basis,
-          total_units: row.remaining_units
+          return_percent: row.total_buy_amount ? totalReturn / row.total_buy_amount * 100 : 0
         };
       });
     }
 
     function rowMatchesStatus(row, status) {
       if (!status) return true;
-      const units = Number(row.remaining_units || 0);
+      const remaining = Number(row.remaining_units || 0);
       const totalReturn = Number(row.total_return || 0);
 
-      if (status === "OPEN") return units > 0;
-      if (status === "CLOSED") return units <= 0;
-      if (status === "PROFIT") return totalReturn > 0;
+      if (status === "OPEN") return remaining > 0;
+      if (status === "CLOSED") return remaining <= 0;
+      if (status === "PROFIT") return totalReturn >= 0;
       if (status === "LOSS") return totalReturn < 0;
       return true;
     }
 
-    function compareValues(a, b, key) {
-      const av = a[key];
-      const bv = b[key];
-
-      if (typeof av === "string" || typeof bv === "string") {
-        return String(av || "").localeCompare(String(bv || ""));
-      }
-
-      return Number(av || 0) - Number(bv || 0);
-    }
-
-    function sortRows(rows, sortState) {
-      return [...rows].sort((a, b) => {
-        const result = compareValues(a, b, sortState.key);
-        return sortState.direction === "asc" ? result : -result;
-      });
-    }
-
-    function applySortIndicators() {
-      document.querySelectorAll("[data-summary-sort]").forEach(th => {
-        th.classList.remove("sorted-asc", "sorted-desc");
-        if (th.dataset.summarySort === summarySort.key) {
-          th.classList.add(summarySort.direction === "asc" ? "sorted-asc" : "sorted-desc");
-        }
-      });
-
-      document.querySelectorAll("[data-record-sort]").forEach(th => {
-        th.classList.remove("sorted-asc", "sorted-desc");
-        if (th.dataset.recordSort === recordSort.key) {
-          th.classList.add(recordSort.direction === "asc" ? "sorted-asc" : "sorted-desc");
-        }
-      });
-
-      syncSortControls();
-    }
-
-    function calculateVisiblePortfolio(rows) {
+    function calculatePortfolio(rows) {
       const portfolio = {
         total_buy_amount: 0,
-        total_sell_amount: 0,
         market_value: 0,
         realized_return: 0,
         unrealized_return: 0,
@@ -2642,26 +2202,19 @@
 
       rows.forEach(row => {
         portfolio.total_buy_amount += Number(row.total_buy_amount || 0);
-        portfolio.total_sell_amount += Number(row.total_sell_amount || 0);
         portfolio.market_value += Number(row.market_value || 0);
         portfolio.realized_return += Number(row.realized_return || 0);
         portfolio.unrealized_return += Number(row.unrealized_return || 0);
         portfolio.total_return += Number(row.total_return || 0);
       });
 
-      portfolio.return_percent = portfolio.total_buy_amount ? (portfolio.total_return / portfolio.total_buy_amount * 100) : 0;
+      portfolio.return_percent = portfolio.total_buy_amount ? portfolio.total_return / portfolio.total_buy_amount * 100 : 0;
       return portfolio;
     }
 
     function updateShareFilterOptions() {
       const current = filterShare.value;
-      const currentSummaryColumn = summaryColumnShareFilter?.value || "";
-      const currentRecordColumn = recordColumnShareFilter?.value || "";
       const codes = new Set();
-
-      document.querySelectorAll("#shareCode option").forEach(option => {
-        if (option.value) codes.add(option.value.toUpperCase());
-      });
 
       allRecords.forEach(row => {
         if (row.share_code) codes.add(String(row.share_code).toUpperCase());
@@ -2674,26 +2227,13 @@
       }
 
       const sorted = Array.from(codes).sort();
-      const options = `<option value="">All Shares</option>` + sorted.map(code => `<option value="${code}">${code}</option>`).join("");
-
-      filterShare.innerHTML = options;
+      filterShare.innerHTML = `<option value="">All Shares</option>` + sorted.map(code => `<option value="${code}">${code}</option>`).join("");
       filterShare.value = sorted.includes(current) ? current : "";
-
-      if (summaryColumnShareFilter) {
-        summaryColumnShareFilter.innerHTML = options;
-        summaryColumnShareFilter.value = sorted.includes(currentSummaryColumn) ? currentSummaryColumn : "";
-      }
-
-      if (recordColumnShareFilter) {
-        recordColumnShareFilter.innerHTML = options;
-        recordColumnShareFilter.value = sorted.includes(currentRecordColumn) ? currentRecordColumn : "";
-      }
     }
 
     function updateFilterResult(records, rows) {
       const filters = currentFilters();
       const parts = [];
-
       if (filters.search) parts.push(`Search: ${filters.search}`);
       if (filters.share) parts.push(filters.share);
       if (filters.type) parts.push(filters.type);
@@ -2706,88 +2246,31 @@
         : `All data — ${rows.length} shares, ${records.length} records`;
     }
 
-    function renderMetrics(portfolio) {
-      document.getElementById("metricBuyAmount").textContent = fmtMoney(portfolio.total_buy_amount);
-      document.getElementById("metricMarketValue").textContent = fmtMoney(portfolio.market_value);
+    function renderKpis(portfolio) {
+      document.getElementById("chartBuyAmount").textContent = fmtMoney(portfolio.total_buy_amount);
+      document.getElementById("chartMarketValue").textContent = fmtMoney(portfolio.market_value);
 
-      const metricRealized = document.getElementById("metricRealized");
-      metricRealized.textContent = fmtMoney(portfolio.realized_return);
-      metricRealized.className = `metric-value ${cls(portfolio.realized_return)}`;
+      const realized = document.getElementById("chartRealized");
+      realized.textContent = fmtMoney(portfolio.realized_return);
+      realized.className = `chart-kpi-value ${cls(portfolio.realized_return)}`;
 
-      const metricReturn = document.getElementById("metricReturn");
-      metricReturn.textContent = fmtMoney(portfolio.total_return);
-      metricReturn.className = `metric-value ${cls(portfolio.total_return)}`;
+      const total = document.getElementById("chartTotalReturn");
+      total.textContent = fmtMoney(portfolio.total_return);
+      total.className = `chart-kpi-value ${cls(portfolio.total_return)}`;
 
-      const metricReturnPct = document.getElementById("metricReturnPct");
-      metricReturnPct.textContent = fmtPct(portfolio.return_percent);
-      metricReturnPct.className = `metric-value ${cls(portfolio.return_percent)}`;
+      const returnPct = document.getElementById("chartReturnPct");
+      returnPct.textContent = fmtPct(portfolio.return_percent);
+      returnPct.className = `chart-kpi-value ${cls(portfolio.return_percent)}`;
     }
 
-    function renderSummaryRows(rows) {
-      const body = document.getElementById("summaryBody");
-      body.innerHTML = "";
-
-      summaryCountText.textContent = `${rows.length} ${rows.length === 1 ? "share" : "shares"}`;
-
-      if (!rows.length) {
-        body.innerHTML = `<tr><td colspan="12" class="empty-state">No matching summary rows.</td></tr>`;
-        return;
-      }
-
-      rows.forEach(row => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td data-summary-col="share_code">${row.share_code}</td>
-          <td data-summary-col="total_buy_amount">${fmtMoney(row.total_buy_amount)}</td>
-          <td data-summary-col="total_sell_amount">${fmtMoney(row.total_sell_amount)}</td>
-          <td data-summary-col="remaining_units">${fmtNum(row.remaining_units)}</td>
-          <td data-summary-col="average_price">${fmtMoney(row.average_price)}</td>
-          <td data-summary-col="current_price">${summaryPriceCell(row)}</td>
-          <td data-summary-col="market_value">${fmtMoney(row.market_value)}</td>
-          <td data-summary-col="realized_return" class="${cls(row.realized_return)}">${fmtMoney(row.realized_return)}</td>
-          <td data-summary-col="unrealized_return" class="${cls(row.unrealized_return)}">${fmtMoney(row.unrealized_return)}</td>
-          <td data-summary-col="total_return" class="${cls(row.total_return)}">${fmtMoney(row.total_return)}</td>
-          <td data-summary-col="return_percent" class="${cls(row.return_percent)}">${fmtPct(row.return_percent)}</td>
-          <td data-summary-col="transaction_count"><span class="chip">${row.transaction_count}</span></td>
-        `;
-        body.appendChild(tr);
-      });
-    }
-
-    function renderRecords(records) {
-      const body = document.getElementById("recordsBody");
-      body.innerHTML = "";
-
-      const buyCount = records.filter(row => String(row.transaction_type || "BUY").toUpperCase() === "BUY").length;
-      const sellCount = records.filter(row => String(row.transaction_type || "BUY").toUpperCase() === "SELL").length;
-      recordCountText.textContent = `BUY: ${buyCount} • SELL: ${sellCount} • TOTAL: ${records.length}`;
-
-      if (!records.length) {
-        body.innerHTML = `<tr><td colspan="7" class="empty-state">No matching transaction records.</td></tr>`;
-        return;
-      }
-
-      records.forEach(row => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td data-record-col="purchase_date">${row.purchase_date}</td>
-          <td data-record-col="transaction_type">${typeBadge(row.transaction_type)}</td>
-          <td data-record-col="share_code">${row.share_code}</td>
-          <td data-record-col="investment_amount">${fmtMoney(row.investment_amount)}</td>
-          <td data-record-col="purchase_units">${fmtNum(row.purchase_units)}</td>
-          <td data-record-col="average_price">${fmtMoney(row.average_price)}</td>
-          <td data-record-col="action">
-            <div class="small-actions">
-              <button type="button" class="btn-secondary" data-edit="${row.id}">Edit</button>
-              <button type="button" class="btn-danger" data-delete="${row.id}">Delete</button>
-            </div>
-          </td>
-        `;
-        body.appendChild(tr);
-
-        tr.querySelector("[data-edit]").addEventListener("click", () => editRecord(row));
-        tr.querySelector("[data-delete]").addEventListener("click", () => deleteRecord(row.id));
-      });
+    function topRows(rows, valueKey, limit = 12, abs = false) {
+      return [...rows]
+        .sort((a, b) => {
+          const av = Number(a[valueKey] || 0);
+          const bv = Number(b[valueKey] || 0);
+          return abs ? Math.abs(bv) - Math.abs(av) : bv - av;
+        })
+        .slice(0, limit);
     }
 
     function renderAllocationChart(rows) {
@@ -2832,34 +2315,49 @@
       `;
     }
 
-    function renderProfitChart(rows) {
-      const el = document.getElementById("profitChart");
-      const items = rows
-        .map(row => ({ code: row.share_code, value: Number(row.total_return || 0) }))
-        .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
-        .slice(0, 10);
+    function renderBarChart(elId, rows, valueKey, options = {}) {
+      const el = document.getElementById(elId);
+      const items = topRows(rows, valueKey, options.limit || 12, Boolean(options.abs));
+      const maxAbs = Math.max(...items.map(item => Math.abs(Number(item[valueKey] || 0))), 0);
 
-      const maxAbs = Math.max(...items.map(item => Math.abs(item.value)), 0);
       if (!items.length || maxAbs <= 0) {
-        el.innerHTML = `<div class="chart-empty">No profit/loss data to chart.</div>`;
+        el.innerHTML = `<div class="chart-empty">${options.empty || "No data to chart."}</div>`;
         return;
       }
 
       el.innerHTML = `
         <div class="bar-list">
           ${items.map(item => {
-            const width = Math.max(3, Math.abs(item.value) / maxAbs * 100);
-            const negative = item.value < 0;
+            const value = Number(item[valueKey] || 0);
+            const width = Math.max(3, Math.abs(value) / maxAbs * 100);
+            const negative = value < 0;
+            const label = options.percent ? fmtPct(value) : (options.number ? fmtNum(value) : fmtMoney(value));
             return `
-              <div class="bar-row">
-                <strong>${item.code}</strong>
+              <div class="wide-bar-row">
+                <strong>${item.share_code}</strong>
                 <div class="bar-track"><div class="bar-fill ${negative ? "negative" : ""}" style="width:${width}%"></div></div>
-                <span class="${cls(item.value)}">${fmtMoney(item.value)}</span>
+                <span class="${cls(value)}">${label}</span>
               </div>
             `;
           }).join("")}
         </div>
       `;
+    }
+
+    function renderProfitChart(rows) {
+      renderBarChart("profitChart", rows, "total_return", { limit: 12, abs: true, empty: "No profit/loss data to chart." });
+    }
+
+    function renderCurrentValueChart(rows) {
+      renderBarChart("currentValueChart", rows, "market_value", { limit: 12, empty: "No current holding value to chart." });
+    }
+
+    function renderReturnPercentChart(rows) {
+      renderBarChart("returnPercentChart", rows, "return_percent", { limit: 12, abs: true, percent: true, empty: "No return percentage to chart." });
+    }
+
+    function renderUnitsChart(rows) {
+      renderBarChart("unitsChart", rows, "remaining_units", { limit: 12, number: true, empty: "No remaining units to chart." });
     }
 
     function renderBuySellChart(records) {
@@ -2894,46 +2392,77 @@
       `;
     }
 
-    function renderCharts(rows, records) {
-      renderAllocationChart(rows);
-      renderProfitChart(rows);
-      renderBuySellChart(records);
+    function renderRealizedUnrealizedChart(rows) {
+      const el = document.getElementById("realizedUnrealizedChart");
+      const items = topRows(rows, "total_return", 12, true);
+      const maxAbs = Math.max(...items.map(item => Math.max(Math.abs(Number(item.realized_return || 0)), Math.abs(Number(item.unrealized_return || 0)))), 0);
+
+      if (!items.length || maxAbs <= 0) {
+        el.innerHTML = `<div class="chart-empty">No realized/unrealized P/L to chart.</div>`;
+        return;
+      }
+
+      el.innerHTML = items.map(item => {
+        const realized = Number(item.realized_return || 0);
+        const unrealized = Number(item.unrealized_return || 0);
+        const realizedWidth = Math.max(realized !== 0 ? 3 : 0, Math.abs(realized) / maxAbs * 100);
+        const unrealizedWidth = Math.max(unrealized !== 0 ? 3 : 0, Math.abs(unrealized) / maxAbs * 100);
+        const total = realized + unrealized;
+        return `
+          <div class="stack-row">
+            <strong>${item.share_code}</strong>
+            <div class="stack-track">
+              <span class="${realized < 0 ? "stack-negative" : "stack-realized"}" title="Realized" style="width:${realizedWidth}%"></span>
+              <span class="${unrealized < 0 ? "stack-negative" : "stack-unrealized"}" title="Unrealized" style="width:${unrealizedWidth}%"></span>
+            </div>
+            <span class="${cls(total)}">${fmtMoney(total)}</span>
+          </div>
+        `;
+      }).join("");
     }
 
-    function renderDashboardData() {
+    function renderTransactionCountChart(records) {
+      const grouped = new Map();
+      records.forEach(row => {
+        const code = String(row.share_code || "").toUpperCase();
+        if (!code) return;
+        grouped.set(code, (grouped.get(code) || 0) + 1);
+      });
+
+      const rows = Array.from(grouped.entries()).map(([share_code, transaction_count]) => ({ share_code, transaction_count }));
+      renderBarChart("transactionCountChart", rows, "transaction_count", { limit: 12, number: true, empty: "No transaction count to chart." });
+    }
+
+    function renderCharts(rows, records) {
+      renderAllocationChart(rows);
+      renderCurrentValueChart(rows);
+      renderProfitChart(rows);
+      renderReturnPercentChart(rows);
+      renderRealizedUnrealizedChart(rows);
+      renderBuySellChart(records);
+      renderUnitsChart(rows);
+      renderTransactionCountChart(records);
+    }
+
+    function renderChartData() {
       const filters = currentFilters();
       const smartFilteredRecords = filteredRecordsByForm();
 
       let rows = calculateSummaryRowsFromRecords(smartFilteredRecords)
-        .filter(row => rowMatchesStatus(row, filters.status))
-        .filter(summaryColumnMatches);
+        .filter(row => rowMatchesStatus(row, filters.status));
 
-      const statusShareCodes = new Set(
-        calculateSummaryRowsFromRecords(smartFilteredRecords)
-          .filter(row => rowMatchesStatus(row, filters.status))
-          .map(row => String(row.share_code || "").toUpperCase())
-      );
-
-      let records = filters.status
+      const statusShareCodes = new Set(rows.map(row => String(row.share_code || "").toUpperCase()));
+      const records = filters.status
         ? smartFilteredRecords.filter(row => statusShareCodes.has(String(row.share_code || "").toUpperCase()))
         : smartFilteredRecords;
 
-      records = records.filter(recordColumnMatches);
-
-      rows = sortRows(rows, summarySort);
-      const sortedRecords = sortRows(records, recordSort);
-      const portfolio = calculateVisiblePortfolio(rows);
-
-      renderMetrics(portfolio);
-      renderSummaryRows(rows);
-      renderRecords(sortedRecords);
-      applyColumnVisibility();
-      if (document.getElementById("allocationChart")) renderCharts(rows, sortedRecords);
-      updateFilterResult(sortedRecords, rows);
-      applySortIndicators();
+      const portfolio = calculatePortfolio(rows);
+      renderKpis(portfolio);
+      renderCharts(rows, records);
+      updateFilterResult(records, rows);
     }
 
-    async function loadDashboardData() {
+    async function loadChartData() {
       const [summaryData, recordsData] = await Promise.all([
         requestJson("/api/summary"),
         requestJson("/api/records")
@@ -2943,127 +2472,14 @@
       allRecords = recordsData.records || [];
 
       updateShareFilterOptions();
-      renderDashboardData();
+      renderChartData();
     }
 
-    function editRecord(row) {
-      recordId.value = row.id;
-      purchaseDate.value = row.purchase_date;
-      transactionType.value = row.transaction_type || "BUY";
-      shareCode.value = row.share_code;
-      investmentAmount.value = row.investment_amount;
-      purchaseUnits.value = row.purchase_units;
-      recalcAverage();
-      updateTransactionLabels();
-      formTitle.textContent = "Edit Transaction";
-      saveBtn.textContent = "Update";
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    async function deleteRecord(id) {
-      if (!confirm("Delete this record?")) return;
-      await requestJson(`/api/records/${id}`, { method: "DELETE" });
-      setStatus("Record deleted.");
-      await refreshAll();
-    }
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      saveBtn.disabled = true;
-
-      const payload = {
-        purchase_date: purchaseDate.value,
-        transaction_type: transactionType.value,
-        share_code: shareCode.value,
-        investment_amount: Number(investmentAmount.value),
-        purchase_units: Number(purchaseUnits.value)
-      };
-
-      try {
-        if (recordId.value) {
-          await requestJson(`/api/records/${recordId.value}`, {
-            method: "PUT",
-            body: JSON.stringify(payload)
-          });
-          setStatus("Transaction updated.");
-        } else {
-          const result = await requestJson("/api/records", {
-            method: "POST",
-            body: JSON.stringify(payload)
-          });
-          setStatus(result.record.duplicate_blocked ? "Duplicate save blocked." : "Transaction saved.");
-        }
-
-        resetForm();
-        await refreshAll();
-      } catch (err) {
-        setStatus(`Error: ${err.message}`);
-        saveBtn.disabled = false;
-      }
-    });
-
-    cancelBtn.addEventListener("click", resetForm);
-
-    applyFilterBtn.addEventListener("click", renderDashboardData);
+    applyFilterBtn.addEventListener("click", renderChartData);
     [filterSearch, filterShare, filterType, filterDateFrom, filterDateTo, filterStatus].forEach(el => {
-      el.addEventListener("input", renderDashboardData);
-      el.addEventListener("change", renderDashboardData);
+      el.addEventListener("input", renderChartData);
+      el.addEventListener("change", renderChartData);
     });
-
-    document.querySelectorAll("[data-summary-sort]").forEach(th => {
-      th.addEventListener("click", () => {
-        const key = th.dataset.summarySort;
-        summarySort = {
-          key,
-          direction: summarySort.key === key && summarySort.direction === "asc" ? "desc" : "asc"
-        };
-        renderDashboardData();
-      });
-    });
-
-    document.querySelectorAll("[data-record-sort]").forEach(th => {
-      th.addEventListener("click", () => {
-        const key = th.dataset.recordSort;
-        recordSort = {
-          key,
-          direction: recordSort.key === key && recordSort.direction === "asc" ? "desc" : "asc"
-        };
-        renderDashboardData();
-      });
-    });
-
-    [summarySortBy, summarySortDir].forEach(el => {
-      el.addEventListener("change", () => {
-        summarySort = {
-          key: summarySortBy.value,
-          direction: summarySortDir.value
-        };
-        renderDashboardData();
-      });
-    });
-
-    [recordSortBy, recordSortDir].forEach(el => {
-      el.addEventListener("change", () => {
-        recordSort = {
-          key: recordSortBy.value,
-          direction: recordSortDir.value
-        };
-        renderDashboardData();
-      });
-    });
-
-    columnFilterInputs.forEach(el => {
-      el.addEventListener("input", renderDashboardData);
-      el.addEventListener("change", renderDashboardData);
-      el.addEventListener("click", event => event.stopPropagation());
-    });
-
-    if (resetColumnFiltersBtn) {
-      resetColumnFiltersBtn.addEventListener("click", event => {
-        event.stopPropagation();
-        resetColumnFilters();
-      });
-    }
 
     resetFilterBtn.addEventListener("click", () => {
       filterSearch.value = "";
@@ -3072,28 +2488,15 @@
       filterDateFrom.value = "";
       filterDateTo.value = "";
       filterStatus.value = "";
-      renderDashboardData();
+      renderChartData();
     });
 
-    async function refreshAll() {
-      await Promise.all([
-        loadMarket(),
-        loadDashboardData()
-      ]);
-      saveBtn.disabled = false;
-    }
-
-    exportPdfBtn.addEventListener("click", () => {
-      window.location.href = "/api/report.pdf";
+    loadChartData().catch(err => {
+      filterResultText.textContent = `Error loading charts: ${err.message}`;
     });
 
-    renderColumnPickers();
-    syncSortControls();
-    resetForm();
-    refreshAll().catch(err => setStatus(`Error loading dashboard: ${err.message}`));
     setInterval(() => {
-      loadMarket().catch(() => {});
-      loadDashboardData().catch(() => {});
+      loadChartData().catch(() => {});
     }, REFRESH_INTERVAL_MS);
   </script>
 </body>

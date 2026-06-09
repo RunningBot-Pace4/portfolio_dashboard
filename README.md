@@ -185,3 +185,8 @@ Existing Neon tables are migrated automatically. Old rows are treated as `BUY`.
 - Live Market Dashboard cards redesigned with quote status, converted price, native price and FX note.
 - Smart Filters now include search, share code, transaction type, date range and holding status.
 - Summary and transaction table headers are clickable for sorting visible rows.
+
+
+## Charts page
+
+Open `/charts` to view the separate analytics page. Smart Filters on the charts page only affect chart analytics; dashboard tables use their own column filters.

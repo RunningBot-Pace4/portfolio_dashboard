@@ -168,6 +168,18 @@ def dashboard(request: Request, _: None = Depends(require_auth)):
     )
 
 
+@app.get("/charts", response_class=HTMLResponse)
+def charts(request: Request, _: None = Depends(require_auth)):
+    return templates.TemplateResponse(
+        "charts.html",
+        {
+            "request": request,
+            "share_codes": DEFAULT_SHARE_CODES,
+            "portfolio_currency": PORTFOLIO_CURRENCY,
+        },
+    )
+
+
 @app.get("/api/records")
 def api_list_records(_: None = Depends(require_auth)):
     return {"records": list_records()}
