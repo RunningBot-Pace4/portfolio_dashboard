@@ -421,13 +421,13 @@
     .market-tile {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 14px;
+      gap: 12px;
       align-items: center;
-      padding: 16px 16px;
+      padding: 15px;
       border: 1px solid var(--line);
       border-radius: 22px;
       background: var(--market-card-bg);
-      min-height: 108px;
+      min-height: 118px;
       box-shadow: 0 10px 24px rgba(0,0,0,.05);
     }
 
@@ -478,6 +478,14 @@
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .market-meta-block {
+      display: grid;
+      gap: 3px;
+      margin-top: 9px;
+      min-width: 0;
     }
 
     .ticker-pill {
@@ -495,10 +503,12 @@
     .market-note {
       color: var(--muted);
       font-size: 12px;
-      font-weight: 750;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-weight: 800;
+      line-height: 1.25;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      overflow-wrap: anywhere;
     }
 
     .market-right {
@@ -506,7 +516,7 @@
       display: grid;
       gap: 8px;
       justify-items: end;
-      min-width: 110px;
+      min-width: 96px;
     }
 
     .market-price {
@@ -1293,11 +1303,11 @@
         const row = document.createElement("div");
         row.className = `market-tile ${q.error ? "issue" : ""}`;
         const native = q.converted && q.native_price !== null && q.native_price !== undefined
-          ? `Native ${fmtMoney(q.native_price)} ${q.native_currency || ""}`
-          : `Native ${fmtMoney(q.price)} ${q.currency || PORTFOLIO_CURRENCY}`;
+          ? `Native: ${fmtMoney(q.native_price)} ${q.native_currency || ""}`
+          : `Native: ${fmtMoney(q.price)} ${q.currency || PORTFOLIO_CURRENCY}`;
         const fx = q.converted && q.fx_rate
-          ? `${q.fx_symbol || "FX"} ${Number(q.fx_rate).toFixed(4)}`
-          : "No FX";
+          ? `FX ${q.native_currency || ""}→${PORTFOLIO_CURRENCY}: ${Number(q.fx_rate).toFixed(4)}`
+          : "No FX needed";
         const change = q.change_percent === null || q.change_percent === undefined || Number.isNaN(Number(q.change_percent))
           ? "-"
           : `${Number(q.change_percent) >= 0 ? "+" : ""}${Number(q.change_percent).toFixed(2)}%`;
@@ -1313,11 +1323,9 @@
               <span class="ticker-pill">${q.share_code}</span>
               <span class="badge ${q.error ? "issue" : "live"}"><span class="dot"></span>${q.error ? "Issue" : "Live"}</span>
             </div>
-            <div class="market-subrow" style="margin-top:10px;">
-              <span class="market-note">${native}</span>
-            </div>
-            <div class="market-subrow" style="margin-top:4px;">
-              <span class="market-note">${q.error ? q.error : fx}</span>
+            <div class="market-meta-block">
+              <span class="market-note" title="${native}">${native}</span>
+              <span class="market-note" title="${q.error ? q.error : fx}">${q.error ? q.error : fx}</span>
             </div>
           </div>
           <div class="market-right">

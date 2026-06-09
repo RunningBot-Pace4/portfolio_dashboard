@@ -324,6 +324,119 @@
       line-height: 1.45;
     }
 
+    .boss-chart {
+      display: grid;
+      gap: 12px;
+      max-height: 420px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .boss-total {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(96,165,250,.11);
+      border: 1px solid rgba(96,165,250,.18);
+      margin-bottom: 6px;
+    }
+
+    [data-theme="light"] .boss-total {
+      background: rgba(37,99,235,.08);
+      border-color: rgba(37,99,235,.16);
+    }
+
+    .boss-total-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .boss-total-value {
+      font-size: 21px;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .boss-row {
+      display: grid;
+      grid-template-columns: 74px minmax(160px, 1fr) 128px 62px;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    [data-theme="light"] .boss-row {
+      background: rgba(15,23,42,.035);
+      border-color: rgba(15,23,42,.07);
+    }
+
+    .boss-code {
+      font-size: 14px;
+      font-weight: 950;
+      letter-spacing: .04em;
+    }
+
+    .boss-track {
+      position: relative;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(148,163,184,.16);
+      overflow: hidden;
+    }
+
+    .boss-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      min-width: 3%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #2563eb, #60a5fa, #6ee7b7);
+    }
+
+    .boss-fill.negative {
+      background: linear-gradient(90deg, #e11d48, #fb7185, #f97316);
+    }
+
+    .boss-inline-label {
+      position: absolute;
+      inset: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+      pointer-events: none;
+      text-shadow: 0 1px 8px rgba(0,0,0,.12);
+    }
+
+    .boss-value {
+      text-align: right;
+      font-size: 14px;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .boss-pct {
+      text-align: right;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+
     .donut-layout {
       display: grid;
       grid-template-columns: minmax(220px, 280px) 1fr;
@@ -553,6 +666,19 @@
       .hero-actions { width: 100%; }
       .nav-link, .theme-toggle { flex: 1; }
     }
+  
+    @media (max-width: 760px) {
+      .boss-row {
+        grid-template-columns: 62px 1fr;
+      }
+      .boss-value, .boss-pct {
+        grid-column: 2;
+        text-align: left;
+      }
+      .boss-track {
+        grid-column: 2;
+      }
+    }
   </style>
 </head>
 <body>
@@ -660,8 +786,8 @@
       <div class="section-body">
         <div class="section-head">
           <div>
-            <h2>Main Ratio Charts</h2>
-            <p>Cleaner donut charts without crowded outside labels.</p>
+            <h2>Boss View Charts</h2>
+            <p>Direct labels are used so values can be read without matching colors to a legend.</p>
           </div>
           <span class="chip">USD view</span>
         </div>
@@ -669,13 +795,13 @@
         <div class="charts-grid">
           <div class="chart-card">
             <h3 class="chart-title">Market Total Current Value (USD)</h3>
-            <p class="chart-subtitle">Each share’s current market value.</p>
+            <p class="chart-subtitle">Ranked by current value with share code, amount, and percentage on every row.</p>
             <div id="marketValueRatioChart"></div>
           </div>
 
           <div class="chart-card">
             <h3 class="chart-title">Net Buy Amount by Share (USD)</h3>
-            <p class="chart-subtitle">Total BUY amount minus total SELL amount.</p>
+            <p class="chart-subtitle">BUY amount minus SELL amount, directly labelled for quick boss review.</p>
             <div id="netBuyRatioChart"></div>
           </div>
         </div>
@@ -928,7 +1054,7 @@
 
     function renderDonutChart(elId, rows, valueKey, options = {}) {
       const el = document.getElementById(elId);
-      const items = topRows(rows, valueKey, options.limit || 16, false)
+      const items = topRows(rows, valueKey, options.limit || 14, false)
         .map(row => ({
           code: row.share_code,
           value: Math.max(0, Number(row[valueKey] || 0))
@@ -942,37 +1068,29 @@
         return;
       }
 
-      let cursor = 0;
-      const stops = items.map((item, index) => {
-        const start = cursor;
-        const end = cursor + item.value / total * 360;
-        cursor = end;
-        return `${chartColors[index % chartColors.length]} ${start.toFixed(2)}deg ${end.toFixed(2)}deg`;
-      }).join(", ");
-
-      const legend = items.map((item, index) => {
-        const pct = item.value / total * 100;
-        return `
-          <div class="legend-row">
-            <span class="legend-dot" style="background:${chartColors[index % chartColors.length]}"></span>
-            <span class="legend-code">${item.code}</span>
-            <span class="legend-value">${fmtMoney(item.value)}</span>
-            <span class="legend-pct">${pct.toFixed(1)}%</span>
-          </div>
-        `;
-      }).join("");
+      const maxValue = Math.max(...items.map(item => item.value), 0);
 
       el.innerHTML = `
-        <div class="donut-layout">
-          <div class="donut-shell" style="background: conic-gradient(${stops})">
-            <div class="donut-center">
-              <div>
-                <strong>${fmtMoney(total)}</strong>
-                <span>${options.centerLabel || "Total"}</span>
-              </div>
-            </div>
+        <div class="boss-chart">
+          <div class="boss-total">
+            <span class="boss-total-label">${options.centerLabel || "Total"}</span>
+            <span class="boss-total-value">${fmtMoney(total)}</span>
           </div>
-          <div class="legend-list">${legend}</div>
+          ${items.map((item) => {
+            const pct = item.value / total * 100;
+            const width = Math.max(3, item.value / maxValue * 100);
+            return `
+              <div class="boss-row">
+                <div class="boss-code">${item.code}</div>
+                <div class="boss-track" title="${item.code}: ${fmtMoney(item.value)} / ${pct.toFixed(1)}%">
+                  <div class="boss-fill" style="width:${width}%"></div>
+                  <div class="boss-inline-label">${item.code} • ${pct.toFixed(1)}%</div>
+                </div>
+                <div class="boss-value">${fmtMoney(item.value)}</div>
+                <div class="boss-pct">${pct.toFixed(1)}%</div>
+              </div>
+            `;
+          }).join("")}
         </div>
       `;
     }
