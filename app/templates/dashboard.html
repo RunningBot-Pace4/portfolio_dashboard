@@ -1974,6 +1974,224 @@
     }
 
 
+
+    /* v25 table/design fixes: cleaner light/dark colors + anchored checkbox dropdown */
+    .table-wrap {
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--panel-2) 86%, transparent);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.20);
+    }
+
+    .table-wrap.dropdown-open {
+      overflow: visible;
+      position: relative;
+      z-index: 120;
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .table-wrap thead tr:first-child th {
+      background: linear-gradient(180deg, rgba(20, 35, 58, 0.98), rgba(14, 28, 48, 0.98)) !important;
+      color: #eef6ff;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+
+    .table-wrap .column-filter-row th {
+      background: rgba(13, 26, 45, 0.98) !important;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      padding: 10px 10px 14px;
+    }
+
+    .column-filter-row input,
+    .column-filter-row select,
+    .checkbox-dropdown-button {
+      min-height: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(148,163,184,0.22);
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    tbody td {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      font-size: 15px;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+    }
+
+    tbody tr:not(.summary-positive-row):not(.summary-negative-row):nth-child(even) td {
+      background: rgba(255,255,255,0.025);
+    }
+
+    tbody tr:hover td {
+      background: rgba(96,165,250,0.08) !important;
+    }
+
+    tbody tr.summary-positive-row td {
+      background: rgba(16,185,129,0.055) !important;
+      box-shadow: none !important;
+    }
+
+    tbody tr.summary-negative-row td {
+      background: rgba(244,63,94,0.055) !important;
+      box-shadow: none !important;
+    }
+
+    tbody tr.avg-above-market-row td {
+      background: linear-gradient(90deg, rgba(6,78,59,0.42), rgba(6,78,59,0.20)) !important;
+      box-shadow: none !important;
+    }
+
+    tbody tr.summary-positive-row td:first-child,
+    tbody tr.summary-negative-row td:first-child,
+    tbody tr.avg-above-market-row td:first-child {
+      box-shadow: inset 5px 0 0 rgba(52,211,153,0.88) !important;
+    }
+
+    tbody tr.summary-negative-row:not(.avg-above-market-row) td:first-child {
+      box-shadow: inset 5px 0 0 rgba(251,113,133,0.82) !important;
+    }
+
+    .value-positive,
+    td.value-positive {
+      color: #34d399 !important;
+      font-weight: 900 !important;
+    }
+
+    .value-negative,
+    td.value-negative {
+      color: #fb7185 !important;
+      font-weight: 900 !important;
+    }
+
+    .checkbox-dropdown {
+      position: relative;
+      z-index: 140;
+    }
+
+    .checkbox-dropdown-menu {
+      position: absolute !important;
+      left: 0 !important;
+      top: calc(100% + 8px) !important;
+      width: max(260px, 100%) !important;
+      max-height: 340px !important;
+      z-index: 5000;
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .checkbox-option {
+      min-height: 38px;
+      padding: 9px 10px;
+    }
+
+    .checkbox-option span {
+      line-height: 1.2;
+    }
+
+    .checkbox-dropdown-actions button {
+      border-radius: 12px;
+      font-weight: 900;
+    }
+
+    [data-theme="light"] .table-wrap {
+      background: rgba(255,255,255,0.78);
+      border-color: rgba(15,23,42,0.10);
+      box-shadow: 0 18px 45px rgba(15,23,42,0.10);
+    }
+
+    [data-theme="light"] .table-wrap thead tr:first-child th {
+      background: linear-gradient(180deg, #f8fbff, #e8f0fc) !important;
+      color: #0f172a;
+      border-bottom-color: rgba(15,23,42,0.10);
+    }
+
+    [data-theme="light"] .table-wrap .column-filter-row th {
+      background: #f4f8ff !important;
+      border-bottom-color: rgba(15,23,42,0.10);
+    }
+
+    [data-theme="light"] .column-filter-row input,
+    [data-theme="light"] .column-filter-row select,
+    [data-theme="light"] .checkbox-dropdown-button {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: rgba(15,23,42,0.14);
+      box-shadow: 0 1px 0 rgba(15,23,42,0.04);
+    }
+
+    [data-theme="light"] tbody td {
+      color: #0f172a;
+      border-bottom-color: rgba(15,23,42,0.08);
+    }
+
+    [data-theme="light"] tbody tr:not(.summary-positive-row):not(.summary-negative-row):nth-child(even) td {
+      background: #f8fbff;
+    }
+
+    [data-theme="light"] tbody tr.summary-positive-row td {
+      background: #f0fdf4 !important;
+      box-shadow: none !important;
+    }
+
+    [data-theme="light"] tbody tr.summary-negative-row td {
+      background: #fff1f2 !important;
+      box-shadow: none !important;
+    }
+
+    [data-theme="light"] tbody tr.avg-above-market-row td {
+      background: linear-gradient(90deg, #e8fff1, #f2fff7) !important;
+      box-shadow: none !important;
+    }
+
+    [data-theme="light"] tbody tr.summary-positive-row td:first-child,
+    [data-theme="light"] tbody tr.avg-above-market-row td:first-child {
+      box-shadow: inset 5px 0 0 #10b981 !important;
+    }
+
+    [data-theme="light"] tbody tr.summary-negative-row:not(.avg-above-market-row) td:first-child {
+      box-shadow: inset 5px 0 0 #f43f5e !important;
+    }
+
+    [data-theme="light"] tbody tr:hover td {
+      background: #eff6ff !important;
+    }
+
+    [data-theme="light"] tbody tr.avg-above-market-row:hover td {
+      background: linear-gradient(90deg, #d9fbe8, #ecfff4) !important;
+    }
+
+    [data-theme="light"] .value-positive,
+    [data-theme="light"] td.value-positive {
+      color: #047857 !important;
+      font-weight: 900 !important;
+    }
+
+    [data-theme="light"] .value-negative,
+    [data-theme="light"] td.value-negative {
+      color: #dc2626 !important;
+      font-weight: 900 !important;
+    }
+
+    [data-theme="light"] .checkbox-dropdown-menu {
+      background: rgba(255,255,255,0.98);
+      border-color: rgba(15,23,42,0.12);
+      box-shadow: 0 24px 60px rgba(15,23,42,0.18);
+    }
+
+    @media (max-width: 760px) {
+      th, td { padding: 12px 14px; }
+      .checkbox-dropdown-menu { width: min(280px, calc(100vw - 32px)) !important; }
+    }
+
   </style>
 </head>
 <body>
@@ -2736,14 +2954,11 @@
 
     function positionCheckboxDropdown(menu, button) {
       if (!menu || !button) return;
-      const rect = button.getBoundingClientRect();
-      const width = Math.max(rect.width, 220);
-      const availableBelow = window.innerHeight - rect.bottom - 8;
-      const desiredHeight = Math.min(300, Math.max(190, availableBelow));
+      const width = Math.max(button.offsetWidth, 260);
       menu.style.width = `${width}px`;
-      menu.style.maxHeight = `${desiredHeight}px`;
-      menu.style.left = `${Math.max(8, Math.min(rect.left, window.innerWidth - width - 8))}px`;
-      menu.style.top = `${Math.min(rect.bottom + 6, window.innerHeight - desiredHeight - 8)}px`;
+      menu.style.maxHeight = "340px";
+      menu.style.left = "0";
+      menu.style.top = "calc(100% + 8px)";
     }
 
     function syncCheckboxDropdown(select) {
@@ -2830,6 +3045,8 @@
         closeCheckboxDropdowns();
         if (!isOpen) {
           wrapper.classList.add("open");
+          const tableWrap = wrapper.closest(".table-wrap");
+          if (tableWrap) tableWrap.classList.add("dropdown-open");
           positionCheckboxDropdown(menu, button);
         }
       };
@@ -2840,6 +3057,7 @@
 
     function closeCheckboxDropdowns() {
       document.querySelectorAll(".checkbox-dropdown.open").forEach(dropdown => dropdown.classList.remove("open"));
+      document.querySelectorAll(".table-wrap.dropdown-open").forEach(wrap => wrap.classList.remove("dropdown-open"));
     }
 
     function isProfitLossMatch(value, mode) {
