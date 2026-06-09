@@ -1,9 +1,17 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Market Share Live Charts</title>
+  <script id="portfolio-theme-before-paint">
+    (function () {
+      try {
+        var theme = localStorage.getItem("portfolio-theme") || localStorage.getItem("portfolioTheme") || "dark";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {}
+    })();
+  </script>
   <style>
     :root {
       color-scheme: dark;
@@ -557,7 +565,6 @@
         </div>
         <div class="hero-actions">
           <a class="nav-link" href="/">← Dashboard</a>
-          <button id="themeToggleBtn" class="theme-toggle" type="button">🌙 Dark Mode</button>
         </div>
       </div>
     </section>
@@ -729,7 +736,6 @@
   </div>
 
   <script>
-    const themeToggleBtn = document.getElementById("themeToggleBtn");
     const filterSearch = document.getElementById("filterSearch");
     const filterShare = document.getElementById("filterShare");
     const filterType = document.getElementById("filterType");
@@ -763,17 +769,9 @@
     });
 
     function applySavedTheme() {
-      const saved = localStorage.getItem("portfolioTheme") || "dark";
-      document.documentElement.setAttribute("data-theme", saved);
-      themeToggleBtn.textContent = saved === "light" ? "☀️ Light Mode" : "🌙 Dark Mode";
+      const saved = localStorage.getItem("portfolio-theme") || localStorage.getItem("portfolioTheme") || "dark";
+      document.documentElement.setAttribute("data-theme", saved === "light" ? "light" : "dark");
     }
-
-    themeToggleBtn.addEventListener("click", () => {
-      const current = document.documentElement.getAttribute("data-theme") || "dark";
-      const next = current === "dark" ? "light" : "dark";
-      localStorage.setItem("portfolioTheme", next);
-      applySavedTheme();
-    });
 
     function fmtMoney(value) {
       if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";

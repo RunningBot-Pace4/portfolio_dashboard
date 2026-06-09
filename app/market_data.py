@@ -76,6 +76,9 @@ def _fetch_from_yahoo_chart(code: str, yahoo_symbol: str, portfolio_currency: st
         if price is None:
             return _error_quote(code, yahoo_symbol, "Price not available.", portfolio_currency)
 
+        if change_percent is None and previous_close not in (None, 0):
+            change_percent = ((float(price) - float(previous_close)) / float(previous_close)) * 100.0
+
         native_price, native_currency = _normalise_native_price(float(price), native_currency)
         converted_price = native_price
         fx_rate = 1.0

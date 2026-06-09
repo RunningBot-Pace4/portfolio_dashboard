@@ -4,6 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Market Share Live Portfolio</title>
+  <script id="portfolio-theme-before-paint">
+    (function () {
+      try {
+        var theme = localStorage.getItem("portfolio-theme") || localStorage.getItem("portfolioTheme") || "dark";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {}
+    })();
+  </script>
   <style>
 
     :root {
@@ -26,6 +34,9 @@
       --input: rgba(255,255,255,.07);
       --input-border: rgba(148,163,184,.22);
       --good-row: rgba(16, 185, 129, .16);
+      --avatar-shadow: rgba(37,99,235,.22);
+      --ticker-bg: rgba(148,163,184,.14);
+      --market-card-bg: rgba(255,255,255,.075);
     }
 
     [data-theme="light"] {
@@ -43,6 +54,9 @@
       --input: #fff;
       --input-border: rgba(15,23,42,.14);
       --good-row: rgba(187, 247, 208, .70);
+      --avatar-shadow: rgba(37,99,235,.16);
+      --ticker-bg: rgba(241,245,249,.98);
+      --market-card-bg: rgba(255,255,255,.98);
     }
 
     * { box-sizing: border-box; }
@@ -294,6 +308,21 @@
       border-color: rgba(251,113,133,.30);
     }
 
+    [data-theme="dark"] .badge.live {
+      color: #a7f3d0;
+      background: rgba(16,185,129,.16);
+      border-color: rgba(52,211,153,.30);
+    }
+
+    [data-theme="dark"] .badge.issue {
+      color: #fecdd3;
+      background: rgba(251,113,133,.16);
+      border-color: rgba(251,113,133,.30);
+    }
+
+    [data-theme="light"] .positive { color: #047857; }
+    [data-theme="light"] .negative { color: #dc2626; }
+
     .dot {
       width: 9px;
       height: 9px;
@@ -397,7 +426,7 @@
       padding: 16px 16px;
       border: 1px solid var(--line);
       border-radius: 22px;
-      background: var(--card2);
+      background: var(--market-card-bg);
       min-height: 108px;
       box-shadow: 0 10px 24px rgba(0,0,0,.05);
     }
@@ -416,11 +445,19 @@
       place-items: center;
       color: #fff;
       font-weight: 950;
-      font-size: 16px;
+      font-size: 15px;
+      letter-spacing: -.02em;
       background: linear-gradient(135deg, #1d4ed8, #7c3aed);
-      box-shadow: 0 10px 20px rgba(37,99,235,.22);
+      box-shadow: 0 10px 20px var(--avatar-shadow);
       flex-shrink: 0;
     }
+
+    .logo-c1 { background: linear-gradient(135deg, #2563eb, #4f46e5); }
+    .logo-c2 { background: linear-gradient(135deg, #059669, #10b981); }
+    .logo-c3 { background: linear-gradient(135deg, #7c3aed, #db2777); }
+    .logo-c4 { background: linear-gradient(135deg, #ea580c, #f59e0b); }
+    .logo-c5 { background: linear-gradient(135deg, #0891b2, #06b6d4); }
+    .logo-c6 { background: linear-gradient(135deg, #111827, #475569); }
 
     .market-main {
       min-width: 0;
@@ -448,7 +485,7 @@
       align-items: center;
       padding: 6px 10px;
       border-radius: 12px;
-      background: rgba(148,163,184,.12);
+      background: var(--ticker-bg);
       border: 1px solid var(--soft-line);
       font-size: 12px;
       font-weight: 900;
@@ -1053,13 +1090,15 @@
     }
 
     function applyTheme(theme) {
-      document.documentElement.setAttribute("data-theme", theme);
-      localStorage.setItem("portfolio-theme", theme);
-      el("themeToggleBtn").textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
+      const safeTheme = theme === "light" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", safeTheme);
+      localStorage.setItem("portfolio-theme", safeTheme);
+      localStorage.setItem("portfolioTheme", safeTheme);
+      el("themeToggleBtn").textContent = safeTheme === "dark" ? "Light Mode" : "Dark Mode";
     }
 
     function initTheme() {
-      applyTheme(localStorage.getItem("portfolio-theme") || "dark");
+      applyTheme(localStorage.getItem("portfolio-theme") || localStorage.getItem("portfolioTheme") || "dark");
       el("themeToggleBtn").addEventListener("click", () => {
         applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
       });
@@ -1266,8 +1305,9 @@
           ? "muted"
           : cls(q.change_percent);
 
+        const logoClass = `logo-c${(String(q.share_code || "").charCodeAt(0) % 6) + 1}`;
         row.innerHTML = `
-          <div class="market-logo">${logoLabel(q.share_code)}</div>
+          <div class="market-logo ${logoClass}">${logoLabel(q.share_code)}</div>
           <div class="market-main">
             <div class="market-subrow">
               <span class="ticker-pill">${q.share_code}</span>
