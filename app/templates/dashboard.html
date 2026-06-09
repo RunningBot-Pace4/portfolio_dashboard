@@ -302,9 +302,8 @@
       box-shadow: 0 0 0 4px rgba(52,211,153,.12);
     }
 
-    .overview-grid {
+    .overview-stack {
       display: grid;
-      grid-template-columns: 400px minmax(0, 1fr);
       gap: 14px;
       align-items: start;
     }
@@ -386,46 +385,114 @@
 
     .market-board {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 9px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
     }
 
-    .quote {
+    .market-tile {
       display: grid;
-      grid-template-columns: 84px minmax(105px, .9fr) minmax(100px, .8fr) minmax(80px, .7fr) auto;
-      gap: 12px;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 14px;
       align-items: center;
-      padding: 11px 12px;
+      padding: 18px 18px;
       border: 1px solid var(--line);
-      border-radius: 16px;
+      border-radius: 22px;
       background: var(--card2);
-      min-height: 68px;
+      min-height: 116px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.05);
     }
 
-    .quote:hover { border-color: rgba(96,165,250,.36); box-shadow: 0 8px 18px rgba(0,0,0,.08); }
+    .market-tile:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96,165,250,.30);
+      box-shadow: 0 16px 34px rgba(15,23,42,.10);
+    }
 
-    .quote-code {
+    .market-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
       font-weight: 950;
-      font-size: 18px;
-      letter-spacing: -.02em;
+      font-size: 16px;
+      background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+      box-shadow: 0 10px 20px rgba(37,99,235,.22);
+      flex-shrink: 0;
     }
 
-    .quote-symbol, .quote-native, .quote-fx {
+    .market-main {
+      min-width: 0;
+    }
+
+    .market-name {
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .market-subrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ticker-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: rgba(148,163,184,.12);
+      border: 1px solid var(--soft-line);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .04em;
+    }
+
+    .market-note {
       color: var(--muted);
       font-size: 12px;
       font-weight: 750;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
-    .quote-price-main {
-      font-size: 16px;
+    .market-right {
+      text-align: right;
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+      min-width: 110px;
+    }
+
+    .market-price {
+      font-size: 19px;
       font-weight: 950;
+      letter-spacing: -.02em;
       white-space: nowrap;
     }
 
-    .quote-issue { border-color: rgba(251,113,133,.35); }
+    .market-change {
+      font-size: 15px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .market-meta {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .market-tile.issue { border-color: rgba(251,113,133,.35); }
 
     .toolbar {
       display: grid;
@@ -658,14 +725,11 @@
 
     @media (max-width: 1180px) {
       .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .overview-grid { grid-template-columns: 1fr; }
       .toolbar { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .holding-card { grid-template-columns: 1fr; }
       .holding-metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .result-box { justify-items: start; text-align: left; }
-      .quote { grid-template-columns: 80px 1fr 1fr; }
-      .quote .badge { grid-column: 3; justify-self: end; }
-      .quote-fx { grid-column: 2 / -1; }
+      .market-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 720px) {
@@ -678,9 +742,9 @@
       .holding-metrics { grid-template-columns: 1fr; }
       .section-head { display: block; }
       .section-head > * + * { margin-top: 12px; }
-      .quote { grid-template-columns: 1fr 1fr; }
-      .quote .badge { grid-column: auto; justify-self: start; }
-      .quote-fx { grid-column: auto; }
+      .market-board { grid-template-columns: 1fr; }
+      .market-tile { grid-template-columns: auto 1fr; }
+      .market-right { grid-column: 2; justify-items: start; text-align: left; min-width: 0; }
     }
 
   </style>
@@ -729,7 +793,23 @@
     </nav>
 
     <section class="tab-pane" data-tab-pane="overview">
-      <div class="overview-grid">
+      <div class="overview-stack">
+        <section class="panel">
+          <div class="section-body">
+            <div class="section-head">
+              <div>
+                <div class="title-row"><h2>Overview</h2><span id="marketLoadedText" class="count-pill">0 loaded</span></div>
+                <p id="marketRefreshText">Loading live prices...</p>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                <span class="badge">Easy market view</span>
+                <span class="badge live"><span class="dot"></span>Live</span>
+              </div>
+            </div>
+            <div id="marketBoard" class="market-board"></div>
+          </div>
+        </section>
+
         <details id="recordEditor" class="editor">
           <summary><span id="formTitle">Add Buy / Sell Record</span></summary>
           <div class="section-body" style="padding-top:0;">
@@ -778,19 +858,6 @@
             <div id="statusText" class="status">Ready.</div>
           </div>
         </details>
-
-        <section class="panel">
-          <div class="section-body">
-            <div class="section-head">
-              <div>
-                <div class="title-row"><h2>Live Market Dashboard</h2><span id="marketLoadedText" class="count-pill">0 loaded</span></div>
-                <p id="marketRefreshText">Loading live prices...</p>
-              </div>
-              <span class="badge live"><span class="dot"></span>Live</span>
-            </div>
-            <div id="marketBoard" class="market-board"></div>
-          </div>
-        </section>
       </div>
     </section>
 
@@ -1157,6 +1224,15 @@
     }
 
 
+    function logoLabel(code) {
+      const value = String(code || "").toUpperCase();
+      return value.length <= 4 ? value : value.slice(0, 3);
+    }
+
+    function companyName(q) {
+      return q.display_name || q.market_symbol || q.share_code;
+    }
+
     function renderMarket() {
       const board = el("marketBoard");
       board.innerHTML = "";
@@ -1172,20 +1248,38 @@
 
       quotes.forEach(q => {
         const row = document.createElement("div");
-        row.className = `quote ${q.error ? "quote-issue" : ""}`;
+        row.className = `market-tile ${q.error ? "issue" : ""}`;
         const native = q.converted && q.native_price !== null && q.native_price !== undefined
-          ? `${fmtMoney(q.native_price)} ${q.native_currency || ""}`
-          : `${fmtMoney(q.price)} ${q.currency || PORTFOLIO_CURRENCY}`;
-        const fx = q.converted && q.fx_rate ? `${q.fx_symbol || ""} ${Number(q.fx_rate).toFixed(4)}` : "No FX";
+          ? `Native ${fmtMoney(q.native_price)} ${q.native_currency || ""}`
+          : `Native ${fmtMoney(q.price)} ${q.currency || PORTFOLIO_CURRENCY}`;
+        const fx = q.converted && q.fx_rate
+          ? `${q.fx_symbol || "FX"} ${Number(q.fx_rate).toFixed(4)}`
+          : "No FX";
+        const change = q.change_percent === null || q.change_percent === undefined || Number.isNaN(Number(q.change_percent))
+          ? "-"
+          : `${Number(q.change_percent) >= 0 ? "+" : ""}${Number(q.change_percent).toFixed(2)}%`;
+        const changeClass = q.change_percent === null || q.change_percent === undefined || Number.isNaN(Number(q.change_percent))
+          ? "muted"
+          : cls(q.change_percent);
+
         row.innerHTML = `
-          <div class="quote-code-wrap">
-            <div class="quote-code">${q.share_code}</div>
-            <div class="quote-symbol">${q.market_symbol || q.share_code}</div>
+          <div class="market-logo">${logoLabel(q.share_code)}</div>
+          <div class="market-main">
+            <div class="market-name">${companyName(q)}</div>
+            <div class="market-subrow">
+              <span class="ticker-pill">${q.share_code}</span>
+              <span class="market-note">${q.market_symbol || q.share_code}</span>
+              <span class="badge ${q.error ? "issue" : "live"}"><span class="dot"></span>${q.error ? "Issue" : "Live"}</span>
+            </div>
+            <div class="market-subrow" style="margin-top:10px;">
+              <span class="market-note">${native}</span>
+              <span class="market-note">${q.error ? q.error : fx}</span>
+            </div>
           </div>
-          <div class="quote-price-main">${fmtCurrency(q.price)}</div>
-          <div class="quote-native">${native}</div>
-          <div class="quote-fx">${q.error || fx}</div>
-          <span class="badge ${q.error ? "issue" : "live"}"><span class="dot"></span>${q.error ? "Issue" : "Live"}</span>
+          <div class="market-right">
+            <div class="market-price">${fmtCurrency(q.price)}</div>
+            <div class="market-change ${changeClass}">${change}</div>
+          </div>
         `;
         board.appendChild(row);
       });

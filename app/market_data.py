@@ -67,6 +67,8 @@ def _fetch_from_yahoo_chart(code: str, yahoo_symbol: str, portfolio_currency: st
         price = meta.get("regularMarketPrice")
         previous_close = meta.get("previousClose")
         native_currency = str(meta.get("currency") or portfolio_currency or "USD").upper()
+        display_name = meta.get("longName") or meta.get("shortName") or code
+        change_percent = meta.get("regularMarketChangePercent")
 
         if price is None:
             price = previous_close
@@ -109,6 +111,8 @@ def _fetch_from_yahoo_chart(code: str, yahoo_symbol: str, portfolio_currency: st
         return {
             "share_code": code,
             "market_symbol": yahoo_symbol,
+            "display_name": display_name,
+            "change_percent": float(change_percent) if change_percent is not None else None,
             "price": float(converted_price),
             "currency": portfolio_currency,
             "native_price": float(native_price),
@@ -203,6 +207,8 @@ def _error_quote(code: str, yahoo_symbol: str, message: str, portfolio_currency:
     return {
         "share_code": code,
         "market_symbol": yahoo_symbol,
+        "display_name": code,
+        "change_percent": None,
         "price": None,
         "currency": portfolio_currency,
         "native_price": None,
