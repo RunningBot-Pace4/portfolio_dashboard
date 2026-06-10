@@ -1201,6 +1201,7 @@
           <div class="pie-floating-tooltip"></div>
         </div>
       `;
+      attachInteractivePie(el);
     }
 
 
@@ -1245,7 +1246,6 @@
           row.classList.toggle("active");
         });
       });
-      attachInteractivePie(el);
     }
 
     function renderBarChart(elId, rows, valueKey, options = {}) {
