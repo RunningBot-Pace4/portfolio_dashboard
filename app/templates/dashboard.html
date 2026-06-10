@@ -434,7 +434,7 @@
       display: grid;
       grid-template-columns: auto minmax(0, 1fr) auto;
       gap: 12px;
-      align-items: center;
+      align-items: start;
       padding: 15px;
       border: 1px solid var(--line);
       border-radius: 22px;
@@ -525,10 +525,13 @@
 
     .market-right {
       text-align: right;
-      display: grid;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
       gap: 8px;
-      justify-items: end;
       min-width: 96px;
+      align-self: stretch;
     }
 
     .market-price {
@@ -549,6 +552,19 @@
       font-size: 12px;
       font-weight: 750;
       white-space: nowrap;
+    }
+
+    .market-right-top {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .market-right-bottom {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+      width: 100%;
     }
 
     .market-tile.issue { border-color: rgba(251,113,133,.35); }
@@ -1534,7 +1550,6 @@
           <div class="market-main">
             <div class="market-subrow">
               <span class="ticker-pill">${q.share_code}</span>
-              <span class="badge ${q.error ? "issue" : "live"}"><span class="dot"></span>${q.error ? "Issue" : "Live"}</span>
             </div>
             <div class="market-meta-block">
               <span class="market-note" title="${native}">${native}</span>
@@ -1542,8 +1557,13 @@
             </div>
           </div>
           <div class="market-right">
-            <div class="market-price">${fmtCurrency(q.price)}</div>
-            <div class="market-change ${changeClass}">${change}</div>
+            <div class="market-right-top">
+              <span class="badge ${q.error ? "issue" : "live"}"><span class="dot"></span>${q.error ? "Issue" : "Live"}</span>
+            </div>
+            <div class="market-right-bottom">
+              <div class="market-price">${fmtCurrency(q.price)}</div>
+              <div class="market-change ${changeClass}">${change}</div>
+            </div>
           </div>
         `;
         board.appendChild(row);

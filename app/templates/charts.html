@@ -304,7 +304,7 @@
         var(--card);
       padding: 20px;
       min-height: 380px;
-      overflow: visible;
+      overflow: hidden;
     }
 
     .chart-card.wide {
@@ -429,34 +429,14 @@
       stroke-width: 2.2;
     }
 
-    .pie-floating-tooltip {
-      display: none;
-      position: absolute;
-      left: 18px;
-      bottom: 18px;
-      z-index: 10;
-      max-width: 320px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--panel-strong);
-      color: var(--text);
-      box-shadow: 0 18px 40px rgba(0,0,0,.22);
-      font-size: 12px;
-      font-weight: 850;
-      line-height: 1.45;
-    }
-
-    .pie-chart-wrap.has-active .pie-floating-tooltip {
-      display: block;
-    }
+    .pie-floating-tooltip { display: none !important; }
 
     .bar-list {
       display: grid;
       gap: 12px;
       max-height: 360px;
       overflow: auto;
-      padding-right: 4px;
+      padding: 6px 6px 6px 0;
     }
 
     .bar-row {
@@ -597,38 +577,7 @@
       color: var(--accent-2);
     }
 
-    .bar-tooltip {
-      display: none;
-      position: absolute;
-      right: 10px;
-      top: calc(100% + 8px);
-      z-index: 20;
-      max-width: 280px;
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--panel-strong);
-      color: var(--text);
-      box-shadow: 0 16px 34px rgba(0,0,0,.22);
-      font-size: 12px;
-      font-weight: 800;
-      line-height: 1.35;
-      white-space: nowrap;
-      pointer-events: none;
-    }
-
-    .bar-list {
-      overflow: visible !important;
-      padding-top: 4px;
-      padding-bottom: 48px;
-    }
-
-    .bar-row:hover .bar-tooltip,
-    .bar-row.active .bar-tooltip,
-    .split-row:hover .bar-tooltip,
-    .split-row.active .bar-tooltip {
-      display: block;
-    }
+    .bar-tooltip { display: none !important; }
 
     @media (max-width: 720px) {
       .bar-row:hover,
@@ -1198,7 +1147,6 @@
               ${labels}
             </svg>
           </div>
-          <div class="pie-floating-tooltip"></div>
         </div>
       `;
       attachInteractivePie(el);
@@ -1266,7 +1214,7 @@
             const negative = value < 0;
             const label = options.percent ? fmtPct(value) : (options.number ? fmtNum(value) : fmtMoney(value));
             return `
-              <div class="bar-row" title="Click to highlight ${item.share_code}">
+              <div class="bar-row">
                 <div class="bar-code">${item.share_code}</div>
                 <div class="bar-track">
                   <div class="bar-fill ${negative ? "negative" : ""}" style="width:${width}%"></div>
@@ -1301,13 +1249,13 @@
 
       el.innerHTML = `
         <div class="split-chart">
-          <div class="split-row" title="Click to highlight BUY amount">
+          <div class="split-row">
             <div class="split-label">BUY</div>
             <div class="split-track"><span class="split-fill split-buy" style="width:${buyWidth}%"></span></div>
             <div class="bar-value">${fmtMoney(buyAmount)}</div>
             <div class="bar-tooltip">BUY amount<br>${fmtMoney(buyAmount)}</div>
           </div>
-          <div class="split-row" title="Click to highlight SELL amount">
+          <div class="split-row">
             <div class="split-label">SELL</div>
             <div class="split-track"><span class="split-fill split-sell" style="width:${sellWidth}%"></span></div>
             <div class="bar-value">${fmtMoney(sellAmount)}</div>
@@ -1337,7 +1285,7 @@
             const realizedWidth = Math.max(realized !== 0 ? 3 : 0, Math.abs(realized) / maxAbs * 100);
             const unrealizedWidth = Math.max(unrealized !== 0 ? 3 : 0, Math.abs(unrealized) / maxAbs * 100);
             return `
-              <div class="bar-row" title="Click to highlight ${item.share_code}">
+              <div class="bar-row">
                 <div class="bar-code">${item.share_code}</div>
                 <div class="bar-track" title="Realized: ${fmtMoney(realized)} | Unrealized: ${fmtMoney(unrealized)}">
                   <div class="bar-fill ${realized < 0 ? "negative" : ""}" style="display:inline-block;width:${realizedWidth}%;vertical-align:top"></div>
