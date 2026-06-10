@@ -427,20 +427,21 @@
     .market-board {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
+      gap: 12px;
     }
 
     .market-tile {
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-columns: 46px minmax(0, 1fr) auto;
       gap: 12px;
       align-items: start;
-      padding: 15px;
+      padding: 14px;
       border: 1px solid var(--line);
-      border-radius: 22px;
+      border-radius: 20px;
       background: var(--market-card-bg);
-      min-height: 118px;
+      min-height: 108px;
       box-shadow: 0 10px 24px rgba(0,0,0,.05);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
 
     .market-tile:hover {
@@ -450,14 +451,14 @@
     }
 
     .market-logo {
-      width: 52px;
-      height: 52px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
       display: grid;
       place-items: center;
       color: #fff;
       font-weight: 950;
-      font-size: 15px;
+      font-size: 13px;
       letter-spacing: -.02em;
       background: linear-gradient(135deg, #1d4ed8, #7c3aed);
       box-shadow: 0 10px 20px var(--avatar-shadow);
@@ -503,18 +504,18 @@
     .ticker-pill {
       display: inline-flex;
       align-items: center;
-      padding: 6px 10px;
-      border-radius: 12px;
+      padding: 5px 9px;
+      border-radius: 11px;
       background: var(--ticker-bg);
       border: 1px solid var(--soft-line);
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing: .04em;
     }
 
     .market-note {
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       line-height: 1.25;
       white-space: normal;
@@ -530,20 +531,20 @@
       align-items: flex-end;
       justify-content: space-between;
       gap: 8px;
-      min-width: 96px;
+      min-width: 88px;
       align-self: stretch;
     }
 
     .market-price {
-      font-size: 19px;
+      font-size: 17px;
       font-weight: 950;
       letter-spacing: -.02em;
       white-space: nowrap;
     }
 
     .market-change {
-      font-size: 15px;
-      font-weight: 900;
+      font-size: 14px;
+      font-weight: 950;
       white-space: nowrap;
     }
 

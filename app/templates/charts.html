@@ -300,11 +300,12 @@
       border-radius: 24px;
       border: 1px solid var(--border);
       background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025)),
+        linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.028)),
         var(--card);
-      padding: 20px;
+      padding: 22px;
       min-height: 380px;
       overflow: hidden;
+      box-shadow: 0 16px 36px rgba(15,23,42,.08);
     }
 
     .chart-card.wide {
@@ -376,14 +377,15 @@
     }
 
     .pie-label {
-      font-size: 12px;
-      font-weight: 900;
+      font-size: 11px;
+      font-weight: 950;
       fill: var(--text);
+      letter-spacing: .02em;
     }
 
     .pie-subvalue {
-      font-size: 11px;
-      font-weight: 800;
+      font-size: 10px;
+      font-weight: 850;
       fill: var(--muted);
     }
 
@@ -394,8 +396,8 @@
     }
 
     .pie-line {
-      stroke: rgba(148,163,184,.85);
-      stroke-width: 1.6;
+      stroke: rgba(148,163,184,.72);
+      stroke-width: 1.4;
       fill: none;
     }
 
@@ -433,17 +435,18 @@
 
     .bar-list {
       display: grid;
-      gap: 12px;
+      gap: 10px;
       max-height: 360px;
       overflow: auto;
-      padding: 6px 6px 6px 0;
+      padding: 6px 8px 6px 0;
     }
 
     .bar-row {
       display: grid;
-      grid-template-columns: 76px minmax(130px, 1fr) 110px;
-      gap: 12px;
+      grid-template-columns: 86px minmax(150px, 1fr) 118px;
+      gap: 14px;
       align-items: center;
+      min-height: 44px;
     }
 
     .bar-code {
@@ -451,12 +454,13 @@
       letter-spacing: .03em;
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .bar-track {
-      height: 16px;
+      height: 20px;
       border-radius: 999px;
-      background: rgba(255,255,255,.09);
+      background: rgba(148,163,184,.18);
       overflow: hidden;
       position: relative;
     }
@@ -476,9 +480,10 @@
     }
 
     .bar-value {
-      font-weight: 900;
+      font-weight: 950;
       text-align: right;
       font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     .split-chart {
@@ -597,7 +602,7 @@
 
       .bar-row.active .bar-tooltip,
       .split-row.active .bar-tooltip {
-        display: block;
+        display: none !important;
       }
     }
 
@@ -1157,13 +1162,10 @@
     function attachInteractivePie(container) {
       const wrap = container.querySelector(".pie-chart-wrap");
       if (!wrap) return;
-      const tooltip = wrap.querySelector(".pie-floating-tooltip");
       const items = wrap.querySelectorAll(".pie-slice, .pie-label-group");
 
       function setActive(code, value, pct) {
-        wrap.classList.add("has-active");
         items.forEach(item => item.classList.toggle("active", item.dataset.code === code));
-        if (tooltip) tooltip.innerHTML = `${code}<br>${pct}% • ${fmtMoney(Number(value || 0))}`;
       }
 
       items.forEach(item => {
