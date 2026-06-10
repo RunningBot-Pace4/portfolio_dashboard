@@ -324,17 +324,14 @@
       line-height: 1.45;
     }
 
-    .boss-chart {
+    .pie-chart-wrap {
       display: grid;
-      gap: 12px;
-      max-height: 420px;
-      overflow: auto;
-      padding-right: 4px;
+      gap: 14px;
     }
 
-    .boss-total {
+    .pie-summary {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
       gap: 12px;
       padding: 12px 14px;
@@ -342,14 +339,15 @@
       background: rgba(96,165,250,.11);
       border: 1px solid rgba(96,165,250,.18);
       margin-bottom: 6px;
+      flex-wrap: wrap;
     }
 
-    [data-theme="light"] .boss-total {
+    [data-theme="light"] .pie-summary {
       background: rgba(37,99,235,.08);
       border-color: rgba(37,99,235,.16);
     }
 
-    .boss-total-label {
+    .pie-summary-label {
       color: var(--muted);
       font-size: 12px;
       font-weight: 900;
@@ -357,186 +355,53 @@
       letter-spacing: .08em;
     }
 
-    .boss-total-value {
+    .pie-summary-value {
       font-size: 21px;
       font-weight: 950;
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
 
-    .boss-row {
-      display: grid;
-      grid-template-columns: 74px minmax(160px, 1fr) 128px 62px;
-      gap: 12px;
-      align-items: center;
-      padding: 10px 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid rgba(255,255,255,.06);
+    .pie-svg-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 4px;
     }
 
-    [data-theme="light"] .boss-row {
-      background: rgba(15,23,42,.035);
-      border-color: rgba(15,23,42,.07);
+    .pie-svg {
+      width: 100%;
+      min-width: 620px;
+      height: auto;
+      display: block;
     }
 
-    .boss-code {
-      font-size: 14px;
-      font-weight: 950;
-      letter-spacing: .04em;
-    }
-
-    .boss-track {
-      position: relative;
-      height: 30px;
-      border-radius: 999px;
-      background: rgba(148,163,184,.16);
-      overflow: hidden;
-    }
-
-    .boss-fill {
-      position: absolute;
-      inset: 0 auto 0 0;
-      min-width: 3%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #2563eb, #60a5fa, #6ee7b7);
-    }
-
-    .boss-fill.negative {
-      background: linear-gradient(90deg, #e11d48, #fb7185, #f97316);
-    }
-
-    .boss-inline-label {
-      position: absolute;
-      inset: 0 10px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      color: var(--text);
+    .pie-label {
       font-size: 12px;
       font-weight: 900;
-      white-space: nowrap;
-      pointer-events: none;
-      text-shadow: 0 1px 8px rgba(0,0,0,.12);
+      fill: var(--text);
     }
 
-    .boss-value {
-      text-align: right;
-      font-size: 14px;
-      font-weight: 950;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-
-    .boss-pct {
-      text-align: right;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 900;
-      font-variant-numeric: tabular-nums;
-    }
-
-
-    .donut-layout {
-      display: grid;
-      grid-template-columns: minmax(220px, 280px) 1fr;
-      gap: 24px;
-      align-items: center;
-      min-height: 290px;
-    }
-
-    .donut-shell {
-      position: relative;
-      width: min(100%, 280px);
-      aspect-ratio: 1;
-      margin: auto;
-      border-radius: 999px;
-      background: conic-gradient(#60a5fa 0deg, #60a5fa 360deg);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.10), 0 18px 40px rgba(0,0,0,.16);
-    }
-
-    .donut-shell::after {
-      content: "";
-      position: absolute;
-      inset: 27%;
-      border-radius: 999px;
-      background: var(--panel-strong);
-      border: 1px solid var(--border);
-    }
-
-    .donut-center {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 34%;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .donut-center strong {
-      display: block;
-      font-size: 22px;
-      letter-spacing: -.02em;
-      white-space: nowrap;
-    }
-
-    .donut-center span {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
+    .pie-subvalue {
       font-size: 11px;
       font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .08em;
+      fill: var(--muted);
     }
 
-    .legend-list {
-      display: grid;
-      gap: 9px;
-      max-height: 300px;
-      overflow: auto;
-      padding-right: 4px;
+    .pie-inside {
+      font-size: 17px;
+      font-weight: 950;
+      fill: #0f172a;
     }
 
-    .legend-row {
-      display: grid;
-      grid-template-columns: 14px minmax(70px, 1fr) auto auto;
-      gap: 10px;
-      align-items: center;
-      border-radius: 12px;
-      padding: 9px 10px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid rgba(255,255,255,.055);
+    .pie-line {
+      stroke: rgba(148,163,184,.85);
+      stroke-width: 1.6;
+      fill: none;
     }
 
-    [data-theme="light"] .legend-row {
-      background: rgba(15,23,42,.035);
-      border-color: rgba(15,23,42,.07);
-    }
-
-    .legend-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
-    }
-
-    .legend-code {
-      font-weight: 900;
-      letter-spacing: .03em;
-    }
-
-    .legend-value {
-      font-weight: 800;
-      color: var(--soft);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .legend-pct {
-      color: var(--muted);
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
+    .pie-dot {
+      fill: rgba(148,163,184,.95);
     }
 
     .bar-list {
@@ -665,21 +530,7 @@
       .split-row { grid-template-columns: 1fr; gap: 8px; }
       .hero-actions { width: 100%; }
       .nav-link, .theme-toggle { flex: 1; }
-    }
-  
-    @media (max-width: 760px) {
-      .boss-row {
-        grid-template-columns: 62px 1fr;
-      }
-      .boss-value, .boss-pct {
-        grid-column: 2;
-        text-align: left;
-      }
-      .boss-track {
-        grid-column: 2;
-      }
-    }
-  </style>
+    }  </style>
 </head>
 <body>
   <div class="container">
@@ -787,7 +638,7 @@
         <div class="section-head">
           <div>
             <h2>Boss View Charts</h2>
-            <p>Direct labels are used so values can be read without matching colors to a legend.</p>
+            <p>Pie charts are directly labelled so bosses can read share name, percentage, and amount at a glance.</p>
           </div>
           <span class="chip">USD view</span>
         </div>
@@ -795,13 +646,13 @@
         <div class="charts-grid">
           <div class="chart-card">
             <h3 class="chart-title">Market Total Current Value (USD)</h3>
-            <p class="chart-subtitle">Ranked by current value with share code, amount, and percentage on every row.</p>
+            <p class="chart-subtitle">Portfolio composition by current market value with direct labels and percentages on the pie.</p>
             <div id="marketValueRatioChart"></div>
           </div>
 
           <div class="chart-card">
             <h3 class="chart-title">Net Buy Amount by Share (USD)</h3>
-            <p class="chart-subtitle">BUY amount minus SELL amount, directly labelled for quick boss review.</p>
+            <p class="chart-subtitle">Net invested amount by share, calculated as total BUY amount minus total SELL amount.</p>
             <div id="netBuyRatioChart"></div>
           </div>
         </div>
@@ -1052,9 +903,32 @@
         .slice(0, limit);
     }
 
-    function renderDonutChart(elId, rows, valueKey, options = {}) {
+    function polarToCartesian(cx, cy, radius, angle) {
+      return {
+        x: cx + radius * Math.cos(angle),
+        y: cy + radius * Math.sin(angle)
+      };
+    }
+
+    function arcPath(cx, cy, radius, startAngle, endAngle) {
+      const start = polarToCartesian(cx, cy, radius, startAngle);
+      const end = polarToCartesian(cx, cy, radius, endAngle);
+      const largeArcFlag = endAngle - startAngle > Math.PI ? 1 : 0;
+      return `M ${cx} ${cy} L ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x.toFixed(2)} ${end.y.toFixed(2)} Z`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function renderPieChart(elId, rows, valueKey, options = {}) {
       const el = document.getElementById(elId);
-      const items = topRows(rows, valueKey, options.limit || 14, false)
+      let items = topRows(rows, valueKey, options.limit || 10, false)
         .map(row => ({
           code: row.share_code,
           value: Math.max(0, Number(row[valueKey] || 0))
@@ -1062,35 +936,107 @@
         .filter(item => item.value > 0);
 
       const total = items.reduce((sum, item) => sum + item.value, 0);
-
       if (!items.length || total <= 0) {
         el.innerHTML = `<div class="chart-empty">${options.empty || "No data to chart."}</div>`;
         return;
       }
 
-      const maxValue = Math.max(...items.map(item => item.value), 0);
+      const fullRows = [...rows]
+        .map(row => ({ code: row.share_code, value: Math.max(0, Number(row[valueKey] || 0)) }))
+        .filter(item => item.value > 0)
+        .sort((a,b) => b.value - a.value);
+      if (fullRows.length > items.length) {
+        const shownCodes = new Set(items.map(i => i.code));
+        const others = fullRows.filter(i => !shownCodes.has(i.code));
+        const otherValue = others.reduce((s,i) => s + i.value, 0);
+        if (otherValue > 0) items.push({ code: 'OTHERS', value: otherValue });
+      }
+
+      const width = 760;
+      const height = 430;
+      const cx = 380;
+      const cy = 220;
+      const radius = 150;
+      const labelRadius = 165;
+      const leftX = 118;
+      const rightX = 642;
+      const lineJoinOffset = 28;
+      let currentAngle = -Math.PI / 2;
+
+      items = items.map((item, index) => {
+        const pct = item.value / total * 100;
+        const sweep = (item.value / total) * Math.PI * 2;
+        const startAngle = currentAngle;
+        const endAngle = currentAngle + sweep;
+        const midAngle = startAngle + sweep / 2;
+        currentAngle = endAngle;
+        return {
+          ...item,
+          pct,
+          startAngle,
+          endAngle,
+          midAngle,
+          color: chartColors[index % chartColors.length]
+        };
+      });
+
+      const left = items.filter(item => Math.cos(item.midAngle) < 0).sort((a,b) => Math.sin(a.midAngle) - Math.sin(b.midAngle));
+      const right = items.filter(item => Math.cos(item.midAngle) >= 0).sort((a,b) => Math.sin(a.midAngle) - Math.sin(b.midAngle));
+
+      function positioned(list, side) {
+        if (!list.length) return [];
+        const top = 64;
+        const bottom = height - 48;
+        const gap = list.length === 1 ? 0 : (bottom - top) / (list.length - 1);
+        return list.map((item, idx) => {
+          const edge = polarToCartesian(cx, cy, radius, item.midAngle);
+          const out = polarToCartesian(cx, cy, labelRadius, item.midAngle);
+          const labelY = list.length === 1 ? cy : top + gap * idx;
+          const labelX = side === 'left' ? leftX : rightX;
+          const anchor = side === 'left' ? 'end' : 'start';
+          const joinX = side === 'left' ? labelX + lineJoinOffset : labelX - lineJoinOffset;
+          return { ...item, edge, out, labelY, labelX, joinX, anchor, side };
+        });
+      }
+
+      const labelled = [...positioned(left, 'left'), ...positioned(right, 'right')];
+      const slices = items.map((item) => {
+        const path = arcPath(cx, cy, radius, item.startAngle, item.endAngle);
+        const bigEnough = item.pct >= 8;
+        let inside = '';
+        if (bigEnough) {
+          const pt = polarToCartesian(cx, cy, radius * 0.67, item.midAngle);
+          inside = `<text class="pie-inside" x="${pt.x.toFixed(2)}" y="${pt.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle">${item.pct.toFixed(1)}%</text>`;
+        }
+        return `<g><path d="${path}" fill="${item.color}" stroke="rgba(255,255,255,.65)" stroke-width="1"></path>${inside}</g>`;
+      }).join('');
+
+      const labels = labelled.map(item => {
+        const line = `M ${item.edge.x.toFixed(2)} ${item.edge.y.toFixed(2)} L ${item.out.x.toFixed(2)} ${item.out.y.toFixed(2)} L ${item.joinX.toFixed(2)} ${item.labelY.toFixed(2)} L ${item.labelX.toFixed(2)} ${item.labelY.toFixed(2)}`;
+        const titleY = item.labelY - 4;
+        const valueY = item.labelY + 15;
+        return `
+          <g>
+            <path class="pie-line" d="${line}"></path>
+            <circle class="pie-dot" cx="${item.edge.x.toFixed(2)}" cy="${item.edge.y.toFixed(2)}" r="3.4"></circle>
+            <text class="pie-label" x="${item.labelX}" y="${titleY}" text-anchor="${item.anchor}">${escapeHtml(item.code)}</text>
+            <text class="pie-subvalue" x="${item.labelX}" y="${valueY}" text-anchor="${item.anchor}">${item.pct.toFixed(1)}% • ${escapeHtml(fmtMoney(item.value))}</text>
+          </g>
+        `;
+      }).join('');
 
       el.innerHTML = `
-        <div class="boss-chart">
-          <div class="boss-total">
-            <span class="boss-total-label">${options.centerLabel || "Total"}</span>
-            <span class="boss-total-value">${fmtMoney(total)}</span>
+        <div class="pie-chart-wrap">
+          <div class="pie-summary">
+            <span class="pie-summary-label">${escapeHtml(options.centerLabel || 'Total')}</span>
+            <span class="pie-summary-value">${fmtMoney(total)}</span>
           </div>
-          ${items.map((item) => {
-            const pct = item.value / total * 100;
-            const width = Math.max(3, item.value / maxValue * 100);
-            return `
-              <div class="boss-row">
-                <div class="boss-code">${item.code}</div>
-                <div class="boss-track" title="${item.code}: ${fmtMoney(item.value)} / ${pct.toFixed(1)}%">
-                  <div class="boss-fill" style="width:${width}%"></div>
-                  <div class="boss-inline-label">${item.code} • ${pct.toFixed(1)}%</div>
-                </div>
-                <div class="boss-value">${fmtMoney(item.value)}</div>
-                <div class="boss-pct">${pct.toFixed(1)}%</div>
-              </div>
-            `;
-          }).join("")}
+          <div class="pie-svg-wrap">
+            <svg class="pie-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(options.centerLabel || 'Pie chart')}">
+              ${slices}
+              ${labels}
+            </svg>
+          </div>
         </div>
       `;
     }
@@ -1222,11 +1168,11 @@
 
     function renderCharts(rows, records) {
       renderMetrics(rows);
-      renderDonutChart("marketValueRatioChart", rows, "market_value", {
+      renderPieChart("marketValueRatioChart", rows, "market_value", {
         centerLabel: "Market Value",
         empty: "No current market value to chart."
       });
-      renderDonutChart("netBuyRatioChart", rows, "net_buy_amount", {
+      renderPieChart("netBuyRatioChart", rows, "net_buy_amount", {
         centerLabel: "Net Buy",
         empty: "No net buy amount to chart."
       });
