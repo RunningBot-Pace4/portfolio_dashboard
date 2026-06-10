@@ -711,17 +711,38 @@
       background: var(--card);
     }
 
+    .summary-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
+    }
+
+    .summary-table-wrap table {
+      min-width: 1180px;
+    }
+
+    .summary-table-wrap tr.below-market td {
+      background: var(--good-row);
+    }
+
+    .summary-table-wrap tr.below-market:hover td {
+      background: var(--good-row);
+    }
+
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       min-width: 820px;
     }
 
     th, td {
-      padding: 13px 14px;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--soft-line);
       white-space: nowrap;
       text-align: right;
+      vertical-align: middle;
     }
 
     th {
@@ -731,14 +752,45 @@
       letter-spacing: .07em;
       font-size: 12px;
       font-weight: 950;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    [data-theme="light"] th {
+      background: rgba(37, 99, 235, .08);
     }
 
     th:first-child, td:first-child,
     th:nth-child(2), td:nth-child(2),
     th:nth-child(3), td:nth-child(3) { text-align: left; }
 
+    tbody tr {
+      transition: background .16s ease, transform .16s ease;
+    }
+
     tbody tr:hover td { background: rgba(96,165,250,.06); }
     tr:last-child td { border-bottom: 0; }
+
+    .table-symbol {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 950;
+    }
+
+    .txn-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: var(--ticker-bg);
+      border: 1px solid var(--soft-line);
+      font-size: 12px;
+      font-weight: 950;
+    }
 
     .type {
       display: inline-flex;
@@ -781,17 +833,105 @@
 
     @media (max-width: 720px) {
       .page { padding: 10px; }
-      .topbar { grid-template-columns: 1fr; border-radius: 18px; }
+      .topbar { grid-template-columns: 1fr; border-radius: 18px; position: static; }
+      .brand p { white-space: normal; }
       .top-actions { justify-content: flex-start; }
-      .tabbar { top: 0; }
+      .top-actions .btn { flex: 1 1 auto; }
+      .tabbar { top: 0; position: sticky; }
       .metrics { grid-template-columns: 1fr; }
+      .metric { padding: 14px; }
       .form-grid, .toolbar { grid-template-columns: 1fr; }
       .holding-metrics { grid-template-columns: 1fr; }
       .section-head { display: block; }
       .section-head > * + * { margin-top: 12px; }
+      h2 { font-size: 19px; }
       .market-board { grid-template-columns: 1fr; }
-      .market-tile { grid-template-columns: auto 1fr; }
-      .market-right { grid-column: 2; justify-items: start; text-align: left; min-width: 0; }
+      .market-tile { grid-template-columns: auto 1fr; padding: 14px; min-height: auto; }
+      .market-right { grid-column: 1 / -1; justify-items: start; text-align: left; min-width: 0; padding-left: 66px; }
+      .market-price { font-size: 18px; }
+      .market-note { white-space: normal; }
+      .dropdown-menu {
+        width: min(320px, calc(100vw - 34px));
+        max-height: 300px;
+      }
+
+      .records-table-wrap,
+      .summary-table-wrap {
+        overflow: visible;
+        border: 0;
+        background: transparent;
+      }
+
+      table,
+      .summary-table-wrap table {
+        min-width: 0;
+        width: 100%;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody {
+        display: grid;
+        gap: 12px;
+      }
+
+      tbody tr {
+        display: block;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--card2);
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0,0,0,.06);
+      }
+
+      tbody tr.below-market {
+        background: var(--good-row);
+        border-color: rgba(16,185,129,.34);
+      }
+
+      tbody tr.below-market td,
+      .summary-table-wrap tr.below-market td,
+      .summary-table-wrap tr.below-market:hover td {
+        background: transparent;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        align-items: center;
+        text-align: right !important;
+        white-space: normal;
+        padding: 12px 14px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        text-align: left;
+      }
+
+      td[data-label="Action"] {
+        display: block;
+      }
+
+      td[data-label="Action"]::before {
+        display: none;
+      }
+
+      .row-actions {
+        justify-content: stretch;
+      }
+
+      .row-actions .btn {
+        flex: 1;
+      }
     }
 
   </style>
@@ -921,7 +1061,7 @@
                 <h2>Summary Dashboard of Shares You Bought and Sold</h2>
                 <span id="summaryCountText" class="count-pill">0 shares</span>
               </div>
-              <p>Green card means average cost is higher than market price. Other cards have no fill color.</p>
+              <p>Green row means average cost is higher than market price. Other rows have no fill color.</p>
             </div>
             <span class="badge">Grouped by share code</span>
           </div>
@@ -974,7 +1114,27 @@
             </div>
           </div>
 
-          <div id="summaryList" class="summary-list"></div>
+          <div class="summary-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Share Code</th>
+                  <th>Buy Amount</th>
+                  <th>Sell Amount</th>
+                  <th>Remaining Units</th>
+                  <th>Avg Cost</th>
+                  <th>Market Price</th>
+                  <th>Current Value</th>
+                  <th>Realized P/L</th>
+                  <th>Unrealized P/L</th>
+                  <th>Total P/L</th>
+                  <th>Return %</th>
+                  <th>Txns</th>
+                </tr>
+              </thead>
+              <tbody id="summaryBody"></tbody>
+            </table>
+          </div>
         </div>
       </section>
     </section>
@@ -1365,42 +1525,35 @@
     }
 
     function renderSummary() {
-      const list = el("summaryList");
+      const body = el("summaryBody");
       const rows = getFilteredSummaryRows();
-      list.innerHTML = "";
+      body.innerHTML = "";
       el("summaryCountText").textContent = `${rows.length} ${rows.length === 1 ? "share" : "shares"}`;
 
       if (!rows.length) {
-        list.innerHTML = `<div class="empty">No matching shares. Change the filters above.</div>`;
+        body.innerHTML = `<tr><td data-label="Status" colspan="12" class="muted" style="text-align:center;padding:26px;">No matching shares. Change the filters above.</td></tr>`;
         return;
       }
 
       rows.forEach(row => {
         const belowMarket = row.current_price !== null && row.current_price !== undefined && Number(row.average_price || 0) > Number(row.current_price || 0);
-        const card = document.createElement("div");
-        card.className = `holding-card ${belowMarket ? "below-market" : ""}`;
-        card.innerHTML = `
-          <div>
-            <div class="ticker">${row.share_code}</div>
-            <div class="ticker-sub">${row.market_symbol || row.share_code} • ${row.transaction_count || 0} txns</div>
-          </div>
-          <div class="holding-metrics">
-            <div class="mini-metric"><div class="mini-label">Buy Amount</div><div class="mini-value">${fmtMoney(row.total_buy_amount)}</div></div>
-            <div class="mini-metric"><div class="mini-label">Sell Amount</div><div class="mini-value">${fmtMoney(row.total_sell_amount)}</div></div>
-            <div class="mini-metric"><div class="mini-label">Remaining Units</div><div class="mini-value">${fmtNum(row.remaining_units)}</div></div>
-            <div class="mini-metric"><div class="mini-label">Avg Cost</div><div class="mini-value">${fmtMoney(row.average_price)}</div></div>
-            <div class="mini-metric"><div class="mini-label">Market Price</div><div class="mini-value">${fmtMoney(row.current_price)}</div></div>
-            <div class="mini-metric"><div class="mini-label">Current Value</div><div class="mini-value">${fmtMoney(row.market_value)}</div></div>
-            <div class="mini-metric"><div class="mini-label">Realized P/L</div><div class="mini-value ${cls(row.realized_return)}">${fmtMoney(row.realized_return)}</div></div>
-            <div class="mini-metric"><div class="mini-label">Unrealized P/L</div><div class="mini-value ${cls(row.unrealized_return)}">${fmtMoney(row.unrealized_return)}</div></div>
-          </div>
-          <div class="result-box">
-            <div class="result-main ${cls(row.total_return)}">${fmtMoney(row.total_return)}</div>
-            <div class="result-sub">Total P/L</div>
-            <div class="${cls(row.return_percent)}" style="font-weight:950;">${fmtPct(row.return_percent)}</div>
-          </div>
+        const tr = document.createElement("tr");
+        tr.className = belowMarket ? "below-market" : "";
+        tr.innerHTML = `
+          <td data-label="Share Code"><span class="table-symbol">${row.share_code}</span></td>
+          <td data-label="Buy Amount">${fmtMoney(row.total_buy_amount)}</td>
+          <td data-label="Sell Amount">${fmtMoney(row.total_sell_amount)}</td>
+          <td data-label="Remaining Units">${fmtNum(row.remaining_units)}</td>
+          <td data-label="Avg Cost">${fmtMoney(row.average_price)}</td>
+          <td data-label="Market Price">${fmtMoney(row.current_price)}</td>
+          <td data-label="Current Value">${fmtMoney(row.market_value)}</td>
+          <td data-label="Realized P/L" class="${cls(row.realized_return)}">${fmtMoney(row.realized_return)}</td>
+          <td data-label="Unrealized P/L" class="${cls(row.unrealized_return)}">${fmtMoney(row.unrealized_return)}</td>
+          <td data-label="Total P/L" class="${cls(row.total_return)}">${fmtMoney(row.total_return)}</td>
+          <td data-label="Return %" class="${cls(row.return_percent)}">${fmtPct(row.return_percent)}</td>
+          <td data-label="Txns"><span class="txn-pill">${row.transaction_count || 0}</span></td>
         `;
-        list.appendChild(card);
+        body.appendChild(tr);
       });
     }
 
@@ -1431,7 +1584,7 @@
       el("recordCountText").textContent = `BUY: ${buyCount} • SELL: ${sellCount} • TOTAL: ${rows.length}`;
 
       if (!rows.length) {
-        body.innerHTML = `<tr><td colspan="7" class="muted" style="text-align:center;padding:26px;">No matching records.</td></tr>`;
+        body.innerHTML = `<tr><td data-label="Status" colspan="7" class="muted" style="text-align:center;padding:26px;">No matching records.</td></tr>`;
         return;
       }
 
@@ -1439,13 +1592,13 @@
         const type = String(row.transaction_type || "BUY").toUpperCase();
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${row.purchase_date}</td>
-          <td><span class="type ${type.toLowerCase()}">${type}</span></td>
-          <td><strong>${row.share_code}</strong></td>
-          <td>${fmtMoney(row.investment_amount)}</td>
-          <td>${fmtNum(row.purchase_units)}</td>
-          <td>${fmtMoney(row.average_price)}</td>
-          <td>
+          <td data-label="Date">${row.purchase_date}</td>
+          <td data-label="Type"><span class="type ${type.toLowerCase()}">${type}</span></td>
+          <td data-label="Share Code"><strong>${row.share_code}</strong></td>
+          <td data-label="Amount">${fmtMoney(row.investment_amount)}</td>
+          <td data-label="Share Unit">${fmtNum(row.purchase_units)}</td>
+          <td data-label="Price / Share">${fmtMoney(row.average_price)}</td>
+          <td data-label="Action">
             <div class="row-actions">
               <button class="btn small secondary" type="button" data-edit="${row.id}">Edit</button>
               <button class="btn small danger" type="button" data-delete="${row.id}">Delete</button>
