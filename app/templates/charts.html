@@ -304,6 +304,7 @@
         var(--card);
       padding: 20px;
       min-height: 380px;
+      overflow: visible;
     }
 
     .chart-card.wide {
@@ -364,14 +365,12 @@
 
     .pie-svg-wrap {
       width: 100%;
-      overflow-x: auto;
-      overflow-y: hidden;
+      overflow: hidden;
       padding-bottom: 4px;
     }
 
     .pie-svg {
       width: 100%;
-      min-width: 620px;
       height: auto;
       display: block;
     }
@@ -402,6 +401,54 @@
 
     .pie-dot {
       fill: rgba(148,163,184,.95);
+    }
+
+    .pie-slice,
+    .pie-label-group {
+      cursor: pointer;
+      transition: transform .18s ease, opacity .18s ease, filter .18s ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .pie-slice:hover,
+    .pie-slice.active {
+      transform: scale(1.035);
+      filter: drop-shadow(0 14px 18px rgba(15,23,42,.18));
+      opacity: .96;
+    }
+
+    .pie-label-group:hover .pie-label,
+    .pie-label-group.active .pie-label {
+      fill: var(--accent-2);
+    }
+
+    .pie-label-group:hover .pie-line,
+    .pie-label-group.active .pie-line {
+      stroke: var(--accent-2);
+      stroke-width: 2.2;
+    }
+
+    .pie-floating-tooltip {
+      display: none;
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      z-index: 10;
+      max-width: 320px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel-strong);
+      color: var(--text);
+      box-shadow: 0 18px 40px rgba(0,0,0,.22);
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1.45;
+    }
+
+    .pie-chart-wrap.has-active .pie-floating-tooltip {
+      display: block;
     }
 
     .bar-list {
@@ -554,9 +601,9 @@
       display: none;
       position: absolute;
       right: 10px;
-      top: -40px;
-      z-index: 5;
-      max-width: 260px;
+      top: calc(100% + 8px);
+      z-index: 20;
+      max-width: 280px;
       padding: 8px 10px;
       border-radius: 12px;
       border: 1px solid var(--border);
@@ -568,6 +615,12 @@
       line-height: 1.35;
       white-space: nowrap;
       pointer-events: none;
+    }
+
+    .bar-list {
+      overflow: visible !important;
+      padding-top: 4px;
+      padding-bottom: 48px;
     }
 
     .bar-row:hover .bar-tooltip,
@@ -745,8 +798,8 @@
       <div class="section-body">
         <div class="section-head">
           <div>
-            <h2>Boss View Charts</h2>
-            <p>Pie charts are directly labelled so bosses can read share name, percentage, and amount at a glance.</p>
+            <h2>Charts</h2>
+            <p>Pie charts are directly labelled so you can read share name, percentage, and amount at a glance.</p>
           </div>
           <span class="chip">USD view</span>
         </div>
@@ -1064,11 +1117,11 @@
       const height = 430;
       const cx = 380;
       const cy = 220;
-      const radius = 150;
-      const labelRadius = 165;
-      const leftX = 118;
-      const rightX = 642;
-      const lineJoinOffset = 28;
+      const radius = 138;
+      const labelRadius = 152;
+      const leftX = 150;
+      const rightX = 610;
+      const lineJoinOffset = 24;
       let currentAngle = -Math.PI / 2;
 
       items = items.map((item, index) => {
@@ -1116,7 +1169,7 @@
           const pt = polarToCartesian(cx, cy, radius * 0.67, item.midAngle);
           inside = `<text class="pie-inside" x="${pt.x.toFixed(2)}" y="${pt.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle">${item.pct.toFixed(1)}%</text>`;
         }
-        return `<g><path d="${path}" fill="${item.color}" stroke="rgba(255,255,255,.65)" stroke-width="1"></path>${inside}</g>`;
+        return `<g class="pie-slice" data-code="${escapeHtml(item.code)}" data-value="${item.value}" data-pct="${item.pct.toFixed(1)}"><path d="${path}" fill="${item.color}" stroke="rgba(255,255,255,.65)" stroke-width="1"></path>${inside}</g>`;
       }).join('');
 
       const labels = labelled.map(item => {
@@ -1124,7 +1177,7 @@
         const titleY = item.labelY - 4;
         const valueY = item.labelY + 15;
         return `
-          <g>
+          <g class="pie-label-group" data-code="${escapeHtml(item.code)}" data-value="${item.value}" data-pct="${item.pct.toFixed(1)}">
             <path class="pie-line" d="${line}"></path>
             <circle class="pie-dot" cx="${item.edge.x.toFixed(2)}" cy="${item.edge.y.toFixed(2)}" r="3.4"></circle>
             <text class="pie-label" x="${item.labelX}" y="${titleY}" text-anchor="${item.anchor}">${escapeHtml(item.code)}</text>
@@ -1145,10 +1198,39 @@
               ${labels}
             </svg>
           </div>
+          <div class="pie-floating-tooltip"></div>
         </div>
       `;
     }
 
+
+
+    function attachInteractivePie(container) {
+      const wrap = container.querySelector(".pie-chart-wrap");
+      if (!wrap) return;
+      const tooltip = wrap.querySelector(".pie-floating-tooltip");
+      const items = wrap.querySelectorAll(".pie-slice, .pie-label-group");
+
+      function setActive(code, value, pct) {
+        wrap.classList.add("has-active");
+        items.forEach(item => item.classList.toggle("active", item.dataset.code === code));
+        if (tooltip) tooltip.innerHTML = `${code}<br>${pct}% • ${fmtMoney(Number(value || 0))}`;
+      }
+
+      items.forEach(item => {
+        item.addEventListener("mouseenter", () => setActive(item.dataset.code, item.dataset.value, item.dataset.pct));
+        item.addEventListener("click", event => {
+          event.stopPropagation();
+          const alreadyActive = item.classList.contains("active");
+          if (alreadyActive) {
+            wrap.classList.remove("has-active");
+            items.forEach(x => x.classList.remove("active"));
+            return;
+          }
+          setActive(item.dataset.code, item.dataset.value, item.dataset.pct);
+        });
+      });
+    }
 
     function attachInteractiveBars(container) {
       container.querySelectorAll(".bar-row, .split-row").forEach(row => {
@@ -1163,6 +1245,7 @@
           row.classList.toggle("active");
         });
       });
+      attachInteractivePie(el);
     }
 
     function renderBarChart(elId, rows, valueKey, options = {}) {
@@ -1358,6 +1441,12 @@
     document.addEventListener("click", event => {
       if (!event.target.closest(".bar-row, .split-row")) {
         document.querySelectorAll(".bar-row.active, .split-row.active").forEach(row => row.classList.remove("active"));
+      }
+      if (!event.target.closest(".pie-chart-wrap")) {
+        document.querySelectorAll(".pie-chart-wrap").forEach(wrap => {
+          wrap.classList.remove("has-active");
+          wrap.querySelectorAll(".pie-slice.active, .pie-label-group.active").forEach(item => item.classList.remove("active"));
+        });
       }
     });
 
