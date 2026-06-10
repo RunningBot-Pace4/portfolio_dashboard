@@ -128,6 +128,25 @@ def list_records() -> list[dict[str, Any]]:
     return [clean_row(dict(row)) for row in rows]
 
 
+def list_distinct_share_codes() -> list[str]:
+    """Return distinct share codes already saved in Neon.
+
+    This drives the live market dashboard, so new tickers appear after they
+    are added as a transaction or inserted directly into the database.
+    """
+    ensure_schema()
+    with get_connection() as conn:
+        rows = conn.execute(
+            """
+            SELECT DISTINCT UPPER(TRIM(share_code)) AS share_code
+            FROM portfolio_records
+            WHERE TRIM(share_code) <> ''
+            ORDER BY UPPER(TRIM(share_code))
+            """
+        ).fetchall()
+    return [str(row["share_code"]).upper() for row in rows if row.get("share_code")]
+
+
 def _list_records_for_share(share_code: str, exclude_record_id: int | None = None) -> list[dict[str, Any]]:
     ensure_schema()
     share_code = share_code.strip().upper()

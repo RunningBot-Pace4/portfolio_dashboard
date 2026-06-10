@@ -15,10 +15,11 @@ from .db import (
     holdings_summary_rows,
     insert_record,
     list_records,
+    list_distinct_share_codes,
     ping_database,
     update_record,
 )
-from .market_data import fetch_market_price
+from .market_data import fetch_market_price, search_yahoo_symbols
 from .models import PortfolioRecordIn
 from .pdf_report import build_portfolio_pdf
 
@@ -234,7 +235,15 @@ def api_quote(share_code: str, _: None = Depends(require_auth)):
 
 @app.get("/api/market")
 def api_market(_: None = Depends(require_auth)):
-    return {"quotes": [fetch_market_price(code) for code in DEFAULT_SHARE_CODES]}
+    # Build the watchlist from Neon records, not a hardcoded list.
+    # If records were inserted directly into Neon, they will appear here automatically.
+    codes = sorted(set(DEFAULT_SHARE_CODES + list_distinct_share_codes()))
+    return {"codes": codes, "quotes": [fetch_market_price(code) for code in codes]}
+
+
+@app.get("/api/symbol-search")
+def api_symbol_search(q: str = "", limit: int = 12, _: None = Depends(require_auth)):
+    return {"results": search_yahoo_symbols(q, max_results=limit)}
 
 
 @app.get("/api/summary")

@@ -1,21 +1,8 @@
 import os
 
-DEFAULT_SHARE_CODES = [
-    "NVDA",
-    "ORCL",
-    "GOOGL",
-    "NU",
-    "GRAB",
-    "TSM",
-    "HROW",
-    "SAIL",
-    "TLX",
-    "META",
-    "MSFT",
-    "AVGO",
-    "GLDM",
-    "P",
-]
+# No hardcoded watchlist. The app builds the market dashboard from share codes saved in Neon.
+# New symbols can be searched from Yahoo Finance in the Add/Edit form.
+DEFAULT_SHARE_CODES: list[str] = []
 
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 PORTFOLIO_CURRENCY = os.getenv("PORTFOLIO_CURRENCY", "USD").strip().upper() or "USD"

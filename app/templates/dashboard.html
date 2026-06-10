@@ -33,7 +33,7 @@
       --radius: 22px;
       --input: rgba(255,255,255,.07);
       --input-border: rgba(148,163,184,.22);
-      --good-row: rgba(16, 185, 129, .16);
+      --good-row: rgba(251, 113, 133, .18);
       --avatar-shadow: rgba(37,99,235,.22);
       --ticker-bg: rgba(148,163,184,.14);
       --market-card-bg: rgba(255,255,255,.075);
@@ -53,7 +53,7 @@
       --shadow: 0 16px 36px rgba(15,23,42,.10);
       --input: #fff;
       --input-border: rgba(15,23,42,.14);
-      --good-row: rgba(187, 247, 208, .70);
+      --good-row: rgba(254, 226, 226, .78);
       --avatar-shadow: rgba(37,99,235,.16);
       --ticker-bg: rgba(241,245,249,.98);
       --market-card-bg: rgba(255,255,255,.98);
@@ -394,6 +394,18 @@
 
     select option { color: #0f172a; }
 
+    .input-help {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .symbol-field input {
+      text-transform: uppercase;
+    }
+
     .form-grid, .filter-grid {
       display: grid;
       gap: 12px;
@@ -640,8 +652,8 @@
     }
 
     .holding-card.below-market {
-      background: linear-gradient(90deg, var(--good-row), rgba(16,185,129,.06));
-      border-color: rgba(16,185,129,.34);
+      background: linear-gradient(90deg, var(--good-row), rgba(251,113,133,.08));
+      border-color: rgba(251,113,133,.38);
     }
 
     .ticker {
@@ -1018,13 +1030,11 @@
                     <option value="SELL">SELL</option>
                   </select>
                 </div>
-                <div>
+                <div class="symbol-field">
                   <label for="shareCode">Share Code</label>
-                  <select id="shareCode" required>
-                    {% for code in share_codes %}
-                    <option value="{{ code }}">{{ code }}</option>
-                    {% endfor %}
-                  </select>
+                  <input id="shareCode" type="text" list="shareCodeSearchList" placeholder="Search Yahoo Finance symbol..." autocomplete="off" required />
+                  <datalist id="shareCodeSearchList"></datalist>
+                  <div class="input-help" id="shareCodeHelp">Type a symbol or company name. Results come from Yahoo Finance search.</div>
                 </div>
                 <div>
                   <label id="unitLabel" for="purchaseUnits">Share Unit</label>
@@ -1061,7 +1071,7 @@
                 <h2>Summary Dashboard of Shares You Bought and Sold</h2>
                 <span id="summaryCountText" class="count-pill">0 shares</span>
               </div>
-              <p>Green row means average cost is higher than market price. Other rows have no fill color.</p>
+              <p>Red row means average cost is higher than market price. Other rows have no fill color.</p>
             </div>
             <span class="badge">Grouped by share code</span>
           </div>
@@ -1230,6 +1240,9 @@
     const purchaseDate = el("purchaseDate");
     const transactionType = el("transactionType");
     const shareCode = el("shareCode");
+    const shareCodeSearchList = el("shareCodeSearchList");
+    const shareCodeHelp = el("shareCodeHelp");
+    let shareSearchTimer = null;
     const investmentAmount = el("investmentAmount");
     const purchaseUnits = el("purchaseUnits");
     const averagePrice = el("averagePrice");
@@ -1321,7 +1334,7 @@
       recordId.value = "";
       purchaseDate.value = todayIso();
       transactionType.value = "BUY";
-      shareCode.value = "NVDA";
+      shareCode.value = "";
       investmentAmount.value = "";
       purchaseUnits.value = "";
       averagePrice.value = "";
@@ -1345,6 +1358,46 @@
         throw new Error(detail);
       }
       return response.json();
+    }
+
+    async function searchSymbols(query) {
+      const q = String(query || "").trim();
+      if (q.length < 1) {
+        shareCodeSearchList.innerHTML = "";
+        shareCodeHelp.textContent = "Type a symbol or company name. Results come from Yahoo Finance search.";
+        return;
+      }
+
+      try {
+        const data = await requestJson(`/api/symbol-search?q=${encodeURIComponent(q)}&limit=12`);
+        const results = data.results || [];
+        shareCodeSearchList.innerHTML = "";
+        results.forEach(item => {
+          const option = document.createElement("option");
+          option.value = item.symbol;
+          const parts = [item.name, item.exchange, item.currency, item.quote_type].filter(Boolean);
+          option.label = parts.join(" • ");
+          option.textContent = `${item.symbol} — ${parts.join(" • ")}`;
+          shareCodeSearchList.appendChild(option);
+        });
+        shareCodeHelp.textContent = results.length
+          ? "Select a result or type any Yahoo Finance symbol manually."
+          : "No Yahoo Finance result found. You can still type the exact symbol manually.";
+      } catch (err) {
+        shareCodeHelp.textContent = `Symbol search error. You can still type the exact symbol manually.`;
+      }
+    }
+
+    function initSymbolSearch() {
+      shareCode.addEventListener("input", () => {
+        shareCode.value = String(shareCode.value || "").toUpperCase();
+        clearTimeout(shareSearchTimer);
+        shareSearchTimer = setTimeout(() => searchSymbols(shareCode.value), 250);
+      });
+
+      shareCode.addEventListener("blur", () => {
+        shareCode.value = String(shareCode.value || "").trim().toUpperCase();
+      });
     }
 
     function shareCodes() {
@@ -1674,7 +1727,7 @@
       const payload = {
         purchase_date: purchaseDate.value,
         transaction_type: transactionType.value,
-        share_code: shareCode.value,
+        share_code: String(shareCode.value || "").trim().toUpperCase(),
         investment_amount: Number(investmentAmount.value),
         purchase_units: Number(purchaseUnits.value)
       };
@@ -1740,6 +1793,7 @@
     initTheme();
     initTabs();
     initDropdowns();
+    initSymbolSearch();
     resetForm();
     loadAll().catch(err => setStatus(`Error loading dashboard: ${err.message}`));
     setInterval(() => loadAll().catch(() => {}), 120000);

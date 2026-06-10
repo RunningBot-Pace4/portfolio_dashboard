@@ -47,6 +47,80 @@ def to_yahoo_symbol(raw_code: str) -> str:
     return SYMBOL_OVERRIDES.get(code, code)
 
 
+def search_yahoo_symbols(query: str, max_results: int = 12) -> list[dict]:
+    """Search Yahoo Finance symbols for the Add/Edit form.
+
+    This is search-as-you-type; Yahoo/yfinance does not provide a practical
+    endpoint to preload every ticker globally into a browser dropdown.
+    """
+    q = (query or "").strip()
+    if len(q) < 1:
+        return []
+
+    url = "https://query2.finance.yahoo.com/v1/finance/search"
+    params = {
+        "q": q,
+        "quotesCount": max(1, min(int(max_results or 12), 25)),
+        "newsCount": 0,
+        "listsCount": 0,
+        "enableFuzzyQuery": "true",
+        "quotesQueryId": "tss_match_phrase_query",
+    }
+    headers = {
+        "User-Agent": "Mozilla/5.0 portfolio-dashboard/1.0",
+        "Accept": "application/json",
+    }
+
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=8)
+        response.raise_for_status()
+        payload = response.json()
+    except Exception as exc:
+        return [{
+            "symbol": normalize_share_code(q),
+            "name": "Search unavailable. You can still type the symbol manually.",
+            "exchange": "",
+            "quote_type": "MANUAL",
+            "currency": "",
+            "error": str(exc),
+        }]
+
+    results: list[dict] = []
+    seen: set[str] = set()
+
+    for item in payload.get("quotes", []) or []:
+        symbol = str(item.get("symbol") or "").strip().upper()
+        if not symbol or symbol in seen:
+            continue
+
+        quote_type = str(item.get("quoteType") or item.get("typeDisp") or "").upper()
+        # Keep normal investable/searchable Yahoo instruments; skip news pages and unrelated objects.
+        if quote_type and quote_type not in {"EQUITY", "ETF", "MUTUALFUND", "INDEX", "CURRENCY", "CRYPTOCURRENCY", "FUTURE"}:
+            continue
+
+        seen.add(symbol)
+        results.append({
+            "symbol": symbol,
+            "name": item.get("longname") or item.get("shortname") or item.get("name") or symbol,
+            "exchange": item.get("exchDisp") or item.get("exchange") or "",
+            "quote_type": quote_type or item.get("typeDisp") or "",
+            "currency": item.get("currency") or "",
+        })
+
+    # Put exact typed value at the top if Yahoo search did not return it.
+    typed = normalize_share_code(q)
+    if typed and typed not in seen:
+        results.insert(0, {
+            "symbol": typed,
+            "name": "Use typed symbol",
+            "exchange": "",
+            "quote_type": "MANUAL",
+            "currency": "",
+        })
+
+    return results[:max_results]
+
+
 def fetch_market_price(raw_code: str) -> dict:
     """Fetch latest market price and convert it into the portfolio currency.
 
