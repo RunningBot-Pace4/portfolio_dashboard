@@ -761,13 +761,13 @@
         <div class="charts-grid">
           <div class="chart-card">
             <h3 class="chart-title">Market Total Current Value (USD)</h3>
-            <p class="chart-subtitle">Portfolio composition by current market value with direct labels and percentages on the pie.</p>
+            <p class="chart-subtitle">Portfolio composition by current market value. All shares are labelled individually.</p>
             <div id="marketValueRatioChart"></div>
           </div>
 
           <div class="chart-card">
             <h3 class="chart-title">Net Buy Amount by Share (USD)</h3>
-            <p class="chart-subtitle">Net invested amount by share, calculated as total BUY amount minus total SELL amount.</p>
+            <p class="chart-subtitle">Net invested amount by share. All shares are labelled individually.</p>
             <div id="netBuyRatioChart"></div>
           </div>
         </div>
@@ -1043,28 +1043,18 @@
 
     function renderPieChart(elId, rows, valueKey, options = {}) {
       const el = document.getElementById(elId);
-      let items = topRows(rows, valueKey, options.limit || 10, false)
+      let items = [...rows]
         .map(row => ({
           code: row.share_code,
           value: Math.max(0, Number(row[valueKey] || 0))
         }))
-        .filter(item => item.value > 0);
+        .filter(item => item.value > 0)
+        .sort((a, b) => b.value - a.value);
 
       const total = items.reduce((sum, item) => sum + item.value, 0);
       if (!items.length || total <= 0) {
         el.innerHTML = `<div class="chart-empty">${options.empty || "No data to chart."}</div>`;
         return;
-      }
-
-      const fullRows = [...rows]
-        .map(row => ({ code: row.share_code, value: Math.max(0, Number(row[valueKey] || 0)) }))
-        .filter(item => item.value > 0)
-        .sort((a,b) => b.value - a.value);
-      if (fullRows.length > items.length) {
-        const shownCodes = new Set(items.map(i => i.code));
-        const others = fullRows.filter(i => !shownCodes.has(i.code));
-        const otherValue = others.reduce((s,i) => s + i.value, 0);
-        if (otherValue > 0) items.push({ code: 'OTHERS', value: otherValue });
       }
 
       const width = 760;
